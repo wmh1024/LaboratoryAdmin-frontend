@@ -22,7 +22,7 @@ const router = createRouter({
                     component: () => import('@/views/data/DataDirector.vue')
                 }, {
                     path: '/data/president',
-                    component: () => import('@/views/data/DataStudent.vue')
+                    component: () => import('@/views/data/DataPresident.vue')
                 }, {
                     path: '/lab/category',
                     component: () => import('@/views/lab/LabCategory.vue')

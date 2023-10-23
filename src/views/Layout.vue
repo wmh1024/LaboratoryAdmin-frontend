@@ -40,9 +40,9 @@ import { Box, Calendar, DataLine, Files, Picture, School, User } from '@element-
             </el-icon>
             <span>实验室数据</span>
           </template>
-          <el-menu-item index="/lab/category">实验室类别</el-menu-item>
           <el-menu-item index="/lab/log">实验室预约记录</el-menu-item>
           <el-menu-item index="/lab/head">负责人数据</el-menu-item>
+          <el-menu-item index="/lab/category">实验室类别</el-menu-item>
           <el-menu-item index="/lab/note">注意事项</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="3">
@@ -52,9 +52,9 @@ import { Box, Calendar, DataLine, Files, Picture, School, User } from '@element-
             </el-icon>
             <span>设备数据</span>
           </template>
-          <el-menu-item index="/dev/category">设备类别</el-menu-item>
           <el-menu-item index="/dev/log">设备预约记录</el-menu-item>
           <el-menu-item index="/dev/head">负责人数据</el-menu-item>
+          <el-menu-item index="/dev/category">设备类别</el-menu-item>
           <el-menu-item index="/dev/note">注意事项</el-menu-item>
         </el-sub-menu>
         <el-menu-item index="/timetable">
