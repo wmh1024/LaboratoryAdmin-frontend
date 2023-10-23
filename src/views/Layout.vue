@@ -12,7 +12,6 @@ import { Box, Calendar, DataLine, Files, Picture, School, User } from '@element-
   </el-row>
   <el-row class="tac">
     <el-col :span="4">
-      <!--      <h5 class="mb-2">Default colors</h5>-->
       <el-menu
           default-active="/data/student"
           class="el-menu-vertical-demo"
@@ -26,13 +25,13 @@ import { Box, Calendar, DataLine, Files, Picture, School, User } from '@element-
             <el-icon>
               <User/>
             </el-icon>
-            <span>信息录入</span>
+            <span>信息管理</span>
           </template>
-          <el-menu-item index="/data/student">学生信息录入</el-menu-item>
-          <el-menu-item index="/data/teacher">教师信息录入</el-menu-item>
-          <el-menu-item index="/data/admin">管理员信息录入</el-menu-item>
-          <el-menu-item index="/data/director">主任信息录入</el-menu-item>
-          <el-menu-item index="/data/president">院长信息录入</el-menu-item>
+          <el-menu-item index="/data/student">学生信息</el-menu-item>
+          <el-menu-item index="/data/teacher">教师信息</el-menu-item>
+          <el-menu-item index="/data/admin">管理员信息</el-menu-item>
+          <el-menu-item index="/data/director">主任信息</el-menu-item>
+          <el-menu-item index="/data/president">院长信息</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
