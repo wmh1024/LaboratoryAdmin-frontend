@@ -31,11 +31,12 @@ import { Delete, Edit } from '@element-plus/icons-vue'
     <h3 style="margin: 5px auto;">学生信息管理</h3>
   </el-row>
   <el-row style="margin-bottom: 20px;">
-    <el-button type="primary" plain style="margin-left: 20px;">添加学生信息</el-button>
-    <el-button type="danger" style="margin-left: 20px;" plain>删除选中</el-button>
+    <el-button plain style="margin-left: 20px;" type="primary">添加学生信息</el-button>
+    <el-button plain style="margin-left: 20px;" type="danger">删除选中</el-button>
 
   </el-row>
-  <el-table :data="tableData" style="width: 100%">
+  <el-table :data="tableData" border style="width: 98%; margin:0 auto">
+    <el-table-column type="selection" width="55"/>
     <el-table-column label="学号" width="">
       <template #default="scope">
         <div style="display: flex; align-items: center">
@@ -68,18 +69,18 @@ import { Delete, Edit } from '@element-plus/icons-vue'
       <template #default="scope">
         <div style="display: flex; align-items: center">
           <el-tag
-              effect="dark"
-              type='danger'
-              label='Tag 4'
               v-if="scope.row.status"
+              effect="dark"
+              label='Tag 4'
+              type='danger'
           >
             有违规
           </el-tag>
           <el-tag
-              effect="dark"
-              type='success'
-              label='Tag 2'
               v-else
+              effect="dark"
+              label='Tag 2'
+              type='success'
           >
             无违规
           </el-tag>
@@ -88,8 +89,8 @@ import { Delete, Edit } from '@element-plus/icons-vue'
     </el-table-column>
     <el-table-column label="操作">
       <template #default="scope">
-        <el-button type="primary" :icon="Edit" circle/>
-        <el-button type="danger" :icon="Delete" circle/>
+        <el-button :icon="Edit" circle type="primary"/>
+        <el-button :icon="Delete" circle type="danger"/>
       </template>
     </el-table-column>
   </el-table>
