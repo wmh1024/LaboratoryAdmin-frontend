@@ -22,7 +22,7 @@ const login = async () => {
   await router.push('/')
 }
 
-// 12
+// 123
 </script>
 
 <template>
