@@ -15,7 +15,7 @@ const formModel = ref({
   password: ''
 })
 const login = async () => {
-  // await form.value.validate()11
+  // await form.value.validate()
   const res = await userLoginService(formModel.value)
   userStore.setToken(res.data.data.token)
   ElMessage.success('登录成功')
@@ -35,7 +35,7 @@ const login = async () => {
           size="large"
       >
         <el-form-item>
-          <h1>管理员登录111</h1>
+          <h1>管理员登录</h1>
         </el-form-item>
         <el-form-item>
           <el-input
