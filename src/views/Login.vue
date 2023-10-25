@@ -19,7 +19,7 @@ const login = async () => {
   const res = await userLoginService(formModel.value)
   userStore.setToken(res.data.data.token)
   ElMessage.success('登录成功')
-  router.push('/')
+  await router.push('/')
 }
 
 
@@ -28,42 +28,42 @@ const login = async () => {
 <template>
   <el-row class="login-page">
     <el-col :span="12" class="bg"></el-col>
-    <el-col :span="6" :offset="3" class="form">
+    <el-col :offset="3" :span="6" class="form">
       <el-form
           ref="form"
-          size="large"
           autocomplete="off"
+          size="large"
       >
         <el-form-item>
-          <h1>登录</h1>
+          <h1>管理员登录</h1>
         </el-form-item>
         <el-form-item>
           <el-input
+              v-model="formModel.username"
               :prefix-icon="User"
               placeholder="请输入用户名"
-              v-model="formModel.username"
           ></el-input>
         </el-form-item>
         <el-form-item>
           <el-input
-              name="password"
-              :prefix-icon="Lock"
-              type="password"
-              placeholder="请输入密码"
               v-model="formModel.password"
+              :prefix-icon="Lock"
+              name="password"
+              placeholder="请输入密码"
+              type="password"
           ></el-input>
         </el-form-item>
         <el-form-item class="flex">
           <div class="flex">
-            <el-checkbox>记住我</el-checkbox>
-            <el-link type="primary" :underline="false">忘记密码？</el-link>
+            <!--            <el-checkbox>记住我</el-checkbox>-->
+            <!--            <el-link type="primary" :underline="false">忘记密码？</el-link>-->
           </div>
         </el-form-item>
         <el-form-item>
           <el-button
+              auto-insert-space
               class="button"
               type="primary"
-              auto-insert-space
               @click="() => login()"
           >登录
           </el-button
@@ -80,7 +80,8 @@ const login = async () => {
   background-color: #fff;
 
   .bg {
-    background: url('@/assets/lab.jpeg') no-repeat center / cover;
+    background: url('@/assets/sjzc.png') no-repeat 60% center / 240px auto,
+    url('@/assets/lab.jpeg') no-repeat center / cover;
     border-radius: 0 20px 20px 0;
   }
 

@@ -13,12 +13,12 @@ import { Box, Calendar, DataLine, Files, Picture, School, User } from '@element-
   <el-row class="tac">
     <el-col :span="4">
       <el-menu
-          default-active="/data/student"
           class="el-menu-vertical-demo"
-          @open="handleOpen"
-          @close="handleClose"
-          unique-opened
+          default-active="/data/student"
           router
+          unique-opened
+          @close="handleClose"
+          @open="handleOpen"
       >
         <el-sub-menu index="1">
           <template #title>
