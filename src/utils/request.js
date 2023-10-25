@@ -5,7 +5,7 @@ import router from '@/router'
 const baseURL = ''
 
 const instance = axios.create({
-  // TODO 1. 基础地址，超时时间
+  // 基础地址，超时时间
   baseURL,
   timeout: 10000
 })
@@ -13,7 +13,7 @@ const instance = axios.create({
 // 请求拦截器
 instance.interceptors.request.use(
   (config) => {
-    // TODO 2. 携带token
+    // 携带token
     const useStore = useUserStore()
     if (useStore.token) {
       config.headers.Authorization = useStore.token
