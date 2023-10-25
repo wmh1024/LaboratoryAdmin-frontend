@@ -1,5 +1,5 @@
 import axios from 'axios'
 
-export const userLoginService = (username, password) => {
-    return axios.post('https://mock.apifox.cn/m2/3472636-0-default/119384422', { username, password })
+export const userLoginService = (user) => {
+    return axios.get('https://mock.apifox.cn/m1/3472636-0-default/admin/login', user)
 }
