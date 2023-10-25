@@ -1,28 +1,28 @@
 <script setup>
-
-const handleEdit = (index) => {
-  console.log(index)
-}
-const handleDelete = (index, row) => {
-  console.log(index, row)
-}
-
-const tableData = [
-  {
-    date: '20211308076',
-    name: '王铭颢',
-    class: '计科三班',
-    phone: '13223169904',
-    status: true
-  }, {
-    date: '20211308097',
-    name: '伊煊',
-    class: '软工二班',
-    phone: '13020830696',
-    status: false
-  }
-]
+import { ElPagination } from 'element-plus'
 import { Delete, Edit } from '@element-plus/icons-vue'
+import { getStudentListService } from '@/api/data'
+import { ref } from 'vue'
+
+// const handleEdit = (index) => {
+//   console.log(index)
+// }
+// const handleDelete = (index, row) => {
+//   console.log(index, row)
+// }
+
+
+let tableData = ref([])
+
+const getStudentList = async () => {
+  const studentResult = await getStudentListService()
+  const studentData = studentResult.data
+  tableData.value = studentData.data.items
+  // console.log(studentData.items)
+}
+
+getStudentList()
+
 </script>
 
 
@@ -40,7 +40,7 @@ import { Delete, Edit } from '@element-plus/icons-vue'
     <el-table-column label="学号" width="">
       <template #default="scope">
         <div style="display: flex; align-items: center">
-          <span>{{ scope.row.date }}</span>
+          <span>{{ scope.row.username }}</span>
         </div>
       </template>
     </el-table-column>
@@ -51,20 +51,13 @@ import { Delete, Edit } from '@element-plus/icons-vue'
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="专业班级" width="">
-      <template #default="scope">
-        <div style="display: flex; align-items: center">
-          <span>{{ scope.row.class }}</span>
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column label="手机号" width="">
-      <template #default="scope">
-        <div style="display: flex; align-items: center">
-          <span>{{ scope.row.phone }}</span>
-        </div>
-      </template>
-    </el-table-column>
+    <!--    <el-table-column label="专业班级" width="">-->
+    <!--      <template #default="scope">-->
+    <!--        <div style="display: flex; align-items: center">-->
+    <!--          <span>{{ scope.row.class }}</span>-->
+    <!--        </div>-->
+    <!--      </template>-->
+    <!--    </el-table-column>-->
     <el-table-column label="学生违规状态" width="">
       <template #default="scope">
         <div style="display: flex; align-items: center">
@@ -87,6 +80,31 @@ import { Delete, Edit } from '@element-plus/icons-vue'
         </div>
       </template>
     </el-table-column>
+    <el-table-column label="创建人" width="">
+      <template #default="scope">
+        <div style="display: flex; align-items: center">
+          <span>{{ scope.row.create_user }}</span>
+        </div>
+      </template>
+    </el-table-column><el-table-column label="创建时间" width="">
+      <template #default="scope">
+        <div style="display: flex; align-items: center">
+          <span>{{ scope.row.create_time }}</span>
+        </div>
+      </template>
+    </el-table-column><el-table-column label="更新人" width="">
+      <template #default="scope">
+        <div style="display: flex; align-items: center">
+          <span>{{ scope.row.update_user }}</span>
+        </div>
+      </template>
+    </el-table-column><el-table-column label="更新时间" width="">
+      <template #default="scope">
+        <div style="display: flex; align-items: center">
+          <span>{{ scope.row.update_time }}</span>
+        </div>
+      </template>
+    </el-table-column>
     <el-table-column label="操作">
       <template #default="scope">
         <el-button :icon="Edit" circle type="primary"/>
@@ -94,6 +112,15 @@ import { Delete, Edit } from '@element-plus/icons-vue'
       </template>
     </el-table-column>
   </el-table>
+  <div style="display: flex; justify-content: center">
+    <ElPagination
+        style="margin: 20px auto"
+        background
+        hide-on-single-page
+        :default-page-size="5"
+        layout="total, prev, pager, next" :total="20"/>
+  </div>
 </template>
 
-
+<style scoped>
+</style>
