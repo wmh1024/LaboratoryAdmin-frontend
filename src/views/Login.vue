@@ -22,7 +22,6 @@ const login = async () => {
   await router.push('/')
 }
 
-// 123
 </script>
 
 <template>
@@ -80,7 +79,7 @@ const login = async () => {
   background-color: #fff;
 
   .bg {
-    background: url('@/assets/sjzc.png') no-repeat 60% center / 240px auto,
+    background: url('@/assets/sjzc.png') no-repeat 50% center / 240px auto,
     url('@/assets/lab.jpeg') no-repeat center / cover;
     border-radius: 0 20px 20px 0;
   }
