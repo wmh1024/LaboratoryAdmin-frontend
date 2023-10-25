@@ -3,7 +3,7 @@
 </script>
 
 <template>
-<h1>DevNote</h1>
+  <h1>DevNote</h1>
 </template>
 
 <style scoped>
