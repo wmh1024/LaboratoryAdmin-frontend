@@ -1,7 +1,8 @@
 import axios from 'axios'
 
-export const getUserListService = () => {
-    return axios.get('https://mock.apifox.cn/m1/3472636-0-default/data/user?test=1')
+export const getUserListService = (page) => {
+    console.log(page)
+    return axios.get(`https://mock.apifox.cn/m1/3472636-0-default/data/user?page=${page}`)
 }
 
 export const getUserByIdService = (id) => {

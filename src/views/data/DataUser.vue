@@ -8,16 +8,20 @@ const addDrawer = ref(false)
 const editDrawer = ref(false)
 const tableData = ref([])
 const multipleSelection = ref([])
-const positionList = [{ id: 0, name: "学生" }, { id: 1, name: "教职工" }]
 const formModel = ref({})
+const positionList = [{ id: 0, name: "学生" }, { id: 1, name: "教职工" }]
+const pageNum = ref(1)
+const totalNum = ref(0)
+
 
 const handleSelectionChange = (val) => {
   multipleSelection.value = val.map(item => item.id);
 }
 
-const getUserList = async () => {
-  const userResult = await getUserListService()
+const getUserList = async (page) => {
+  const userResult = await getUserListService(page)
   tableData.value = userResult.data.data.items
+  totalNum.value = userResult.data.data.counts
 }
 
 const getUserById = async (id) => {
@@ -41,33 +45,37 @@ const onDelete = async (ids) => {
     confirmButtonText: '确认',
     cancelButtonText: '取消'
   })
+  // todo Mock测试数据
   console.log('old-ids', ids)
   ids = [1, 2, 3]
   await deleteUserByIdsService(ids)
   ElMessage.success('删除成功')
-  await getUserList()
+  await getUserList(pageNum.value)
 }
-
 
 const addUser = async () => {
   console.log(formModel.value)
   await addUserService(formModel.value)
   ElMessage.success('添加成功')
   addDrawer.value = false
-  await getUserList()
+  await getUserList(pageNum.value)
 }
 
 const editUser = async () => {
   console.log(formModel.value)
   ElMessage.success('修改成功')
   editDrawer.value = false
-  await getUserList()
+  await getUserList(pageNum.value)
 }
 
-getUserList()
+const pageChange = async (page) => {
+  pageNum.value = page
+  await getUserList(pageNum.value)
+}
+
+getUserList(pageNum.value)
 
 </script>
-
 
 <template>
   <div>
@@ -75,36 +83,33 @@ getUserList()
       <h1 style="margin: 5px auto;">用户信息管理</h1>
     </el-row>
     <el-row style="margin-bottom: 20px;">
-      <el-button plain style="margin-left: 20px;" type="primary"
-                 @click="onAdd">用户添加
+      <el-button plain style="margin-left: 20px;" type="primary" @click="onAdd">
+        用户添加
       </el-button>
-      <el-button plain
-                 :disabled="multipleSelection.length === 0"
-                 style="margin-left: 20px;" type="danger"
-                 @click="() => onDelete(multipleSelection)">删除选中
+      <el-button :disabled="multipleSelection.length === 0" plain
+                 style="margin-left: 20px;" type="danger" @click="() => onDelete(multipleSelection)">
+        删除选中
       </el-button>
 
     </el-row>
-    <el-table :data="tableData"
-              :row-key="(row) => row.id"
-              border
+    <el-table :data="tableData" :row-key="(row) => row.id" border
               style="width: 98%; margin:0 auto" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"/>
-      <el-table-column label="学号(工号)" width="">
+      <el-table-column label="学号(工号)" width="200">
         <template #default="scope">
           <div style="display: flex; align-items: center">
             <span>{{ scope.row.username }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="姓名" width="">
+      <el-table-column label="姓名" width="150">
         <template #default="scope">
           <div style="display: flex; align-items: center">
             <span>{{ scope.row.name }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="职位" width="">
+      <el-table-column label="职位" width="150">
         <template #default="scope">
           <div style="display: flex; align-items: center">
             <span>{{ scope.row.position_status === 0 ? '学生' : '教职工' }}</span>
@@ -118,23 +123,20 @@ getUserList()
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="违规次数" width="">
+      <el-table-column label="违规次数" width="140">
         <template #default="scope">
           <div style="display: flex; align-items: center">
             <span>{{ scope.row.violation_count }}</span>
             <el-tag
                 v-if="scope.row.violation_status === 1"
-                effect="dark"
-                label='Tag 4'
-                style="margin-left: 15px;"
-                type='danger'
-            >
+                effect="dark" label='Tag 4'
+                style="margin-left: 15px;" type='danger'>
               现有违规
             </el-tag>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" width="130">
         <template #default="scope">
           <el-button :icon="Edit" circle type="primary" @click="onEdit"/>
           <el-button :icon="Delete" circle type="danger" @click="() => onDelete([scope.row.id])"/>
@@ -142,20 +144,11 @@ getUserList()
       </el-table-column>
     </el-table>
     <div style="display: flex; justify-content: center">
-      <ElPagination
-          :default-page-size="5"
-          :total="20"
-          background
-          hide-on-single-page
-          layout="total, prev, pager, next" style="margin: 20px auto"/>
+      <ElPagination :default-page-size="10" :total="totalNum" background hide-on-single-page layout="total, prev, pager, next"
+                    style="margin: 20px auto" @current-change="(currentPage) => pageChange(currentPage)"/>
     </div>
   </div>
-  <el-drawer
-      v-model="addDrawer"
-      direction="rtl"
-      size="35%"
-      title="添加用户"
-  >
+  <el-drawer v-model="addDrawer" direction="rtl" size="35%" title="添加用户">
     <el-form ref="formRef" label-width="100px">
       <el-form-item label="学号(工号)">
         <el-input v-model="formModel.username" placeholder="请输入学号(工号)"></el-input>
@@ -164,15 +157,10 @@ getUserList()
         <el-input v-model="formModel.name" placeholder="请输入姓名"></el-input>
       </el-form-item>
       <el-form-item label="职位">
-        <el-select
-            v-model="formModel.status"
-            style="width: 100%;"
-        >
+        <el-select v-model="formModel.status" style="width: 100%;">
           <el-option
-              v-for="channel in positionList"
-              :key="channel.id"
-              :label="channel.name"
-              :value="channel.id"
+              v-for="channel in positionList" :key="channel.id"
+              :label="channel.name" :value="channel.id"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -190,12 +178,7 @@ getUserList()
       </el-form-item>
     </el-form>
   </el-drawer>
-  <el-drawer
-      v-model="editDrawer"
-      direction="rtl"
-      size="35%"
-      title="编辑用户"
-  >
+  <el-drawer v-model="editDrawer" direction="rtl" size="35%" title="编辑用户">
     <el-form ref="formRef" label-width="100px">
       <el-form-item label="学号(工号)">
         <el-input v-model="formModel.username" placeholder="请输入学号(工号)"></el-input>
@@ -204,15 +187,10 @@ getUserList()
         <el-input v-model="formModel.name" placeholder="请输入姓名"></el-input>
       </el-form-item>
       <el-form-item label="职位">
-        <el-select
-            v-model="formModel.position_status"
-            style="width: 100%;"
-        >
+        <el-select v-model="formModel.position_status" style="width: 100%;">
           <el-option
-              v-for="channel in positionList"
-              :key="channel.id"
-              :label="channel.name"
-              :value="channel.id"
+              v-for="channel in positionList" :key="channel.id"
+              :label="channel.name" :value="channel.id"
           ></el-option>
         </el-select>
       </el-form-item>
