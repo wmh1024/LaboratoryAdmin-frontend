@@ -1,20 +1,18 @@
 <script setup>
 
 import { Delete, Edit } from '@element-plus/icons-vue'
+import { ref } from 'vue'
+import { getAdminListService } from '@/api/data'
 
-const tableData = [
-  {
-    date: '20211308076',
-    name: '王铭颢',
-    phone: '13223169904',
-    status: true
-  }, {
-    date: '20211308097',
-    name: '伊煊',
-    phone: '13020830696',
-    status: false
-  }
-]
+let tableData = ref([])
+
+const getAdminList = async () => {
+  const adminResult = await getAdminListService()
+  tableData.value = adminResult.data.data.items
+}
+
+getAdminList()
+
 
 </script>
 
@@ -23,7 +21,7 @@ const tableData = [
     <h3 style="margin: 5px auto;">管理员信息管理</h3>
   </el-row>
   <el-row style="margin-bottom: 20px;">
-    <el-button plain style="margin-left: 20px;" type="primary">添加管理员信息</el-button>
+    <el-button plain style="margin-left: 20px;" type="primary">管理员添加</el-button>
     <el-button plain style="margin-left: 20px;" type="danger">删除选中</el-button>
 
   </el-row>
@@ -32,7 +30,7 @@ const tableData = [
     <el-table-column label="账号" width="">
       <template #default="scope">
         <div style="display: flex; align-items: center">
-          <span>{{ scope.row.date }}</span>
+          <span>{{ scope.row.username }}</span>
         </div>
       </template>
     </el-table-column>
@@ -43,10 +41,21 @@ const tableData = [
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="手机号" width="">
+    <el-table-column label="权限" width="">
       <template #default="scope">
         <div style="display: flex; align-items: center">
-          <span>{{ scope.row.phone }}</span>
+          <div v-if="scope.row.status === 0">
+            <span>院长</span>
+          </div>
+          <div v-else-if="scope.row.status === 1">
+            <span>主任</span>
+          </div>
+          <div v-else-if="scope.row.status === 2">
+            <span>指导老师</span>
+          </div>
+          <div v-else-if="scope.row.status === 3">
+            <span>负责人</span>
+          </div>
         </div>
       </template>
     </el-table-column>
@@ -57,6 +66,14 @@ const tableData = [
       </template>
     </el-table-column>
   </el-table>
+  <div style="display: flex; justify-content: center">
+    <ElPagination
+        style="margin: 20px auto"
+        background
+        hide-on-single-page
+        :default-page-size="5"
+        layout="total, prev, pager, next" :total="20"/>
+  </div>
 </template>
 
 <style scoped>
