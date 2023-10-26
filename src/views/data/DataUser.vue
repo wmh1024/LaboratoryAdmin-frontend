@@ -1,12 +1,19 @@
 <script setup>
 import { Delete, Edit } from '@element-plus/icons-vue'
-import { getUserByIdService, getUserListService } from '@/api/data'
+import { addUserService, deleteUserByIdsService, getUserByIdService, getUserListService } from '@/api/data'
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
 const addDrawer = ref(false)
-let editDrawer = ref(false)
-let tableData = ref([])
+const editDrawer = ref(false)
+const tableData = ref([])
+const multipleSelection = ref([])
+const positionList = [{ id: 0, name: "学生" }, { id: 1, name: "教职工" }]
+const formModel = ref({})
+
+const handleSelectionChange = (val) => {
+  multipleSelection.value = val.map(item => item.id);
+}
 
 const getUserList = async () => {
   const userResult = await getUserListService()
@@ -15,16 +22,8 @@ const getUserList = async () => {
 
 const getUserById = async (id) => {
   const result = await getUserByIdService(id)
-  console.log(result)
   return result.data.data
 }
-
-const positionList = [
-  { id: 0, name: "学生" },
-  { id: 1, name: "教职工" }
-]
-
-const formModel = ref({})
 
 const onAdd = () => {
   formModel.value = {}
@@ -33,34 +32,36 @@ const onAdd = () => {
 
 const onEdit = async (index) => {
   formModel.value = await getUserById(index)
-  // console.log(formModel.value)
   editDrawer.value = true
 }
 
-const onDelete = async (id) => {
+const onDelete = async (ids) => {
   await ElMessageBox.confirm('你确认要删除吗？', '提示', {
     type: 'warning',
     confirmButtonText: '确认',
     cancelButtonText: '取消'
   })
-  // await artDelChannelService(id)
+  console.log('old-ids', ids)
+  ids = [1, 2, 3]
+  await deleteUserByIdsService(ids)
   ElMessage.success('删除成功')
   await getUserList()
 }
 
 
-const addUser = () => {
+const addUser = async () => {
   console.log(formModel.value)
+  await addUserService(formModel.value)
   ElMessage.success('添加成功')
   addDrawer.value = false
-  getUserList()
+  await getUserList()
 }
 
-const editUser = () => {
+const editUser = async () => {
   console.log(formModel.value)
   ElMessage.success('修改成功')
   editDrawer.value = false
-  getUserList()
+  await getUserList()
 }
 
 getUserList()
@@ -71,16 +72,23 @@ getUserList()
 <template>
   <div>
     <el-row>
-      <h3 style="margin: 5px auto;">用户信息管理</h3>
+      <h1 style="margin: 5px auto;">用户信息管理</h1>
     </el-row>
     <el-row style="margin-bottom: 20px;">
       <el-button plain style="margin-left: 20px;" type="primary"
                  @click="onAdd">用户添加
       </el-button>
-      <el-button plain style="margin-left: 20px;" type="danger">删除选中</el-button>
+      <el-button plain
+                 :disabled="multipleSelection.length === 0"
+                 style="margin-left: 20px;" type="danger"
+                 @click="() => onDelete(multipleSelection)">删除选中
+      </el-button>
 
     </el-row>
-    <el-table :data="tableData" border style="width: 98%; margin:0 auto">
+    <el-table :data="tableData"
+              :row-key="(row) => row.id"
+              border
+              style="width: 98%; margin:0 auto" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"/>
       <el-table-column label="学号(工号)" width="">
         <template #default="scope">
@@ -118,8 +126,8 @@ getUserList()
                 v-if="scope.row.violation_status === 1"
                 effect="dark"
                 label='Tag 4'
-                type='danger'
                 style="margin-left: 15px;"
+                type='danger'
             >
               现有违规
             </el-tag>
@@ -128,25 +136,25 @@ getUserList()
       </el-table-column>
       <el-table-column label="操作">
         <template #default="scope">
-          <el-button @click="() => onEdit(scope.row.id)" :icon="Edit" circle type="primary"/>
-          <el-button @click="onDelete" :icon="Delete" circle type="danger"/>
+          <el-button :icon="Edit" circle type="primary" @click="onEdit"/>
+          <el-button :icon="Delete" circle type="danger" @click="() => onDelete([scope.row.id])"/>
         </template>
       </el-table-column>
     </el-table>
     <div style="display: flex; justify-content: center">
       <ElPagination
-          style="margin: 20px auto"
+          :default-page-size="5"
+          :total="20"
           background
           hide-on-single-page
-          :default-page-size="5"
-          layout="total, prev, pager, next" :total="20"/>
+          layout="total, prev, pager, next" style="margin: 20px auto"/>
     </div>
   </div>
   <el-drawer
       v-model="addDrawer"
-      title="添加用户"
       direction="rtl"
-      size="50%"
+      size="35%"
+      title="添加用户"
   >
     <el-form ref="formRef" label-width="100px">
       <el-form-item label="学号(工号)">
@@ -157,7 +165,7 @@ getUserList()
       </el-form-item>
       <el-form-item label="职位">
         <el-select
-            v-model="formModel.statues"
+            v-model="formModel.status"
             style="width: 100%;"
         >
           <el-option
@@ -178,15 +186,15 @@ getUserList()
         <el-input v-model="formModel.repassword" placeholder="请输入确认密码" type="password"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="addUser" type="primary">添加</el-button>
+        <el-button type="primary" @click="addUser">添加</el-button>
       </el-form-item>
     </el-form>
   </el-drawer>
   <el-drawer
       v-model="editDrawer"
-      title="编辑用户"
       direction="rtl"
       size="35%"
+      title="编辑用户"
   >
     <el-form ref="formRef" label-width="100px">
       <el-form-item label="学号(工号)">
@@ -218,7 +226,7 @@ getUserList()
         <el-input v-model="formModel.repassword" placeholder="请输入确认密码" type="password"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="editUser" type="primary">修改</el-button>
+        <el-button type="primary" @click="editUser">修改</el-button>
       </el-form-item>
     </el-form>
   </el-drawer>
