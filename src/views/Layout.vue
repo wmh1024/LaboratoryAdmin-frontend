@@ -1,25 +1,20 @@
 <script setup>
-import { Box, Calendar, DataLine, Files, Picture, School, User } from '@element-plus/icons-vue'
 </script>
 
 <template>
-  <el-row>
-    <div style="width: 100%; margin-bottom: 20px; text-align: center;font-size: 20px;margin-top: 10px;">
-      <strong>
-        实验室预约系统 后台管理
-      </strong>
-    </div>
-  </el-row>
   <el-row class="tac">
     <el-col :span="4">
       <el-menu
           class="el-menu-vertical-demo"
-          default-active="/data/student"
           router
           unique-opened
           @close="handleClose"
           @open="handleOpen"
+          :default-active="$route.path"
       >
+        <div class="mb-2" style="text-align: center; line-height: 45px;">
+          实验室预约系统
+        </div>
         <el-sub-menu index="1">
           <template #title>
             <el-icon>
@@ -27,11 +22,8 @@ import { Box, Calendar, DataLine, Files, Picture, School, User } from '@element-
             </el-icon>
             <span>信息管理</span>
           </template>
-          <el-menu-item index="/data/student">学生信息</el-menu-item>
-          <el-menu-item index="/data/teacher">教师信息</el-menu-item>
+          <el-menu-item index="/data/user">用户信息</el-menu-item>
           <el-menu-item index="/data/admin">管理员信息</el-menu-item>
-          <el-menu-item index="/data/director">主任信息</el-menu-item>
-          <el-menu-item index="/data/president">院长信息</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
