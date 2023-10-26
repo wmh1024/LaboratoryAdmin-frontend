@@ -7,37 +7,19 @@ const router = createRouter({
         {
             path: '/',
             component: () => import('@/views/Layout.vue'),
-            redirect: '/data/student',
+            redirect: '/data/user',
             children: [
                 {
-                    path: '/data/student',
-                    component: () => import('@/views/data/DataStudent.vue'),
+                    path: '/data/user',
+                    component: () => import('@/views/data/DataUser.vue'),
                     meta: {
-                        title: '学生信息管理'
-                    }
-                }, {
-                    path: '/data/teacher',
-                    component: () => import('@/views/data/DataTeacher.vue'),
-                    meta: {
-                        title: '教师信息管理'
+                        title: '用户信息管理'
                     }
                 }, {
                     path: '/data/admin',
                     component: () => import('@/views/data/DataAdmin.vue'),
                     meta: {
                         title: '管理员信息管理'
-                    }
-                }, {
-                    path: '/data/director',
-                    component: () => import('@/views/data/DataDirector.vue'),
-                    meta: {
-                        title: '主任信息管理'
-                    }
-                }, {
-                    path: '/data/president',
-                    component: () => import('@/views/data/DataPresident.vue'),
-                    meta: {
-                        title: '院长信息管理'
                     }
                 }, {
                     path: '/lab/category',
