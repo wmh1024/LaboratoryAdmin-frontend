@@ -12,16 +12,18 @@ const formModel = ref({})
 const positionList = [{ id: 0, name: "学生" }, { id: 1, name: "教职工" }]
 const pageNum = ref(1)
 const totalNum = ref(0)
-
+const loading = ref(false)
 
 const handleSelectionChange = (val) => {
   multipleSelection.value = val.map(item => item.id);
 }
 
 const getUserList = async (page) => {
+  loading.value = true
   const userResult = await getUserListService(page)
   tableData.value = userResult.data.data.items
   totalNum.value = userResult.data.data.counts
+  loading.value = false
 }
 
 const getUserById = async (id) => {
@@ -92,7 +94,7 @@ getUserList(pageNum.value)
       </el-button>
 
     </el-row>
-    <el-table :data="tableData" :row-key="(row) => row.id" border
+    <el-table :data="tableData" :row-key="(row) => row.id" border v-loading="loading"
               style="width: 98%; margin:0 auto" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"/>
       <el-table-column label="学号(工号)" width="200">
