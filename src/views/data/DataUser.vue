@@ -1,6 +1,12 @@
 <script setup>
 import { Delete, Edit } from '@element-plus/icons-vue'
-import { addUserService, deleteUserByIdsService, getUserByIdService, getUserListService } from '@/api/data'
+import {
+  addUserService,
+  deleteUserByIdsService,
+  editUserService,
+  getUserByIdService,
+  getUserListService
+} from '@/api/data'
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
@@ -64,7 +70,8 @@ const addUser = async () => {
 }
 
 const editUser = async () => {
-  console.log(formModel.value)
+  await editUserService(formModel.value)
+  // console.log(formModel.value)
   ElMessage.success('修改成功')
   editDrawer.value = false
   await getUserList(pageNum.value)
@@ -140,7 +147,7 @@ getUserList(pageNum.value)
       </el-table-column>
       <el-table-column label="操作" width="130">
         <template #default="scope">
-          <el-button :icon="Edit" circle type="primary" @click="onEdit"/>
+          <el-button :icon="Edit" circle type="primary" @click="() => onEdit(scope.row.id)"/>
           <el-button :icon="Delete" circle type="danger" @click="() => onDelete([scope.row.id])"/>
         </template>
       </el-table-column>
