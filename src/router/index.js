@@ -25,7 +25,7 @@ const router = createRouter({
                     path: '/lab/category',
                     component: () => import('@/views/lab/LabCategory.vue'),
                     meta: {
-                        title: '实验室分类'
+                        title: '实验室类别'
                     }
                 }, {
                     path: '/lab/log',
@@ -34,10 +34,10 @@ const router = createRouter({
                         title: '实验室预约记录'
                     }
                 }, {
-                    path: '/lab/head',
-                    component: () => import('@/views/lab/LabHead.vue'),
+                    path: '/lab/manage',
+                    component: () => import('@/views/lab/LabManage.vue'),
                     meta: {
-                        title: '实验室负责人数据'
+                        title: '实验室管理'
                     }
                 }, {
                     path: '/lab/note',

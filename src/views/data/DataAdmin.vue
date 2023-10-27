@@ -2,7 +2,13 @@
 
 import { Delete, Edit } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import { getAdminByIdService, getAdminListService } from '@/api/data'
+import {
+  addAdminService,
+  deleteAdminByIdsService,
+  editAdminService,
+  getAdminByIdService,
+  getAdminListService
+} from '@/api/data'
 
 const addDrawer = ref(false)
 const editDrawer = ref(false)
@@ -53,24 +59,25 @@ const onDelete = async (ids) => {
   // todo Mock测试数据
   console.log('old-ids', ids)
   ids = [1, 2, 3]
-  await deleteUserByIdsService(ids)
+
+  await deleteAdminByIdsService(ids)
   ElMessage.success('删除成功')
-  await getUserList(pageNum.value)
+  await getAdminList(pageNum.value)
 }
 
 const addAdmin = async () => {
   console.log(formModel.value)
-  await addUserService(formModel.value)
+  await addAdminService(formModel.value)
   ElMessage.success('添加成功')
   addDrawer.value = false
-  await getUserList(pageNum.value)
+  await getAdminList(pageNum.value)
 }
 
 const editAdmin = async () => {
-  console.log(formModel.value)
+  await editAdminService(formModel.value)
   ElMessage.success('修改成功')
   editDrawer.value = false
-  await getUserList(pageNum.value)
+  await getAdminList(pageNum.value)
 }
 
 const pageChange = async (page) => {
@@ -78,9 +85,7 @@ const pageChange = async (page) => {
   await getAdminList(pageNum.value)
 }
 
-
 getAdminList()
-
 
 </script>
 
@@ -90,15 +95,15 @@ getAdminList()
       <h1 style="margin: 5px auto;">管理员信息管理</h1>
     </el-row>
     <el-row style="margin-bottom: 20px;">
-      <el-button plain style="margin-left: 20px;" @click="onAdd" type="primary">管理员添加</el-button>
-      <el-button plain :disabled="multipleSelection.length === 0"
-                 @click="() => onDelete(multipleSelection)"
-                 style="margin-left: 20px;" type="danger">删除选中
+      <el-button plain style="margin-left: 20px;" type="primary" @click="onAdd">管理员添加</el-button>
+      <el-button :disabled="multipleSelection.length === 0" plain
+                 style="margin-left: 20px;"
+                 type="danger" @click="() => onDelete(multipleSelection)">删除选中
       </el-button>
 
     </el-row>
-    <el-table :data="tableData" @selection-change="handleSelectionChange"
-              :row-key="(row) => row.id" border style="width: 98%; margin:0 auto" v-loading="loading">
+    <el-table v-loading="loading" :data="tableData"
+              :row-key="(row) => row.id" border style="width: 98%; margin:0 auto" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"/>
       <el-table-column label="账号" width="">
         <template #default="scope">
@@ -121,10 +126,10 @@ getAdminList()
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" width="130">
         <template #default="scope">
-          <el-button :icon="Edit" @click="() => onEdit(scope.row.id)" circle type="primary"/>
-          <el-button :icon="Delete" @click="() => onDelete([scope.row.id])" circle type="danger"/>
+          <el-button :icon="Edit" circle type="primary" @click="() => onEdit(scope.row.id)"/>
+          <el-button :icon="Delete" circle type="danger" @click="() => onDelete([scope.row.id])"/>
         </template>
       </el-table-column>
     </el-table>
@@ -157,7 +162,7 @@ getAdminList()
         <el-input v-model="formModel.repassword" placeholder="请输入确认密码" type="password"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="addUser">添加</el-button>
+        <el-button type="primary" @click="addAdmin">添加</el-button>
       </el-form-item>
     </el-form>
   </el-drawer>
@@ -184,7 +189,7 @@ getAdminList()
         <el-input v-model="formModel.repassword" placeholder="请输入确认密码" type="password"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="editUser">修改</el-button>
+        <el-button type="primary" @click="editAdmin">修改</el-button>
       </el-form-item>
     </el-form>
   </el-drawer>
