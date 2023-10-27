@@ -32,11 +32,11 @@ export const getAdminByIdService = (id) => {
 }
 
 export const deleteAdminByIdsService = (ids) => {
-    // return axios.delete('https://mock.apifox.cn/m1/3472636-0-default/data/user', ids)
+    return axios.delete('https://mock.apifox.cn/m1/3472636-0-default/data/admin', ids)
 }
 export const editAdminService = (admin) => {
-    // return axios.put('https://mock.apifox.cn/m1/3472636-0-default/data/user?q=1', admin)
+    return axios.put('https://mock.apifox.cn/m1/3472636-0-default/data/admin?q=1', admin)
 }
 export const addAdminService = (admin) => {
-    // return axios.post('https://mock.apifox.cn/m1/3472636-0-default/data/user?q=1', admin)
+    return axios.post('https://mock.apifox.cn/m1/3472636-0-default/data/admin?q=1', admin)
 }
