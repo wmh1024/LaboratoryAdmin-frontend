@@ -81,7 +81,7 @@ getLabCategoryList()
 <template>
   <div>
     <el-row>
-      <h1 style="margin: 5px auto;">实验室类别管理</h1>
+      <h1 style="margin: 5px auto;">实验室类别</h1>
     </el-row>
     <el-row style="margin-bottom: 20px;">
       <el-button plain style="margin-left: 20px;" type="primary" @click="onAdd">
@@ -93,7 +93,7 @@ getLabCategoryList()
       </el-button>
 
     </el-row>
-    <el-table :data="tableData" :row-key="(row) => row.id" border v-loading="loading"
+    <el-table v-loading="loading" :data="tableData" :row-key="(row) => row.id" border
               style="width: 98%; margin:0 auto" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"/>
       <el-table-column label="分类名称" width="">

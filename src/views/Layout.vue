@@ -5,16 +5,22 @@
   <el-row class="tac">
     <el-col :span="4">
       <el-menu
+          :default-active="$route.path"
           class="el-menu-vertical-demo"
           router
           unique-opened
           @close="handleClose"
           @open="handleOpen"
-          :default-active="$route.path"
       >
         <div class="mb-2" style="text-align: center; line-height: 45px;">
           实验室预约系统
         </div>
+        <el-menu-item index="/datashow">
+          <el-icon>
+            <DataLine/>
+          </el-icon>
+          <span>数据展示</span>
+        </el-menu-item>
         <el-sub-menu index="1">
           <template #title>
             <el-icon>
@@ -55,23 +61,12 @@
           </el-icon>
           <span>课表数据</span>
         </el-menu-item>
-        <el-menu-item index="/datashow">
-          <el-icon>
-            <DataLine/>
-          </el-icon>
-          <span>数据展示</span>
-        </el-menu-item>
+
         <el-menu-item index="/datalog">
           <el-icon>
             <Files/>
           </el-icon>
           <span>数据留存</span>
-        </el-menu-item>
-        <el-menu-item index="/image">
-          <el-icon>
-            <Picture/>
-          </el-icon>
-          <span>首页轮播图</span>
         </el-menu-item>
       </el-menu>
     </el-col>

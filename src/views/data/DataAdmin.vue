@@ -103,7 +103,8 @@ getAdminList()
 
     </el-row>
     <el-table v-loading="loading" :data="tableData"
-              :row-key="(row) => row.id" border style="width: 98%; margin:0 auto" @selection-change="handleSelectionChange">
+              :row-key="(row) => row.id" border style="width: 98%; margin:0 auto"
+              @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"/>
       <el-table-column label="账号" width="">
         <template #default="scope">
