@@ -24,4 +24,6 @@ export const addLabCategoryService = (labCategory) => {
 
 /* 实验室管理 */
 
-
+export const getLabListService = (page) => {
+    return axios.get(`https://mock.apifox.cn/m1/3472636-0-default/lab/manage?q=q`)
+}
