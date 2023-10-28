@@ -71,7 +71,6 @@ const addUser = async () => {
 
 const editUser = async () => {
   await editUserService(formModel.value)
-  // console.log(formModel.value)
   ElMessage.success('修改成功')
   editDrawer.value = false
   await getUserList(pageNum.value)
