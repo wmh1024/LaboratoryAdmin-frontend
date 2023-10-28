@@ -100,7 +100,7 @@ getUserList(pageNum.value)
       </el-button>
 
     </el-row>
-    <el-table :data="tableData" :row-key="(row) => row.id" border v-loading="loading"
+    <el-table v-loading="loading" :data="tableData" :row-key="(row) => row.id" border
               style="width: 98%; margin:0 auto" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"/>
       <el-table-column label="学号(工号)" width="200">
@@ -152,7 +152,8 @@ getUserList(pageNum.value)
       </el-table-column>
     </el-table>
     <div style="display: flex; justify-content: center">
-      <ElPagination :default-page-size="10" :total="totalNum" background hide-on-single-page layout="total, prev, pager, next"
+      <ElPagination :default-page-size="10" :total="totalNum" background hide-on-single-page
+                    layout="total, prev, pager, next"
                     style="margin: 20px auto" @current-change="(currentPage) => pageChange(currentPage)"/>
     </div>
   </div>

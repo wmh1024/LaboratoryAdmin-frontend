@@ -7,7 +7,7 @@ const router = createRouter({
         {
             path: '/',
             component: () => import('@/views/Layout.vue'),
-            redirect: '/data/user',
+            redirect: '/datashow',
             children: [
                 {
                     path: '/data/user',
@@ -82,12 +82,6 @@ const router = createRouter({
                         title: '数据留存'
                     }
                 }, {
-                    path: '/image',
-                    component: () => import('@/views/Image.vue'),
-                    meta: {
-                        title: '首页轮播图'
-                    }
-                }, {
                     path: '/datashow',
                     component: () => import('@/views/DataShow.vue'),
                     meta: {
@@ -107,7 +101,7 @@ const router = createRouter({
             path: '/:catchAll(.*)',
             component: () => import('@/views/NotFind.vue'),
             meta: {
-                title: '页面未找到',
+                title: '页面未找到'
             }
         }
     ]
