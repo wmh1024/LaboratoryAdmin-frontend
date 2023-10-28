@@ -1,16 +1,15 @@
 <script setup>
 
 import { Delete, Edit } from '@element-plus/icons-vue'
-import {
-  addUserService,
-  deleteUserByIdsService,
-  editUserService,
-  getUserByIdService,
-  getUserListService
-} from '@/api/data'
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { getLabCategoryByIdService, getLabCategoryListService } from '@/api/lab'
+import {
+  addLabCategoryService,
+  deleteLabCategoryByIdsService,
+  editLabCategoryService,
+  getLabCategoryByIdService,
+  getLabCategoryListService
+} from '@/api/lab'
 
 const addDrawer = ref(false)
 const editDrawer = ref(false)
@@ -55,30 +54,25 @@ const onDelete = async (ids) => {
   // todo Mock测试数据
   console.log('old-ids', ids)
   ids = [1, 2, 3]
-  await deleteUserByIdsService(ids)
+  await deleteLabCategoryByIdsService(ids)
   ElMessage.success('删除成功')
   await getLabCategoryList()
 }
 
-const addUser = async () => {
-  console.log(formModel.value)
-  await addUserService(formModel.value)
+const addLabCategory = async () => {
+  await addLabCategoryService(formModel.value)
   ElMessage.success('添加成功')
   addDrawer.value = false
   await getLabCategoryList()
 }
 
-const editUser = async () => {
-  await editUserService()
+const editLabCategory = async () => {
+  await editLabCategoryService(formModel.value)
   ElMessage.success('修改成功')
   editDrawer.value = false
   await getLabCategoryList()
 }
 
-const pageChange = async (page) => {
-  pageNum.value = page
-  await getLabCategoryList()
-}
 
 getLabCategoryList()
 
@@ -113,7 +107,6 @@ getLabCategoryList()
         <template #default="scope">
           <div style="display: flex; align-items: center">
             <span>{{ positionList[scope.row.category_status]["name"] }}</span>
-<!--            <span>{{ scope.row.category_status }}</span>-->
           </div>
         </template>
       </el-table-column>
@@ -130,63 +123,39 @@ getLabCategoryList()
                     style="margin: 20px auto" @current-change="(currentPage) => pageChange(currentPage)"/>
     </div>
   </div>
-  <el-drawer v-model="addDrawer" direction="rtl" size="35%" title="添加用户">
+  <el-drawer v-model="addDrawer" direction="rtl" size="35%" title="添加分类">
     <el-form ref="formRef" label-width="100px">
-      <el-form-item label="学号(工号)">
-        <el-input v-model="formModel.username" placeholder="请输入学号(工号)"></el-input>
+      <el-form-item label="分类名称">
+        <el-input v-model="formModel.category_name" placeholder="请输入分类名称"></el-input>
       </el-form-item>
-      <el-form-item label="姓名">
-        <el-input v-model="formModel.name" placeholder="请输入姓名"></el-input>
-      </el-form-item>
-      <el-form-item label="职位">
-        <el-select v-model="formModel.status" style="width: 100%;">
+      <el-form-item label="权限">
+        <el-select v-model="formModel.category_status" style="width: 100%;">
           <el-option
               v-for="channel in positionList" :key="channel.id"
               :label="channel.name" :value="channel.id"
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="专业班级">
-        <el-input v-model="formModel.class" placeholder="请输入专业班级"></el-input>
-      </el-form-item>
-      <el-form-item label="密码">
-        <el-input v-model="formModel.password" placeholder="请输入密码" type="password"></el-input>
-      </el-form-item>
-      <el-form-item label="确认密码">
-        <el-input v-model="formModel.repassword" placeholder="请输入确认密码" type="password"></el-input>
-      </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="addUser">添加</el-button>
+        <el-button type="primary" @click="addLabCategory">添加</el-button>
       </el-form-item>
     </el-form>
   </el-drawer>
-  <el-drawer v-model="editDrawer" direction="rtl" size="35%" title="编辑用户">
+  <el-drawer v-model="editDrawer" direction="rtl" size="35%" title="编辑分类">
     <el-form ref="formRef" label-width="100px">
-      <el-form-item label="学号(工号)">
-        <el-input v-model="formModel.username" placeholder="请输入学号(工号)"></el-input>
+      <el-form-item label="分类名称">
+        <el-input v-model="formModel.category_name" placeholder="请输入分类名称"></el-input>
       </el-form-item>
-      <el-form-item label="姓名">
-        <el-input v-model="formModel.name" placeholder="请输入姓名"></el-input>
-      </el-form-item>
-      <el-form-item label="职位">
-        <el-select v-model="formModel.position_status" style="width: 100%;">
+      <el-form-item label="权限">
+        <el-select v-model="formModel.category_status" style="width: 100%;">
           <el-option
               v-for="channel in positionList" :key="channel.id"
               :label="channel.name" :value="channel.id"
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="专业班级">
-        <el-input v-model="formModel.class" placeholder="请输入专业班级"></el-input>
-      </el-form-item>
-      <el-form-item label="密码">
-        <el-input v-model="formModel.password" placeholder="请输入密码" type="password"></el-input>
-      </el-form-item>
-      <el-form-item label="确认密码">
-        <el-input v-model="formModel.repassword" placeholder="请输入确认密码" type="password"></el-input>
-      </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="editUser">修改</el-button>
+        <el-button type="primary" @click="editLabCategory">修改</el-button>
       </el-form-item>
     </el-form>
   </el-drawer>
