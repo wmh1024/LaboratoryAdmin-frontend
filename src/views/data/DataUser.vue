@@ -120,23 +120,23 @@ getUserList(pageNum.value)
       <el-table-column label="职位" width="150">
         <template #default="scope">
           <div style="display: flex; align-items: center">
-            <span>{{ scope.row.position_status === 0 ? '学生' : '教职工' }}</span>
+            <span>{{ scope.row.positionStatus === 0 ? '学生' : '教职工' }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="专业班级" width="">
         <template #default="scope">
           <div style="display: flex; align-items: center">
-            <span>{{ scope.row.class }}</span>
+            <span>{{ scope.row.className }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="违规次数" width="140">
         <template #default="scope">
           <div style="display: flex; align-items: center">
-            <span>{{ scope.row.violation_count }}</span>
+            <span>{{ scope.row.violationCount }}</span>
             <el-tag
-                v-if="scope.row.violation_status === 1"
+                v-if="scope.row.violationStatus === 1"
                 effect="dark" label='Tag 4'
                 style="margin-left: 15px;" type='danger'>
               现有违规
@@ -166,7 +166,7 @@ getUserList(pageNum.value)
         <el-input v-model="formModel.name" placeholder="请输入姓名"></el-input>
       </el-form-item>
       <el-form-item label="职位">
-        <el-select v-model="formModel.status" style="width: 100%;">
+        <el-select v-model="formModel.positionStatus" style="width: 100%;">
           <el-option
               v-for="channel in positionList" :key="channel.id"
               :label="channel.name" :value="channel.id"
@@ -174,7 +174,7 @@ getUserList(pageNum.value)
         </el-select>
       </el-form-item>
       <el-form-item label="专业班级">
-        <el-input v-model="formModel.class" placeholder="请输入专业班级"></el-input>
+        <el-input v-model="formModel.className" placeholder="请输入专业班级"></el-input>
       </el-form-item>
       <el-form-item label="密码">
         <el-input v-model="formModel.password" placeholder="请输入密码" type="password"></el-input>
@@ -196,7 +196,7 @@ getUserList(pageNum.value)
         <el-input v-model="formModel.name" placeholder="请输入姓名"></el-input>
       </el-form-item>
       <el-form-item label="职位">
-        <el-select v-model="formModel.position_status" style="width: 100%;">
+        <el-select v-model="formModel.positionStatus" style="width: 100%;">
           <el-option
               v-for="channel in positionList" :key="channel.id"
               :label="channel.name" :value="channel.id"
@@ -204,7 +204,7 @@ getUserList(pageNum.value)
         </el-select>
       </el-form-item>
       <el-form-item label="专业班级">
-        <el-input v-model="formModel.class" placeholder="请输入专业班级"></el-input>
+        <el-input v-model="formModel.className" placeholder="请输入专业班级"></el-input>
       </el-form-item>
       <el-form-item label="密码">
         <el-input v-model="formModel.password" placeholder="请输入密码" type="password"></el-input>
