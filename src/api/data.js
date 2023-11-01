@@ -1,42 +1,46 @@
 import axios from 'axios'
+import request from '@/utils/request'
+import { List2String } from '@/utils/format'
 
 /* 用户 User */
 export const getUserListService = (page) => {
-    console.log(page)
-    return axios.get(`https://mock.apifox.cn/m1/3472636-0-default/data/user?page=${page}`)
+    return request.get(`/user/list?page=${page}&pageSize=10`)
 }
 
 export const getUserByIdService = (id) => {
-    return axios.get('https://mock.apifox.cn/m1/3472636-0-default/data/user/1?test=1')
+    return axios.get(`/user/find/${id}`)
 }
 
 export const deleteUserByIdsService = (ids) => {
-    return axios.delete('https://mock.apifox.cn/m1/3472636-0-default/data/user', ids)
+    return axios.delete('/user/delete', {
+        ids: List2String(ids)
+    })
 }
 export const editUserService = (user) => {
-    console.log('user', user)
-    return axios.put('https://mock.apifox.cn/m1/3472636-0-default/data/user?q=1', user)
+    return axios.put('/user/update', user)
 }
 export const addUserService = (user) => {
-    console.log('user', user)
-    return axios.post('https://mock.apifox.cn/m1/3472636-0-default/data/user?q=1', user)
+    return axios.post('/user/add', user)
 }
 
 /* 管理员 Admin */
 export const getAdminListService = (page) => {
-    return axios.get(`https://mock.apifox.cn/m1/3472636-0-default/data/admin?page=${page}`)
+    return axios.get(`/admin/list?page=${page}&pageSize=10`)
 }
 
 export const getAdminByIdService = (id) => {
-    return axios.get('https://mock.apifox.cn/m1/3472636-0-default/data/admin1?test=1')
+    return axios.get(`/admin/find/${id}`)
 }
 
 export const deleteAdminByIdsService = (ids) => {
-    return axios.delete('https://mock.apifox.cn/m1/3472636-0-default/data/admin', ids)
+    return axios.delete('/admin/delete', {
+        ids: List2String(ids)
+    })
 }
 export const editAdminService = (admin) => {
-    return axios.put('https://mock.apifox.cn/m1/3472636-0-default/data/admin?q=1', admin)
+    return axios.put('/user/update', admin)
 }
 export const addAdminService = (admin) => {
-    return axios.post('https://mock.apifox.cn/m1/3472636-0-default/data/admin?q=1', admin)
+    return axios.post('/admin/add', admin)
 }
+

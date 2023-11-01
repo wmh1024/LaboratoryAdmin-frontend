@@ -1,7 +1,6 @@
 import axios from 'axios'
 
 export const userLoginService = (user) => {
-    // todo
-    user = [1, 2, 3]
-    return axios.get('https://mock.apifox.cn/m2/3472636-0-default/119384422', user)
+    console.log('user', user)
+    return axios.post('http://192.168.126.131:8081/admin/login', user)
 }
