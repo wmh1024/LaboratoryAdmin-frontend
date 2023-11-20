@@ -1,24 +1,44 @@
 <script setup>
 
-const tableData = [
-  {
-    id: 1,
-    laboratory_id: 1,
-    laboratory_name: '软二实训室',
-    start_time: '2023.10.23 18:00',
-    end_time: '2023.10.23 21:00',
-    teacher_id: 1,
-    teacher: '邵高祥',
-    admin_id: 2,
-    admin: '王秋阳',
-    use: '学习Python',
-    status: 1,
-    user_id: 1,
-    user: '包俊辉',
-    teacher_fail_reason: 'xxx',
-    admin_fail_reason: 'xxxx'
-  }
-]
+import { getLabRecordListService } from '@/api/lab/LabLog'
+import { ref } from 'vue'
+import { getLabCategoryListService } from '@/api/lab/labCategory'
+
+// const tableData = [
+//   {
+//     id: 1,
+//     laboratory_id: 1,
+//     laboratory_name: '软二实训室',
+//     start_time: '2023.10.23 18:00',
+//     end_time: '2023.10.23 21:00',
+//     teacher_id: 1,
+//     teacher: '邵高祥',
+//     admin_id: 2,
+//     admin: '王秋阳',
+//     use: '学习Python',
+//     status: 1,
+//     user_id: 1,
+//     user: '包俊辉',
+//     teacher_fail_reason: 'xxx',
+//     admin_fail_reason: 'xxxx'
+//   }
+// ]
+
+const loading = ref(false)
+const tableData = ref([])
+const pageNum = ref(1)
+const totalNum = ref(0)
+
+const getLabCategoryList = async () => {
+  loading.value = true
+  const req = await getLabRecordListService(pageNum.value)
+  tableData.value = req.data.data.items
+  totalNum.value = pageNum.data.data.counts
+  loading.value = false
+}
+
+
+getLabCategoryList()
 </script>
 
 <template>
