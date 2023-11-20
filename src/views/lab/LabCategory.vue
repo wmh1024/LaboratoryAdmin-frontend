@@ -9,7 +9,7 @@ import {
   editLabCategoryService,
   getLabCategoryByIdService,
   getLabCategoryListService
-} from '@/api/lab'
+} from '@/api/lab/labCategory'
 
 const addDrawer = ref(false)
 const editDrawer = ref(false)

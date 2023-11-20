@@ -3,7 +3,7 @@
 import { Delete, Edit } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import { addAdminService, deleteAdminByIdsService, editAdminService, getAdminByIdService } from '@/api/data'
-import { getLabListService } from '@/api/lab'
+import { getLabListService } from '@/api/lab/labCategory'
 
 const addDrawer = ref(false)
 const editDrawer = ref(false)
@@ -104,42 +104,42 @@ getLabList(pageNum.value)
       <el-table-column label="实验室名称" width="">
         <template #default="scope">
           <div style="display: flex; align-items: center">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.laboratoryName }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="实验室地点" width="">
         <template #default="scope">
           <div style="display: flex; align-items: center">
-            <span>{{ scope.row.location }}</span>
+            <span>{{ scope.row.laboratoryLocation }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="实验室类型" width="">
         <template #default="scope">
           <div style="display: flex; align-items: center">
-            <span>{{ scope.row.type }}</span>
+            <span>{{ scope.row.laboratoryType }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="实验室分类" width="">
         <template #default="scope">
           <div style="display: flex; align-items: center">
-            <span>{{ scope.row.category_name }}</span>
+            <span>{{ scope.row.laboratoryCategory }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="审批人" width="">
         <template #default="scope">
           <div style="display: flex; align-items: center">
-            <span>{{ scope.row.admin }}</span>
+            <span>{{ scope.row.laboratoryDirectorId }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="负责人" width="">
         <template #default="scope">
           <div style="display: flex; align-items: center">
-            <span>{{ scope.row.head }}</span>
+            <span>{{ scope.row.laboratoryHeadId }}</span>
           </div>
         </template>
       </el-table-column>
@@ -147,7 +147,7 @@ getLabList(pageNum.value)
       <el-table-column label="使用次数" width="100">
         <template #default="scope">
           <div style="display: flex; align-items: center">
-            <span>{{ scope.row.count }}</span>
+            <span>{{ scope.row.laboratoryCount }}</span>
           </div>
         </template>
       </el-table-column>

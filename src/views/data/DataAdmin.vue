@@ -176,7 +176,7 @@ getAdminList()
         <el-input v-model="formModel.name" placeholder="请输入姓名"></el-input>
       </el-form-item>
       <el-form-item label="权限">
-        <el-select v-model="formModel.position_status" style="width: 100%;">
+        <el-select v-model="formModel.status" style="width: 100%;">
           <el-option
               v-for="channel in positionList" :key="channel.id"
               :label="channel.name" :value="channel.id"
