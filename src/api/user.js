@@ -1,6 +1,6 @@
-import axios from 'axios'
+import request from '@/utils/request'
 
 export const userLoginService = (user) => {
     console.log('user', user)
-    return axios.post('http://127.0.0.1:8081/admin/login', user)
+    return request.post('/admin/login', user)
 }
