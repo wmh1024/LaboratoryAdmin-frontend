@@ -1,42 +1,28 @@
 <script setup>
 
-import { getLabRecordListService } from '@/api/lab/LabLog'
+import { getLabRecordByIdService, getLabRecordListService } from '@/api/lab/LabLog'
 import { ref } from 'vue'
-import { getLabCategoryListService } from '@/api/lab/labCategory'
 
-// const tableData = [
-//   {
-//     id: 1,
-//     laboratory_id: 1,
-//     laboratory_name: '软二实训室',
-//     start_time: '2023.10.23 18:00',
-//     end_time: '2023.10.23 21:00',
-//     teacher_id: 1,
-//     teacher: '邵高祥',
-//     admin_id: 2,
-//     admin: '王秋阳',
-//     use: '学习Python',
-//     status: 1,
-//     user_id: 1,
-//     user: '包俊辉',
-//     teacher_fail_reason: 'xxx',
-//     admin_fail_reason: 'xxxx'
-//   }
-// ]
 
 const loading = ref(false)
 const tableData = ref([])
+const detailsData = ref({})
 const pageNum = ref(1)
-const totalNum = ref(0)
+const detailsDrawer = ref(false)
 
 const getLabCategoryList = async () => {
   loading.value = true
   const req = await getLabRecordListService(pageNum.value)
-  tableData.value = req.data.data.items
-  totalNum.value = pageNum.data.data.counts
+  tableData.value = req.data.data
+  // totalNum.value = req.data.data.counts
   loading.value = false
 }
 
+const onDetails = async (id) => {
+  const req = await getLabRecordByIdService(id)
+  detailsData.value = req.data.data
+  detailsDrawer.value = true
+}
 
 getLabCategoryList()
 </script>
@@ -49,52 +35,59 @@ getLabCategoryList()
     <el-table-column label="实验室名称" width="">
       <template #default="scope">
         <div style="display: flex; align-items: center">
-          <span>{{ scope.row.laboratory_name }}</span>
+          <span>{{ scope.row.laboratoryName }}</span>
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column label="预约班级" width="">
+      <template #default="scope">
+        <div style="display: flex; align-items: center">
+          <span>{{ scope.row.className }}</span>
         </div>
       </template>
     </el-table-column>
     <el-table-column label="预约用户" width="">
       <template #default="scope">
         <div style="display: flex; align-items: center">
-          <span>{{ scope.row.user }}</span>
+          <span>{{ scope.row.userName }}</span>
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="开始时间" width="">
+    <el-table-column label="使用时间" width="">
       <template #default="scope">
         <div style="display: flex; align-items: center">
-          <span>{{ scope.row.start_time }}</span>
+          <span>{{ scope.row.useTime }}</span>
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="结束时间" width="">
-      <template #default="scope">
-        <div style="display: flex; align-items: center">
-          <span>{{ scope.row.end_time }}</span>
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column label="指导老师" width="">
-      <template #default="scope">
-        <div style="display: flex; align-items: center">
-          <span>{{ scope.row.teacher }}</span>
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column label="审核人" width="">
-      <template #default="scope">
-        <div style="display: flex; align-items: center">
-          <span>{{ scope.row.admin }}</span>
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column label="预约用途" width="">
-      <template #default="scope">
-        <div style="display: flex; align-items: center">
-          <span>{{ scope.row.use }}</span>
-        </div>
-      </template>
-    </el-table-column>
+    <!--    <el-table-column label="结束时间" width="">-->
+    <!--      <template #default="scope">-->
+    <!--        <div style="display: flex; align-items: center">-->
+    <!--          <span>{{ scope.row.end_time }}</span>-->
+    <!--        </div>-->
+    <!--      </template>-->
+    <!--    </el-table-column>-->
+    <!--    <el-table-column label="指导老师" width="">-->
+    <!--      <template #default="scope">-->
+    <!--        <div style="display: flex; align-items: center">-->
+    <!--          <span>{{ scope.row.teacher }}</span>-->
+    <!--        </div>-->
+    <!--      </template>-->
+    <!--    </el-table-column>-->
+    <!--    <el-table-column label="审核人" width="">-->
+    <!--      <template #default="scope">-->
+    <!--        <div style="display: flex; align-items: center">-->
+    <!--          <span>{{ scope.row.admin }}</span>-->
+    <!--        </div>-->
+    <!--      </template>-->
+    <!--    </el-table-column>-->
+    <!--    <el-table-column label="预约用途" width="">-->
+    <!--      <template #default="scope">-->
+    <!--        <div style="display: flex; align-items: center">-->
+    <!--          <span>{{ scope.row.use }}</span>-->
+    <!--        </div>-->
+    <!--      </template>-->
+    <!--    </el-table-column>-->
     <el-table-column label="预约状态" width="">
       <template #default="scope">
         <div style="display: flex; align-items: center">
@@ -117,23 +110,47 @@ getLabCategoryList()
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="指导老师不通过原因" width="">
+    <el-table-column label="操作" width="130">
       <template #default="scope">
-        <div style="display: flex; align-items: center">
-          <span>{{ scope.row.teacher_fail_reason }}</span>
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column label="审批人不通过原因" width="">
-      <template #default="scope">
-        <div style="display: flex; align-items: center">
-          <span>{{ scope.row.admin_fail_reason }}</span>
-        </div>
+        <!--        <el-button :icon="Edit" circle type="primary" @click="() => onEdit(scope.row.id)"/>-->
+        <el-button type="primary" @click="() => onDetails(scope.row.id)">查看详情</el-button>
       </template>
     </el-table-column>
   </el-table>
+  <el-drawer v-model="detailsDrawer" direction="rtl" size="25%" title="">
+    <el-descriptions
+        :column="1"
+        title="内容详情"
+        :border="true"
+    >
+      <el-descriptions-item label="ID">{{ detailsData.id || "-" }}</el-descriptions-item>
+      <el-descriptions-item label="实验室名称">{{ detailsData.laboratoryName || "-" }}</el-descriptions-item>
+      <el-descriptions-item label="开始时间">{{ detailsData.startCourseNumber || "-" }}</el-descriptions-item>
+      <el-descriptions-item label="结束时间">{{ detailsData.endCourseNumber || "-" }}</el-descriptions-item>
+      <el-descriptions-item label="使用时间">{{ detailsData.useTime || "-" }}</el-descriptions-item>
+      <el-descriptions-item label="指导教师ID">{{ detailsData.teacherId || "-" }}</el-descriptions-item>
+      <el-descriptions-item label="审核院长ID">{{ detailsData.presidentId || "-" }}</el-descriptions-item>
+      <el-descriptions-item label="审核主任ID">{{ detailsData.directorId || "-" }}</el-descriptions-item>
+      <el-descriptions-item label="用途">{{ detailsData.useTo || "-" }}</el-descriptions-item>
+      <el-descriptions-item label="状态">{{ detailsData.status || "-" }}</el-descriptions-item>
+      <el-descriptions-item label="指导教师拒绝原因">{{ detailsData.teacherFailReason || "-" }}</el-descriptions-item>
+      <el-descriptions-item label="主任拒绝原因">{{ detailsData.directorFailReason || "-" }}</el-descriptions-item>
+      <el-descriptions-item label="院长拒绝原因">{{ detailsData.presidentFailReason || "-" }}</el-descriptions-item>
+    </el-descriptions>
+  </el-drawer>
 </template>
 
 <style scoped>
+.el-descriptions {
+  margin-top: 20px;
+}
 
+.cell-item {
+  display: flex;
+  align-items: center;
+}
+
+.margin-top {
+  margin-top: 20px;
+}
 </style>
