@@ -99,14 +99,14 @@ getLabCategoryList()
       <el-table-column label="分类名称" width="">
         <template #default="scope">
           <div style="display: flex; align-items: center">
-            <span>{{ scope.row.category_name }}</span>
+            <span>{{ scope.row.categoryName }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="类别权限" width="">
         <template #default="scope">
           <div style="display: flex; align-items: center">
-            <span>{{ positionList[scope.row.category_status]["name"] }}</span>
+            <span>{{ positionList[scope.row.categoryStatus]["name"] }}</span>
           </div>
         </template>
       </el-table-column>
@@ -126,10 +126,10 @@ getLabCategoryList()
   <el-drawer v-model="addDrawer" direction="rtl" size="35%" title="添加分类">
     <el-form ref="formRef" label-width="100px">
       <el-form-item label="分类名称">
-        <el-input v-model="formModel.category_name" placeholder="请输入分类名称"></el-input>
+        <el-input v-model="formModel.categoryName" placeholder="请输入分类名称"></el-input>
       </el-form-item>
       <el-form-item label="权限">
-        <el-select v-model="formModel.category_status" style="width: 100%;">
+        <el-select v-model="formModel.categoryStatus" style="width: 100%;">
           <el-option
               v-for="channel in positionList" :key="channel.id"
               :label="channel.name" :value="channel.id"
@@ -144,10 +144,10 @@ getLabCategoryList()
   <el-drawer v-model="editDrawer" direction="rtl" size="35%" title="编辑分类">
     <el-form ref="formRef" label-width="100px">
       <el-form-item label="分类名称">
-        <el-input v-model="formModel.category_name" placeholder="请输入分类名称"></el-input>
+        <el-input v-model="formModel.categoryName" placeholder="请输入分类名称"></el-input>
       </el-form-item>
       <el-form-item label="权限">
-        <el-select v-model="formModel.category_status" style="width: 100%;">
+        <el-select v-model="formModel.categoryStatus" style="width: 100%;">
           <el-option
               v-for="channel in positionList" :key="channel.id"
               :label="channel.name" :value="channel.id"

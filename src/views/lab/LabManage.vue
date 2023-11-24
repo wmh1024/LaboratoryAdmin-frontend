@@ -2,21 +2,29 @@
 
 import { Delete, Edit } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import { addAdminService, deleteAdminByIdsService, editAdminService, getAdminByIdService } from '@/api/data'
-import { getLabListService } from '@/api/lab/labCategory'
+import {
+  addLabService,
+  deleteLabByIdsService,
+  editLabService,
+  getLabByIdService,
+  getLabListService
+} from '@/api/lab/LabManage'
+import { getLabCategoryListService } from '@/api/lab/labCategory'
 
 const addDrawer = ref(false)
 const editDrawer = ref(false)
 const tableData = ref([])
 const multipleSelection = ref([])
 const formModel = ref({})
-const positionList = [
-  { id: 0, name: "院长" }, { id: 1, name: "主任" },
-  { id: 2, name: "指导老师" }, { id: 3, name: "负责人" }
-]
+const categoryList = ref([])
 const pageNum = ref(1)
 const totalNum = ref(0)
 const loading = ref(false)
+
+const getLabCategoryList = async () => {
+  const labCategoryResult = await getLabCategoryListService()
+  categoryList.value = labCategoryResult.data.data.items
+}
 
 const handleSelectionChange = (val) => {
   multipleSelection.value = val.map(item => item.id);
@@ -28,10 +36,11 @@ const getLabList = async () => {
   tableData.value = labResult.data.data.items
   totalNum.value = labResult.data.data.counts
   loading.value = false
+  getLabCategoryList()
 }
 
-const getAdminById = async (id) => {
-  const result = await getAdminByIdService(id)
+const getLabById = async (id) => {
+  const result = await getLabByIdService(id)
   return result.data.data
 }
 
@@ -41,7 +50,7 @@ const onAdd = () => {
 }
 
 const onEdit = async (index) => {
-  formModel.value = await getAdminById(index)
+  formModel.value = await getLabById(index)
   editDrawer.value = true
 }
 
@@ -51,33 +60,29 @@ const onDelete = async (ids) => {
     confirmButtonText: '确认',
     cancelButtonText: '取消'
   })
-  // todo Mock测试数据
-  console.log('old-ids', ids)
-  ids = [1, 2, 3]
-
-  await deleteAdminByIdsService(ids)
+  await deleteLabByIdsService(ids)
   ElMessage.success('删除成功')
-  await getAdminList(pageNum.value)
+  await getLabList(pageNum.value)
 }
 
-const addAdmin = async () => {
+const addLab = async () => {
   console.log(formModel.value)
-  await addAdminService(formModel.value)
+  await addLabService(formModel.value)
   ElMessage.success('添加成功')
   addDrawer.value = false
-  await getAdminList(pageNum.value)
+  await getLabList(pageNum.value)
 }
 
 const editAdmin = async () => {
-  await editAdminService(formModel.value)
+  await editLabService(formModel.value)
   ElMessage.success('修改成功')
   editDrawer.value = false
-  await getAdminList(pageNum.value)
+  await getLabList(pageNum.value)
 }
 
 const pageChange = async (page) => {
   pageNum.value = page
-  await getAdminList(pageNum.value)
+  await getLabList(pageNum.value)
 }
 
 getLabList(pageNum.value)
@@ -166,52 +171,58 @@ getLabList(pageNum.value)
   </div>
   <el-drawer v-model="addDrawer" direction="rtl" size="35%" title="添加实验室">
     <el-form ref="formRef" label-width="100px">
-      <el-form-item label="账号">
-        <el-input v-model="formModel.username" placeholder="请输入账号"></el-input>
+      <el-form-item label="名称">
+        <el-input v-model="formModel.laboratoryName" placeholder="请输入实验室名称"></el-input>
       </el-form-item>
-      <el-form-item label="姓名">
-        <el-input v-model="formModel.name" placeholder="请输入姓名"></el-input>
+      <el-form-item label="位置">
+        <el-input v-model="formModel.laboratoryLocation" placeholder="请输入实验室位置"></el-input>
       </el-form-item>
-      <el-form-item label="权限">
-        <el-select v-model="formModel.status" style="width: 100%;">
+      <el-form-item label="类型">
+        <el-input v-model="formModel.laboratoryType" placeholder="请输入实验室类型"></el-input>
+      </el-form-item>
+      <el-form-item label="分类">
+        <el-select v-model="formModel.laboratoryCategory" style="width: 100%;">
           <el-option
-              v-for="channel in positionList" :key="channel.id"
+              v-for="channel in categoryList" :key="channel.id"
               :label="channel.name" :value="channel.id"
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="密码">
-        <el-input v-model="formModel.password" placeholder="请输入密码" type="password"></el-input>
+      <el-form-item label="审核人">
+        <el-input v-model="formModel.laboratoryAdminId" placeholder="请输入审核人id"></el-input>
       </el-form-item>
-      <el-form-item label="确认密码">
-        <el-input v-model="formModel.repassword" placeholder="请输入确认密码" type="password"></el-input>
+      <el-form-item label="负责人">
+        <el-input v-model="formModel.laboratoryHeadId" placeholder="请输入负责人id"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="addAdmin">添加</el-button>
+        <el-button type="primary" @click="addLab">添加</el-button>
       </el-form-item>
     </el-form>
   </el-drawer>
   <el-drawer v-model="editDrawer" direction="rtl" size="35%" title="编辑实验室">
     <el-form ref="formRef" label-width="100px">
-      <el-form-item label="账号">
-        <el-input v-model="formModel.username" placeholder="请输入账号"></el-input>
+      <el-form-item label="名称">
+        <el-input v-model="formModel.laboratoryName" placeholder="请输入实验室名称"></el-input>
       </el-form-item>
-      <el-form-item label="姓名">
-        <el-input v-model="formModel.name" placeholder="请输入姓名"></el-input>
+      <el-form-item label="位置">
+        <el-input v-model="formModel.laboratoryLocation" placeholder="请输入实验室位置"></el-input>
       </el-form-item>
-      <el-form-item label="权限">
-        <el-select v-model="formModel.position_status" style="width: 100%;">
+      <el-form-item label="类型">
+        <el-input v-model="formModel.laboratoryType" placeholder="请输入实验室类型"></el-input>
+      </el-form-item>
+      <el-form-item label="分类">
+        <el-select v-model="formModel.laboratoryCategory" style="width: 100%;">
           <el-option
-              v-for="channel in positionList" :key="channel.id"
+              v-for="channel in categoryList" :key="channel.id"
               :label="channel.name" :value="channel.id"
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="密码">
-        <el-input v-model="formModel.password" placeholder="请输入密码" type="password"></el-input>
+      <el-form-item label="审核人">
+        <el-input v-model="formModel.laboratoryAdminId" placeholder="请输入审核人id"></el-input>
       </el-form-item>
-      <el-form-item label="确认密码">
-        <el-input v-model="formModel.repassword" placeholder="请输入确认密码" type="password"></el-input>
+      <el-form-item label="负责人">
+        <el-input v-model="formModel.laboratoryHeadId" placeholder="请输入负责人id"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="editAdmin">修改</el-button>

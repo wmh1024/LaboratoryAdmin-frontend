@@ -6,9 +6,11 @@ export const getLabListService = (page) => {
     return request.get(`/laboratory/list?page=${page}&pageSize=10`)
 }
 
+// ❌
 export const getLabByIdService = (id) => {
-    return request.get(`/laboratory/find/${id}`)
+    return request.get(`/laboratory/findl/${id}`)
 }
+
 
 export const deleteLabByIdsService = (ids) => {
     return request.delete('/laboratory/delete', ids)
