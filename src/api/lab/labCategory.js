@@ -2,7 +2,7 @@
 import request from '@/utils/request'
 
 export const getLabCategoryListService = () => {
-    return request.get('/lab/category/list')
+    return request.get('/lab/category/list?page=1&pageSize=50')
 }
 export const getLabCategoryByIdService = (id) => {
     return request.get(`/lab/category/find/${id}`)
