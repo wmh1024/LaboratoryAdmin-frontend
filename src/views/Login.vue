@@ -15,7 +15,6 @@ const formModel = ref({
   password: ''
 })
 const login = async () => {
-  // await form.value.validate()
   const res = await userLoginService(formModel.value)
   console.log(res)
   userStore.setToken(res.data.data.token)

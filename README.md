@@ -1,29 +1,64 @@
-# labAdmin
 
-This template should help get you started developing with Vue 3 in Vite.
 
-## Recommended IDE Setup
+# 实验室预约系统 - 前端（管理端）
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+项目组项目：实验室预约系统 - 管理端
 
-## Customize configuration
+<!-- PROJECT SHIELDS -->
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
 
-## Project Setup
+<!-- PROJECT LOGO -->
+<br />
+
+<p align="center">
+  <a href="https://github.com/wmh1024/LaboratoryAdmin-frontend">
+    <img src="images/logo.png" alt="Logo" width="80" height="78">
+  </a>
+
+  <h3 align="center">实验室预约系统 - 管理端</h3>
+  <p align="center">
+    一个基于 Vue3 + ElementUI plus 的管理系统！
+    <br />
+
+</p>
+
+## 上手指南
 
 ```sh
-npm install
+git clone https://github.com/wmh1024/LaboratoryAdmin-frontend.git
 ```
 
-### Compile and Hot-Reload for Development
+## 使用到的框架
 
-```sh
-npm run dev
-```
+- Vue3
+- Element UI Plus
 
-### Compile and Minify for Production
+## 如何参与开源项目
 
-```sh
-npm run build
-```
+贡献使开源社区成为一个学习、激励和创造的绝佳场所。你所作的任何贡献都是**非常感谢**的。
+
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 版本控制
+
+该项目使用Git进行版本管理。您可以在repository参看当前可用版本。
+
+## 作者
+
+[wmh](https://wmhwiki.cn)
+
+ *您也可以在贡献者名单中参看所有参与该项目的开发者。*
+
+## 版权说明
+
+该项目签署了MIT 授权许可，详情请参阅 [LICENSE.txt](https://github.com/shaojintian/Best_README_template/blob/master/LICENSE.txt)
