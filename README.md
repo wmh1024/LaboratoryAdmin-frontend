@@ -5,13 +5,13 @@
 项目组项目：实验室预约系统 - 管理端
 
 <!-- PROJECT SHIELDS -->
-
+<p align="center">
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![MIT License][license-shield]][license-url]
-
 <!-- PROJECT LOGO -->
+</p>
 <br />
 
 <p align="center">
@@ -60,7 +60,7 @@ git clone https://github.com/wmh1024/LaboratoryAdmin-frontend.git
 
 ## 版权说明
 
-该项目签署了MIT 授权许可，详情请参阅 [LICENSE.txt](https://github.com/wmh1024/LaboratoryAdmin-frontend/LICENSE.txt)
+该项目签署了MIT 授权许可，详情请参阅 [LICENSE.txt](https://github.com/wmh1024/LaboratoryAdmin-frontend/blob/main/LICENSE.txt)
 
 <!-- links -->
 [your-project-path]:wmh1024/LaboratoryAdmin-frontend
