@@ -12,7 +12,9 @@ export const getUserByIdService = (id) => {
 
 export const deleteUserByIdsService = (ids) => {
     return request.delete('/user/delete', {
-        ids: List2String(ids)
+        params: {
+            ids: List2String(ids)
+        }
     })
 }
 export const editUserService = (user) => {
@@ -33,9 +35,12 @@ export const getAdminByIdService = (id) => {
 
 export const deleteAdminByIdsService = (ids) => {
     return request.delete('/admin/delete', {
-        ids: List2String(ids)
+        params: {
+            ids: List2String(ids)
+        }
     })
 }
+
 export const editAdminService = (admin) => {
     return request.put('/user/update', admin)
 }

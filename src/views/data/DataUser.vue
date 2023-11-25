@@ -53,9 +53,6 @@ const onDelete = async (ids) => {
     confirmButtonText: '确认',
     cancelButtonText: '取消'
   })
-  // todo Mock测试数据
-  console.log('old-ids', ids)
-  ids = [1, 2, 3]
   await deleteUserByIdsService(ids)
   ElMessage.success('删除成功')
   await getUserList(pageNum.value)
