@@ -9,7 +9,6 @@
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
 <!-- PROJECT LOGO -->
@@ -61,4 +60,19 @@ git clone https://github.com/wmh1024/LaboratoryAdmin-frontend.git
 
 ## 版权说明
 
-该项目签署了MIT 授权许可，详情请参阅 [LICENSE.txt](https://github.com/shaojintian/Best_README_template/blob/master/LICENSE.txt)
+该项目签署了MIT 授权许可，详情请参阅 [LICENSE.txt](https://github.com/wmh1024/LaboratoryAdmin-frontend/LICENSE.txt)
+
+<!-- links -->
+[your-project-path]:wmh1024/LaboratoryAdmin-frontend
+[contributors-shield]: https://img.shields.io/github/contributors/wmh1024/LaboratoryAdmin-frontend.svg?style=flat-square
+[contributors-url]: https://github.com/wmh1024/LaboratoryAdmin-frontend/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/wmh1024/LaboratoryAdmin-frontend.svg?style=flat-square
+[forks-url]: https://github.com/wmh1024/LaboratoryAdmin-frontend/network/members
+[stars-shield]: https://img.shields.io/github/stars/wmh1024/LaboratoryAdmin-frontend.svg?style=flat-square
+[stars-url]: https://github.com/wmh1024/LaboratoryAdmin-frontend/stargazers
+[issues-shield]: https://img.shields.io/github/issues/wmh1024/LaboratoryAdmin-frontend.svg?style=flat-square
+[issues-url]: https://img.shields.io/github/issues/wmh1024/LaboratoryAdmin-frontend.svg
+[license-shield]: https://img.shields.io/github/license/wmh1024/LaboratoryAdmin-frontend.svg?style=flat-square
+[license-url]: https://github.com/wmh1024/LaboratoryAdmin-frontend/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/shaojintian
