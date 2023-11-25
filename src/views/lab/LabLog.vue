@@ -14,7 +14,6 @@ const getLabCategoryList = async () => {
   loading.value = true
   const req = await getLabRecordListService(pageNum.value)
   tableData.value = req.data.data
-  // totalNum.value = req.data.data.counts
   loading.value = false
 }
 
@@ -60,34 +59,6 @@ getLabCategoryList()
         </div>
       </template>
     </el-table-column>
-    <!--    <el-table-column label="结束时间" width="">-->
-    <!--      <template #default="scope">-->
-    <!--        <div style="display: flex; align-items: center">-->
-    <!--          <span>{{ scope.row.end_time }}</span>-->
-    <!--        </div>-->
-    <!--      </template>-->
-    <!--    </el-table-column>-->
-    <!--    <el-table-column label="指导老师" width="">-->
-    <!--      <template #default="scope">-->
-    <!--        <div style="display: flex; align-items: center">-->
-    <!--          <span>{{ scope.row.teacher }}</span>-->
-    <!--        </div>-->
-    <!--      </template>-->
-    <!--    </el-table-column>-->
-    <!--    <el-table-column label="审核人" width="">-->
-    <!--      <template #default="scope">-->
-    <!--        <div style="display: flex; align-items: center">-->
-    <!--          <span>{{ scope.row.admin }}</span>-->
-    <!--        </div>-->
-    <!--      </template>-->
-    <!--    </el-table-column>-->
-    <!--    <el-table-column label="预约用途" width="">-->
-    <!--      <template #default="scope">-->
-    <!--        <div style="display: flex; align-items: center">-->
-    <!--          <span>{{ scope.row.use }}</span>-->
-    <!--        </div>-->
-    <!--      </template>-->
-    <!--    </el-table-column>-->
     <el-table-column label="预约状态" width="">
       <template #default="scope">
         <div style="display: flex; align-items: center">
@@ -119,9 +90,9 @@ getLabCategoryList()
   </el-table>
   <el-drawer v-model="detailsDrawer" direction="rtl" size="25%" title="">
     <el-descriptions
+        :border="true"
         :column="1"
         title="内容详情"
-        :border="true"
     >
       <el-descriptions-item label="ID">{{ detailsData.id || "-" }}</el-descriptions-item>
       <el-descriptions-item label="实验室名称">{{ detailsData.laboratoryName || "-" }}</el-descriptions-item>
@@ -141,16 +112,4 @@ getLabCategoryList()
 </template>
 
 <style scoped>
-.el-descriptions {
-  margin-top: 20px;
-}
-
-.cell-item {
-  display: flex;
-  align-items: center;
-}
-
-.margin-top {
-  margin-top: 20px;
-}
 </style>
