@@ -5,13 +5,11 @@
 项目组项目：实验室预约系统 - 管理端
 
 <!-- PROJECT SHIELDS -->
-<p align="center">
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![MIT License][license-shield]][license-url]
 <!-- PROJECT LOGO -->
-</p>
 <br />
 
 <p align="center">
