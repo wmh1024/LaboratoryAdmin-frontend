@@ -26,8 +26,28 @@
 
 ## 上手指南
 
+克隆此项目
+
 ```sh
 git clone https://github.com/wmh1024/LaboratoryAdmin-frontend.git
+```
+
+安装依赖
+
+```sh
+yarn
+```
+
+开发运行
+
+```sh
+yarn run dev
+```
+
+生产打包
+
+```sh
+yarn run build
 ```
 
 ## 使用到的框架
