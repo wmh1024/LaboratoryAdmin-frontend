@@ -14,7 +14,7 @@
 
 <p align="center">
   <a href="https://github.com/wmh1024/LaboratoryAdmin-frontend">
-    <img src="images/logo.png" alt="Logo" width="80" height="78">
+    <img src="images/logo.png" alt="Logo" width="100" height="100">
   </a>
 
   <h3 align="center">实验室预约系统 - 管理端</h3>
