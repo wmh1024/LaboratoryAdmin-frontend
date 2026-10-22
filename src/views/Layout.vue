@@ -31,7 +31,7 @@ const handleLogout = async () => {
           router
           unique-opened
       >
-        <div class="mb-2 brand">
+        <div class="brand">
           实验室预约系统
         </div>
         <el-sub-menu index="1">
