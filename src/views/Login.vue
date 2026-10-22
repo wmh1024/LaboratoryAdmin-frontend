@@ -2,71 +2,99 @@
 import { Lock, User } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/modules/user'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { userLoginService } from '@/api/user'
 import { ElMessage } from 'element-plus'
+import { useMock } from '@/utils/request'
 
 const userStore = useUserStore()
 const router = useRouter()
-const form = ref()
+const formRef = ref()
+const loading = ref(false)
 
-const formModel = ref({
+const formModel = reactive({
   username: '',
   password: ''
 })
-const login = async () => {
-  const res = await userLoginService(formModel.value)
-  console.log(res)
-  userStore.setToken(res.data.data.token)
-  ElMessage.success('登录成功')
-  await router.push('/')
+
+const rules = {
+  username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+  password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
 }
 
+const login = async () => {
+  if (loading.value) return
+  const valid = await formRef.value?.validate().catch(() => false)
+  if (!valid) return
+  loading.value = true
+  try {
+    const res = await userLoginService({ ...formModel })
+    const token = res?.data?.data?.token
+    if (!token) {
+      ElMessage.error('登录失败：未获取到登录凭证')
+      return
+    }
+    userStore.setToken(token)
+    ElMessage.success('登录成功')
+    await router.push('/')
+  } catch {
+    // 错误提示已由请求拦截器统一处理
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <template>
   <el-row class="login-page">
-    <el-col :span="12" class="bg"></el-col>
+    <el-col :span="12" class="bg"/>
     <el-col :offset="3" :span="6" class="form">
       <el-form
-          ref="form"
+          ref="formRef"
+          :model="formModel"
+          :rules="rules"
           autocomplete="off"
           size="large"
+          @submit.prevent="login"
       >
         <el-form-item>
           <h1>管理员登录</h1>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="username">
           <el-input
-              v-model="formModel.username"
+              v-model.trim="formModel.username"
               :prefix-icon="User"
               placeholder="请输入用户名"
-          ></el-input>
+          />
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="password">
           <el-input
               v-model="formModel.password"
               :prefix-icon="Lock"
               name="password"
               placeholder="请输入密码"
+              show-password
               type="password"
-          ></el-input>
+              @keyup.enter="login"
+          />
         </el-form-item>
-        <el-form-item class="flex">
-          <div class="flex">
-            <!--            <el-checkbox>记住我</el-checkbox>-->
-            <!--            <el-link type="primary" :underline="false">忘记密码？</el-link>-->
-          </div>
+        <el-form-item v-if="useMock" class="tip">
+          <el-alert
+              :closable="false"
+              show-icon
+              title="当前为演示模式（Mock 数据）：任意用户名与密码即可登录"
+              type="info"
+          />
         </el-form-item>
         <el-form-item>
           <el-button
-              auto-insert-space
+              :loading="loading"
               class="button"
+              native-type="submit"
               type="primary"
-              @click="() => login()"
+              @click="login"
           >登录
-          </el-button
-          >
+          </el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -98,10 +126,8 @@ const login = async () => {
       width: 100%;
     }
 
-    .flex {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
+    .tip {
+      margin-bottom: 12px;
     }
   }
 }

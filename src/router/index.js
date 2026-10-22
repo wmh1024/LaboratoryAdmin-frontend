@@ -108,11 +108,13 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-    // 如果没有token, 且访问的是非登录页，拦截到登录，其他情况正常放行return '/login'
     if (to.meta.title) {
         document.title = to.meta.title + ' | 实验室预约系统'
     }
     const useStore = useUserStore()
+    // 已登录时访问登录页，直接回到首页
+    if (useStore.token && to.path === '/login') return '/'
+    // 如果没有token, 且访问的是非登录页，拦截到登录
     if (!useStore.token && to.path !== '/login') return '/login'
 })
 
