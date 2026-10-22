@@ -1,11 +1,7 @@
 <script setup>
-
+import PlaceholderPage from '@/components/PlaceholderPage.vue'
 </script>
 
 <template>
-  <h1>DevLog</h1>
+  <PlaceholderPage title="设备预约记录" description="设备预约记录查询模块尚未开发完成。" />
 </template>
-
-<style scoped>
-
-</style>
