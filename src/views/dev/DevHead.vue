@@ -1,11 +1,7 @@
 <script setup>
-
+import PlaceholderPage from '@/components/PlaceholderPage.vue'
 </script>
 
 <template>
-  <h1>DevHead</h1>
+  <PlaceholderPage title="负责人数据" description="设备负责人信息模块尚未开发完成。" />
 </template>
-
-<style scoped>
-
-</style>

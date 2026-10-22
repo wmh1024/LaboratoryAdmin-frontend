@@ -1,11 +1,7 @@
 <script setup>
-
+import PlaceholderPage from '@/components/PlaceholderPage.vue'
 </script>
 
 <template>
-  <h1>DataShow</h1>
+  <PlaceholderPage title="数据展示" description="数据可视化展示模块尚未开发完成。" />
 </template>
-
-<style scoped>
-
-</style>
