@@ -1,26 +1,11 @@
 /* 实验室类别 */
 import request from '@/utils/request'
-import { List2String } from '@/utils/format'
+import { createCrudServices, DICT_PAGE_SIZE } from '@/api/common'
 
-export const getLabCategoryListService = () => {
-    return request.get('/lab/category/list?page=1&pageSize=50')
-}
-export const getLabCategoryByIdService = (id) => {
-    return request.get(`/lab/category/find/${id}`)
-}
+const labCategory = createCrudServices(request, '/lab/category')
 
-export const deleteLabCategoryByIdsService = (ids) => {
-    return request.delete('/lab/category/delete', {
-        params: {
-            ids: List2String(ids)
-        }
-    })
-}
-
-export const editLabCategoryService = (labCategory) => {
-    return request.put('/lab/category/update', labCategory)
-}
-export const addLabCategoryService = (labCategory) => {
-    return request.post('/lab/category/add', labCategory)
-}
-
+export const getLabCategoryListService = () => labCategory.list(1, DICT_PAGE_SIZE)
+export const getLabCategoryByIdService = (id) => labCategory.find(id)
+export const deleteLabCategoryByIdsService = (ids) => labCategory.remove(ids)
+export const editLabCategoryService = (data) => labCategory.update(data)
+export const addLabCategoryService = (data) => labCategory.add(data)

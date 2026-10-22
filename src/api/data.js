@@ -1,50 +1,29 @@
 import request from '@/utils/request'
-import { List2String } from '@/utils/format'
+import { createCrudServices, DICT_PAGE_SIZE } from './common'
 
 /* 用户 User */
-export const getUserListService = (page) => {
-    return request.get(`/user/list?page=${page}&pageSize=10`)
-}
+const user = createCrudServices(request, '/user')
 
-export const getUserByIdService = (id) => {
-    return request.get(`/user/find/${id}`)
-}
-
-export const deleteUserByIdsService = (ids) => {
-    return request.delete('/user/delete', {
-        params: {
-            ids: List2String(ids)
-        }
-    })
-}
-export const editUserService = (user) => {
-    return request.put('/user/update', user)
-}
-export const addUserService = (user) => {
-    return request.post('/user/add', user)
-}
+export const getUserListService = (page) => user.list(page)
+export const getUserByIdService = (id) => user.find(id)
+export const deleteUserByIdsService = (ids) => user.remove(ids)
+export const editUserService = (userData) => user.update(userData)
+export const addUserService = (userData) => user.add(userData)
 
 /* 管理员 Admin */
-export const getAdminListService = (page) => {
-    return request.get(`/admin/list?page=${page}&pageSize=10`)
-}
+const admin = createCrudServices(request, '/admin')
 
-export const getAdminByIdService = (id) => {
-    return request.get(`/admin/find/${id}`)
-}
+export const getAdminListService = (page) => admin.list(page)
+export const getAdminByIdService = (id) => admin.find(id)
+export const deleteAdminByIdsService = (ids) => admin.remove(ids)
+export const editAdminService = (adminData) => admin.update(adminData)
+export const addAdminService = (adminData) => admin.add(adminData)
 
-export const deleteAdminByIdsService = (ids) => {
-    return request.delete('/admin/delete', {
-        params: {
-            ids: List2String(ids)
-        }
-    })
-}
+/* 实验室类别（字典数据，一次取较大页） */
+const labCategory = createCrudServices(request, '/lab/category')
 
-export const editAdminService = (admin) => {
-    return request.put('/admin/update', admin)
-}
-export const addAdminService = (admin) => {
-    return request.post('/admin/add', admin)
-}
-
+export const getLabCategoryListService = () => labCategory.list(1, DICT_PAGE_SIZE)
+export const getLabCategoryByIdService = (id) => labCategory.find(id)
+export const deleteLabCategoryByIdsService = (ids) => labCategory.remove(ids)
+export const editLabCategoryService = (labCategoryData) => labCategory.update(labCategoryData)
+export const addLabCategoryService = (labCategoryData) => labCategory.add(labCategoryData)

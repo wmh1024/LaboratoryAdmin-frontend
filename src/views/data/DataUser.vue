@@ -9,8 +9,7 @@ import {
 } from '@/api/data'
 import { reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-
-const PAGE_SIZE = 10
+import { PAGE_SIZE } from '@/constants/page'
 
 const addDrawer = ref(false)
 const editDrawer = ref(false)
