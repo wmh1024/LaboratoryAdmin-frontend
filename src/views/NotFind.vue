@@ -10,7 +10,8 @@ const goBack = () => {
 <template>
   <el-result sub-title="您访问的路径有误！" title="404">
     <template #icon>
-      <el-image :src="sjzc"
+      <el-image
+:src="sjzc"
                 class="img"
       />
     </template>
