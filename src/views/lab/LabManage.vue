@@ -96,13 +96,15 @@ getLabList(pageNum.value)
     </el-row>
     <el-row style="margin-bottom: 20px;">
       <el-button plain style="margin-left: 20px;" type="primary" @click="onAdd">实验室添加</el-button>
-      <el-button :disabled="multipleSelection.length === 0" plain
+      <el-button
+:disabled="multipleSelection.length === 0" plain
                  style="margin-left: 20px;"
                  type="danger" @click="() => onDelete(multipleSelection)">删除选中
       </el-button>
 
     </el-row>
-    <el-table v-loading="loading" :data="tableData"
+    <el-table
+v-loading="loading" :data="tableData"
               :row-key="(row) => row.id" border style="width: 98%; margin:0 auto"
               @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"/>
@@ -164,7 +166,8 @@ getLabList(pageNum.value)
       </el-table-column>
     </el-table>
     <div style="display: flex; justify-content: center">
-      <ElPagination :default-page-size="10" :total="totalNum" background hide-on-single-page
+      <ElPagination
+:default-page-size="10" :total="totalNum" background hide-on-single-page
                     layout="total, prev, pager, next"
                     style="margin: 20px auto" @current-change="(currentPage) => pageChange(currentPage)"/>
     </div>

@@ -49,13 +49,8 @@ const paginate = (list, query, pageSize = PAGE_SIZE) => {
 
 const nextId = (list) => (list.length ? Math.max(...list.map((item) => item.id)) + 1 : 1)
 
-/** token 中保存的是管理员 id，便于后续接口扩展 */
+/** token 中携带管理员 id，便于后续接口按登录人区分数据 */
 const makeToken = (id) => `mock-token-${id}-${Date.now()}`
-
-const parseTokenId = (token) => {
-  const matched = /^mock-token-(\d+)-/.exec(token || '')
-  return matched ? toInt(matched[1], 1) : 1
-}
 
 const listRoutes = () => [
   /* ---------------- 登录 ---------------- */
