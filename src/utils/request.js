@@ -37,24 +37,38 @@ request.interceptors.request.use(
 // 响应拦截器
 request.interceptors.response.use(
     (res) => {
-        // 摘取核心响应数据
-        if (res.data?.code !== 500) {
+        const body = res.data
+        // 兼容二进制/无 code 的响应
+        if (!body || typeof body !== 'object' || !('code' in body)) {
             return res
         }
-        // 处理业务失败
-        ElMessage.error(res.data.msg || '服务异常')
-        return Promise.reject(res.data)
+        // 仅 code === 200 视为业务成功，其余业务码均提示并中断
+        if (body.code === 200) {
+            return res
+        }
+        // 处理业务失败：提示并中断后续逻辑
+        ElMessage.error(body.msg || '服务异常')
+        return Promise.reject(body)
     },
     (err) => {
         const status = err.response?.status
-        const message = err.response?.data?.msg || err.message || '服务异常'
+        const body = err.response?.data
+        const message = body?.msg || err.message || '服务异常'
         // 处理401错误 权限不足 或 token 过期 => 清理登录态并跳转登录
         if (status === 401) {
             const useStore = useUserStore()
             useStore.removeToken()
+            ElMessage.error('登录已过期，请重新登录')
             router.push('/login')
+            return Promise.reject(err)
         }
-        ElMessage.error(message)
+        if (status) {
+            ElMessage.error(message)
+        } else if (err.code === 'ECONNABORTED') {
+            ElMessage.error('请求超时，请稍后重试')
+        } else {
+            ElMessage.error('网络异常，请检查网络或后端服务')
+        }
         return Promise.reject(err)
     }
 )
