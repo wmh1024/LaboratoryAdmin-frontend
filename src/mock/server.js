@@ -279,7 +279,9 @@ export const handleMockRequest = ({ method, url, body }) => {
     const matched = route.test.exec(path)
     if (!matched) continue
     try {
-      return { status: 200, payload: route.handle({ params: matched.slice(1), query, body }) }
+      const payload = route.handle({ params: matched.slice(1), query, body })
+      // 业务失败（如 400/404/500）同时反映到 HTTP 状态码，便于前端区分
+      return { status: payload.code === 200 ? 200 : payload.code, payload }
     } catch (err) {
       return { status: 500, payload: fail(err?.message || 'Mock 服务异常') }
     }

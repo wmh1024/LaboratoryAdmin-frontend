@@ -1,49 +1,20 @@
 <script setup>
-
+// 该页面对应的后端接口尚未提供，暂只做只读提示，不提供无后端的“修改”入口
 </script>
 
 <template>
   <el-row>
-    <h1 style="margin: 5px auto;">实验室注意事项</h1>
+    <h1 style="margin: 5px auto">实验室注意事项</h1>
   </el-row>
-  <el-row style="margin-bottom: 15px;"/>
-  <el-row>
-    <el-col :offset="1" :span="11">
-      <el-card class="box-card">
-        <template #header>
-          <div class="card-header">
-            <span>实验室注意事项</span>
-          </div>
-        </template>
-
-      </el-card>
-    </el-col>
-    <el-col :span="11">
-      <el-card class="box-card">
-        <template #header>
-          <div class="card-header">
-            <span>修改注意事项</span>
-            <el-button class="button" type="primary">修改</el-button>
-          </div>
-        </template>
-        <el-form-item>
-          <el-input :rows="23" type="textarea"/>
-        </el-form-item>
-      </el-card>
+  <el-row justify="center">
+    <el-col :span="20">
+      <el-alert
+        :closable="false"
+        description="后端暂未提供注意事项相关接口，该页面暂不支持编辑。"
+        show-icon
+        title="功能建设中"
+        type="info"
+      />
     </el-col>
   </el-row>
-
-
 </template>
-
-<style scoped>
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.box-card {
-  width: 480px;
-}
-</style>
