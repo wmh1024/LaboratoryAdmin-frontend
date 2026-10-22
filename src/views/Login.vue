@@ -118,10 +118,6 @@ const login = async () => {
     justify-content: center;
     user-select: none;
 
-    .title {
-      margin: 0 auto;
-    }
-
     .button {
       width: 100%;
     }
