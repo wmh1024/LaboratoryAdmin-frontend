@@ -1,18 +1,37 @@
 <script setup>
+import { useRouter } from 'vue-router'
+import { ElMessageBox } from 'element-plus'
+import { SwitchButton } from '@element-plus/icons-vue'
+import { useUserStore } from '@/stores/modules/user'
+
+const router = useRouter()
+const userStore = useUserStore()
+
+const handleLogout = async () => {
+  try {
+    await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
+      type: 'warning',
+      confirmButtonText: '退出',
+      cancelButtonText: '取消'
+    })
+  } catch {
+    return
+  }
+  userStore.removeToken()
+  await router.push('/login')
+}
 </script>
 
 <template>
-  <el-row class="tac">
-    <el-col :span="4">
+  <el-row class="layout">
+    <el-col :span="4" class="aside">
       <el-menu
           :default-active="$route.path"
-          class="el-menu-vertical-demo"
+          class="menu"
           router
           unique-opened
-          @close="handleClose"
-          @open="handleOpen"
       >
-        <div class="mb-2" style="text-align: center; line-height: 45px;">
+        <div class="mb-2 brand">
           实验室预约系统
         </div>
         <el-sub-menu index="1">
@@ -55,13 +74,65 @@
           </el-icon>
           <span>课表数据</span>
         </el-menu-item>
+        <el-menu-item index="/datalog">
+          <el-icon>
+            <Document/>
+          </el-icon>
+          <span>数据留存</span>
+        </el-menu-item>
+        <el-menu-item index="/datashow">
+          <el-icon>
+            <DataAnalysis/>
+          </el-icon>
+          <span>数据展示</span>
+        </el-menu-item>
       </el-menu>
     </el-col>
-    <el-col :span="20">
-      <router-view></router-view>
+    <el-col :span="20" class="main">
+      <div class="topbar">
+        <el-button :icon="SwitchButton" link type="primary" @click="handleLogout">
+          退出登录
+        </el-button>
+      </div>
+      <router-view/>
     </el-col>
   </el-row>
 </template>
 
 <style lang="scss" scoped>
+.layout {
+  min-height: 100vh;
+  background-color: #f5f7fa;
+
+  .aside {
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow-y: auto;
+    background-color: #fff;
+    border-right: 1px solid var(--el-border-color-light);
+
+    .menu {
+      border-right: none;
+    }
+
+    .brand {
+      text-align: center;
+      line-height: 45px;
+      font-weight: 600;
+      user-select: none;
+    }
+  }
+
+  .main {
+    padding: 0 16px 24px;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 48px;
+  }
+}
 </style>
