@@ -31,3 +31,6 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+# 本项目使用 yarn（yarn.lock），忽略 npm 生成的锁文件
+package-lock.json
