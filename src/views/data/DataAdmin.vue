@@ -9,8 +9,7 @@ import {
   getAdminByIdService,
   getAdminListService
 } from '@/api/data'
-
-const PAGE_SIZE = 10
+import { PAGE_SIZE } from '@/constants/page'
 
 const addDrawer = ref(false)
 const editDrawer = ref(false)

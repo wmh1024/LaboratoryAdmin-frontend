@@ -1,29 +1,12 @@
 /* 实验室管理 */
-
 import request from '@/utils/request'
-import { List2String } from '@/utils/format'
+import { createCrudServices } from '@/api/common'
 
-export const getLabListService = (page) => {
-    return request.get(`/laboratory/list?page=${page}&pageSize=10`)
-}
+// 详情路径按后端现有实现保留 findl 拼写
+const lab = createCrudServices(request, '/laboratory', { findPath: '/laboratory/findl' })
 
-export const getLabByIdService = (id) => {
-    return request.get(`/laboratory/findl/${id}`)
-}
-
-
-export const deleteLabByIdsService = (ids) => {
-    return request.delete('/laboratory/delete', {
-        params: {
-            ids: List2String(ids)
-        }
-    })
-}
-
-export const editLabService = (lab) => {
-    return request.put('/laboratory/update', lab)
-}
-
-export const addLabService = (lab) => {
-    return request.post('/laboratory/add', lab)
-}
+export const getLabListService = (page) => lab.list(page)
+export const getLabByIdService = (id) => lab.find(id)
+export const deleteLabByIdsService = (ids) => lab.remove(ids)
+export const editLabService = (data) => lab.update(data)
+export const addLabService = (data) => lab.add(data)

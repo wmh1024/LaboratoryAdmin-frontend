@@ -10,8 +10,7 @@ import {
   getLabListService
 } from '@/api/lab/LabManage'
 import { getLabCategoryListService } from '@/api/lab/labCategory'
-
-const PAGE_SIZE = 10
+import { PAGE_SIZE } from '@/constants/page'
 
 const addDrawer = ref(false)
 const editDrawer = ref(false)

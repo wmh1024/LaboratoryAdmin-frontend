@@ -1,8 +1,7 @@
 <script setup>
 import { getLabRecordByIdService, getLabRecordListService } from '@/api/lab/LabLog'
 import { ref } from 'vue'
-
-const PAGE_SIZE = 10
+import { PAGE_SIZE } from '@/constants/page'
 
 const loading = ref(false)
 const tableData = ref([])
