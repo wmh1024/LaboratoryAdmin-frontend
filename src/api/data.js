@@ -42,7 +42,7 @@ export const deleteAdminByIdsService = (ids) => {
 }
 
 export const editAdminService = (admin) => {
-    return request.put('/user/update', admin)
+    return request.put('/admin/update', admin)
 }
 export const addAdminService = (admin) => {
     return request.post('/admin/add', admin)
