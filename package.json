@@ -1,14 +1,37 @@
 {
-  "name": "labadmin",
-  "version": "0.0.0",
+  "name": "labadmin-frontend",
+  "version": "0.1.0",
   "private": true,
+  "description": "实验室预约系统 · 管理端（Vue3 + Element Plus），内置可离线运行的 Mock 数据",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wmh1024/LaboratoryAdmin-frontend.git"
+  },
+  "homepage": "https://github.com/wmh1024/LaboratoryAdmin-frontend#readme",
+  "bugs": {
+    "url": "https://github.com/wmh1024/LaboratoryAdmin-frontend/issues"
+  },
+  "keywords": [
+    "vue3",
+    "element-plus",
+    "vite",
+    "laboratory",
+    "admin",
+    "mock"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"src/**/*.{js,vue,css,scss}\" \"build/**/*.js\""
+    "format": "prettier --write \"src/**/*.{js,vue,css,scss}\" \"build/**/*.js\"",
+    "audit": "npm audit --omit=dev"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
@@ -31,6 +54,5 @@
     "unplugin-auto-import": "^0.16.6",
     "unplugin-vue-components": "^0.25.2",
     "vite": "^4.4.11"
-  },
-  "type": "module"
+  }
 }
