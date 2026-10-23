@@ -10,6 +10,7 @@
 [![License][license-shield]][license-url]
 [![Vue][vue-shield]][vue-url]
 [![Vite][vite-shield]][vite-url]
+[![Node][node-shield]][node-url]
 
 </div>
 
@@ -119,8 +120,18 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 ## 开发规范
 
 - 静态检查：`yarn lint`（ESLint 9 + eslint-plugin-vue），格式化：`yarn format`（Prettier）
-- 提交前请确保 `yarn lint` 与 `yarn build` 通过
+- 单元测试：`yarn test`（Vitest），覆盖 API 工具、分页 composable 与 Mock 服务
+- 提交前请确保 `yarn lint`、`yarn format:check`、`yarn test`、`yarn build` 全部通过（CI 会自动检查）
 - 详见 [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+## 部署
+
+| 场景 | 命令 | 产物 | 注意事项 |
+| --- | --- | --- | --- |
+| 对接真实后端 | `yarn build`（或 `build:prod`） | `dist/` | Mock 已被构建期剔除，可用 CI 断言校验 |
+| 纯静态演示（无后端） | `yarn build:demo` | `dist/`（`base` 为相对路径） | 含 Mock 与演示账号，**请勿当作生产环境部署** |
+
+> `yarn preview` 预览 demo 时同样可用；若直接 `scp dist/` 部署，请先确认所用的是哪种构建。
 
 ## 参与贡献
 
@@ -144,3 +155,5 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 [vue-url]: https://vuejs.org/
 [vite-shield]: https://img.shields.io/badge/Vite-5.x-646cff?style=flat-square&logo=vite
 [vite-url]: https://vitejs.dev/
+[node-shield]: https://img.shields.io/badge/Node-%3E%3D18-339933?style=flat-square&logo=node.js
+[node-url]: https://nodejs.org/
