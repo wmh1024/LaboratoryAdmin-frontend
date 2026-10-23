@@ -13,6 +13,20 @@ export const DICT_PAGE_SIZE = 50
 /** 数组转逗号分隔字符串（兼容带空格的旧格式） */
 export const List2String = (arr) => (Array.isArray(arr) ? arr.join(',') : '')
 
+/** 取出统一响应结构 `{ code, msg, data }` 中的 data，缺失时返回 undefined */
+export const unwrapData = (res) => res?.data?.data
+
+/**
+ * 把列表响应规范化为 `{ items, counts }`。
+ * 兼容三种后端形态：`{items,counts}`、裸数组、以及 data 为空（避免页面解构崩溃）。
+ * @param {import('axios').AxiosResponse} res
+ */
+export const toPageResult = (res) => {
+    const data = unwrapData(res)
+    if (Array.isArray(data)) return { items: data, counts: data.length }
+    return { items: data?.items ?? [], counts: data?.counts ?? 0 }
+}
+
 /** 分页参数 */
 export const pageParams = (page, pageSize = DEFAULT_PAGE_SIZE) => ({
     page,
