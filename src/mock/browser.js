@@ -24,15 +24,31 @@ const parseBody = (data) => {
   }
 }
 
+/**
+ * 把 axios 的 params 序列化到 query string。
+ * 注意：真实 HTTP 适配器会处理 params，而自定义 adapter 必须自己拼接，否则分页参数会丢失。
+ */
+const toQuery = (params) => {
+  if (!params) return ''
+  const search = new URLSearchParams()
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null) return
+    search.append(key, Array.isArray(value) ? value.join(',') : String(value))
+  })
+  const query = search.toString()
+  return query ? `?${query}` : ''
+}
+
 export const createMockAdapter = () => async (config) => {
   const method = String(config.method || 'get').toUpperCase()
   const body = parseBody(config.data)
   const { pathname, search } = new URL(toAbsolute(config.baseURL, config.url), window.location.origin)
+  const query = search + toQuery(config.params)
 
   // 模拟网络延迟，便于观察 loading 状态
   await delay(120)
 
-  const result = handleMockRequest({ method, url: pathname + search, body })
+  const result = handleMockRequest({ method, url: pathname + query, body })
 
   return {
     data: result.payload,
