@@ -6,7 +6,7 @@ import router from '@/router'
 // 后端基础地址通过环境变量配置，见 .env.example
 const baseURL = import.meta.env.VITE_API_BASE_URL || '/api'
 // 是否使用内置 Mock 服务（无需后端）
-const useMock = String(import.meta.env.VITE_USE_MOCK) === 'true'
+const useMock = import.meta.env.VITE_USE_MOCK === 'true'
 
 const request = axios.create({
     // 基础地址，超时时间
@@ -14,20 +14,25 @@ const request = axios.create({
     timeout: 10000
 })
 
-if (useMock) {
-    // Mock 适配器按需加载，生产环境不会打包进主包
-    import('@/mock/browser').then(({ createMockAdapter }) => {
-        request.defaults.adapter = createMockAdapter()
-    })
+/**
+ * 安装 Mock 适配器。
+ *
+ * 必须在应用挂载前 await 完成，否则页面 setup 阶段发出的首批请求
+ * 可能抢在适配器安装之前走真实网络（见 main.js）。
+ */
+export const setupMockAdapter = async () => {
+    if (!useMock) return
+    const { createMockAdapter } = await import('@/mock/browser')
+    request.defaults.adapter = createMockAdapter()
 }
 
 // 请求拦截器
 request.interceptors.request.use(
     (config) => {
-        // 携带token
+        // 携带 token
         const useStore = useUserStore()
         if (useStore.token) {
-            config.headers.Authorization = useStore.token
+            config.headers.Authorization = `Bearer ${useStore.token}`
         }
         return config
     },
@@ -58,11 +63,13 @@ request.interceptors.response.use(
         if (status === 401) {
             const useStore = useUserStore()
             useStore.removeToken()
-            ElMessage.error('登录已过期，请重新登录')
+            ElMessage.error(message === '服务异常' ? '登录已过期，请重新登录' : message)
             router.push('/login')
             return Promise.reject(err)
         }
-        if (status) {
+        if (status === 403) {
+            ElMessage.error(message === '服务异常' ? '权限不足' : message)
+        } else if (status) {
             ElMessage.error(message)
         } else if (err.code === 'ECONNABORTED') {
             ElMessage.error('请求超时，请稍后重试')

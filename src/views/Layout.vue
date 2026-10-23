@@ -3,22 +3,29 @@ import { useRouter } from 'vue-router'
 import { ElMessageBox } from 'element-plus'
 import { SwitchButton } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/modules/user'
+import { userLogoutService } from '@/api/user'
 
 const router = useRouter()
 const userStore = useUserStore()
 
 const handleLogout = async () => {
-  try {
-    await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
-      type: 'warning',
-      confirmButtonText: '退出',
-      cancelButtonText: '取消'
-    })
-  } catch {
-    return
-  }
-  userStore.removeToken()
-  await router.push('/login')
+    try {
+        await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
+            type: 'warning',
+            confirmButtonText: '退出',
+            cancelButtonText: '取消'
+        })
+    } catch {
+        return
+    }
+    try {
+        // 通知服务端作废当前令牌；失败也必须继续本地登出
+        await userLogoutService()
+    } catch {
+        // 忽略：登出不应因接口异常而中断
+    }
+    userStore.removeToken()
+    await router.push('/login')
 }
 </script>
 

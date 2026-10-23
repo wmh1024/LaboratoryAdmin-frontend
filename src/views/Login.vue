@@ -17,6 +17,9 @@ const formModel = reactive({
   password: ''
 })
 
+// Mock 演示模式下的固定演示账号（生产构建时该模块被替换为空实现，不会进入产物）
+const demoAccount = useMock ? (await import('@/mock/account.js')).DEMO_ACCOUNT : null
+
 const rules = {
   username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
@@ -82,9 +85,12 @@ const login = async () => {
           <el-alert
               :closable="false"
               show-icon
-              title="当前为演示模式（Mock 数据）：任意用户名与密码即可登录"
               type="info"
-          />
+          >
+            <template #title>
+              当前为演示模式（Mock 数据），演示账号：{{ demoAccount?.username }} / {{ demoAccount?.password }}
+            </template>
+          </el-alert>
         </el-form-item>
         <el-form-item>
           <el-button

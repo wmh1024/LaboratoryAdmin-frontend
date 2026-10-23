@@ -8,10 +8,12 @@
 - 包管理器：yarn（仓库提供 `yarn.lock`）
 
 ```sh
-yarn            # 安装依赖
-yarn dev        # 本地开发（默认读取 .env 中的 VITE_USE_MOCK=true，无需后端）
-yarn lint       # 静态检查
-yarn build      # 构建检查
+yarn              # 安装依赖
+yarn dev          # 本地开发（默认读取 .env 中的 VITE_USE_MOCK=true，无需后端）
+yarn lint         # 静态检查
+yarn test         # 单元测试
+yarn format:check # 格式检查
+yarn build        # 构建检查
 ```
 
 ## 分支与提交
@@ -24,9 +26,11 @@ yarn build      # 构建检查
 
 ## 代码约定
 
-- Vue 3 `<script setup>` 组合式 API，2 空格缩进、单引号、无分号（见 `.prettierrc.json`）
+- Vue 3 `<script setup>` 组合式 API，4 空格缩进、单引号、无分号（以 `.prettierrc.json` 为准，提交前请跑 `yarn format`）
 - 接口统一走 `src/utils/request.js`，组件内不要直接使用 axios
 - 页面请求需处理失败分支（错误提示由拦截器统一弹出，页面只需 `try/catch/finally` 复位状态）
+- 列表页优先复用 `composables/usePagedList`、`composables/useCrudDrawer` 与 `components/CrudTable`，不要重复实现分页/删除/抽屉逻辑
+- 角色、状态等枚举统一维护在 `src/constants/`，禁止在页面内另行定义一套
 - 禁止提交调试日志（`console.log`）
 - 禁止提交真实的个人信息、内网地址、账号密码
 

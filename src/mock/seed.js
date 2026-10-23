@@ -60,7 +60,9 @@ export const createSeed = () => ({
   ],
 
   admins: [
-    { id: 1, username: 'demo_admin', name: '演示管理员', status: 2, phone: '199-0000-0001' },
+    // status 与 src/constants/role.js 的 ADMIN_ROLES 一致：0 院长 / 1 主任 / 2 指导老师 / 3 负责人
+    // demo_admin 为演示登录账号，必须是院长（0），否则无写权限
+    { id: 1, username: 'demo_admin', name: '演示管理员', status: 0, phone: '199-0000-0001' },
     { id: 2, username: 'demo_director', name: '演示主任', status: 1, phone: '199-0000-0002' },
     { id: 3, username: 'demo_head', name: '演示负责人', status: 3, phone: '199-0000-0003' }
   ],

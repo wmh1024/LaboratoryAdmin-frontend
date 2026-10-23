@@ -41,19 +41,36 @@ yarn
 # 复制环境变量示例（默认已开启 Mock，无需后端）
 cp .env.example .env
 
-yarn dev      # 开发模式
-yarn build    # 生产构建（产物在 dist/）
-yarn preview  # 预览构建产物
+yarn dev         # 开发模式（默认 Mock）
+yarn build:demo  # 纯静态演示构建（含 Mock，可直接静态托管）
+yarn build       # 生产构建（排除 Mock，产物在 dist/）
+yarn preview     # 预览构建产物
+yarn test        # 单元测试（vitest）
 ```
 
-Mock 模式下**任意非空用户名 + 任意密码**均可登录，登录页会给出提示。
+Mock 模式下使用固定演示账号登录（登录页会提示）：
+
+| 账号 | 密码 | 角色 |
+| --- | --- | --- |
+| `demo_admin` | `demo1234` | 院长（可增删改） |
+
+Mock 服务会校验令牌：除登录外的接口都必须携带有效 `Authorization`，且只有「院长」角色可以写入数据，
+因此演示环境与真实后端的鉴权行为一致，不会出现「打开页面就是管理员」的情况。
 
 ## 环境变量
 
 | 变量 | 默认值 | 说明 |
 | --- | --- | --- |
 | `VITE_API_BASE_URL` | `/api` | 后端接口基础地址。前后端分离部署时填写完整地址，如 `https://api.example.com` |
-| `VITE_USE_MOCK` | `true` | 是否启用内置 Mock 服务。接入真实后端时设为 `false` |
+| `VITE_USE_MOCK` | `true` | 是否启用内置 Mock 服务。**仅对开发服务器生效**，接入真实后端时设为 `false` |
+
+### 构建方式
+
+| 命令 | 用途 | Mock |
+| --- | --- | --- |
+| `yarn dev` | 本地开发 | 由 `VITE_USE_MOCK` 控制 |
+| `yarn build` / `yarn build:prod` | 对接真实后端的生产构建 | ❌ 强制排除（Mock 代码与种子数据不会进入产物） |
+| `yarn build:demo` | 纯静态演示（GitHub Pages 等） | ✅ 内置，产物使用相对路径 |
 
 `.env` 已被 `.gitignore` 忽略，仓库只提交 `.env.example`。
 
@@ -61,6 +78,7 @@ Mock 模式下**任意非空用户名 + 任意密码**均可登录，登录页�
 
 - 实现位置：`src/mock/`
   - `seed.js`：种子数据（全部为虚构数据）
+  - `account.js`：演示账号（生产构建不会进入产物）
   - `server.js`：类 REST 路由分发（内存存储，重启后重置）
   - `browser.js`：axios 适配器，浏览器内直接使用同一套路由
 - 同时提供 Vite 中间件（`build/mock-plugin.js`），`/api/*` 请求在开发服务器阶段即可响应
@@ -73,12 +91,14 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 
 - 响应结构：`{ code: number, msg: string, data: any }`，`code === 200` 视为成功
 - 分页数据：`data = { items: T[], counts: number }`，请求参数为 `page` / `pageSize`
-- 认证：登录返回 `data.token`，前端以 `Authorization` 请求头携带
+- 认证：登录返回 `data.token`，前端以 `Authorization: Bearer <token>` 携带；令牌无效返回 `401`
+- 权限：写接口（add/update/delete）仅「院长」（`status === 0`）可调用，否则返回 `403`
 - 批量删除：`DELETE .../delete?ids=1,2,3`
 
 | 方法 | 路径 | 说明 |
 | --- | --- | --- |
 | POST | `/admin/login` | 管理员登录 |
+| POST | `/admin/logout` | 退出登录（作废当前令牌） |
 | GET | `/user/list` | 用户分页列表 |
 | GET/POST/PUT/DELETE | `/user/find/{id}` `/user/add` `/user/update` `/user/delete` | 用户增删改查 |
 | GET/POST/PUT/DELETE | `/admin/list` `/admin/find/{id}` `/admin/add` `/admin/update` `/admin/delete` | 管理员增删改查 |
@@ -122,5 +142,5 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 [license-url]: ./LICENSE.txt
 [vue-shield]: https://img.shields.io/badge/Vue-3.x-42b883?style=flat-square&logo=vue.js
 [vue-url]: https://vuejs.org/
-[vite-shield]: https://img.shields.io/badge/Vite-4.x-646cff?style=flat-square&logo=vite
+[vite-shield]: https://img.shields.io/badge/Vite-5.x-646cff?style=flat-square&logo=vite
 [vite-url]: https://vitejs.dev/

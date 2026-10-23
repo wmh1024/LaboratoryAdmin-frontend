@@ -34,7 +34,12 @@ export const createMockMiddleware = () => {
     const body = ['POST', 'PUT', 'PATCH'].includes(req.method) ? await readBody(req) : undefined
     // 模拟网络延迟，便于观察 loading 状态
     await new Promise((resolve) => setTimeout(resolve, 120))
-    const result = handleMockRequest({ method: req.method, url: req.url, body })
+    const result = handleMockRequest({
+      method: req.method,
+      url: req.url,
+      body,
+      headers: { authorization: req.headers.authorization || '' }
+    })
     if (!result) return next()
     send(res, result.status, result.payload)
   }

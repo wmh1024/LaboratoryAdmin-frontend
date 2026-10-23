@@ -40,22 +40,25 @@ const toQuery = (params) => {
 }
 
 export const createMockAdapter = () => async (config) => {
-  const method = String(config.method || 'get').toUpperCase()
-  const body = parseBody(config.data)
-  const { pathname, search } = new URL(toAbsolute(config.baseURL, config.url), window.location.origin)
-  const query = search + toQuery(config.params)
+    const method = String(config.method || 'get').toUpperCase()
+    const body = parseBody(config.data)
+    const { pathname, search } = new URL(toAbsolute(config.baseURL, config.url), window.location.origin)
+    const query = search + toQuery(config.params)
 
-  // 模拟网络延迟，便于观察 loading 状态
-  await delay(120)
+    // 真实 HTTP 适配器会自动带上请求头，自定义 adapter 必须手动透传，否则 Mock 侧鉴权必然 401
+    const headers = { authorization: config.headers?.Authorization || config.headers?.authorization || '' }
 
-  const result = handleMockRequest({ method, url: pathname + query, body })
+    // 模拟网络延迟，便于观察 loading 状态
+    await delay(120)
 
-  return {
-    data: result.payload,
-    status: result.status,
-    statusText: result.status === 200 ? 'OK' : 'Error',
-    headers: {},
-    config,
-    request: {}
-  }
+    const result = handleMockRequest({ method, url: pathname + query, body, headers })
+
+    return {
+        data: result.payload,
+        status: result.status,
+        statusText: result.status === 200 ? 'OK' : 'Error',
+        headers: {},
+        config,
+        request: {}
+    }
 }
