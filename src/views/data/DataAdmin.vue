@@ -1,19 +1,26 @@
 <script setup>
 import { Delete, Edit } from '@element-plus/icons-vue'
-import { addAdminService, deleteAdminByIdsService, editAdminService, getAdminByIdService, getAdminListService } from '@/api/data'
+import {
+    addAdminService,
+    deleteAdminByIdsService,
+    editAdminService,
+    getAdminByIdService,
+    getAdminListService
+} from '@/api/data'
 import { usePagedList } from '@/composables/usePagedList'
 import { useCrudDrawer } from '@/composables/useCrudDrawer'
 import { ADMIN_ROLES, roleName } from '@/constants/role'
 
-const { rows, total, page, pageSize, loading, selection, load, refresh, onSelectionChange } = usePagedList(
-    getAdminListService
-)
+const { rows, total, page, pageSize, loading, selection, load, refresh, onSelectionChange } =
+    usePagedList(getAdminListService)
 
 /* 只提交允许修改的字段，避免把 role/phone 等整包覆盖 */
 const EDITABLE_FIELDS = ['id', 'username', 'name', 'status', 'phone']
 
 const transform = (payload) => {
-    const data = Object.fromEntries(EDITABLE_FIELDS.filter((key) => payload[key] !== undefined).map((key) => [key, payload[key]]))
+    const data = Object.fromEntries(
+        EDITABLE_FIELDS.filter((key) => payload[key] !== undefined).map((key) => [key, payload[key]])
+    )
     if (payload.password) data.password = payload.password
     return data
 }
@@ -82,7 +89,9 @@ load(1)
     >
         <template #toolbar>
             <el-button plain type="primary" @click="openAdd">管理员添加</el-button>
-            <el-button :disabled="selection.length === 0" plain type="danger" @click="onDelete(selection)">删除选中</el-button>
+            <el-button :disabled="selection.length === 0" plain type="danger" @click="onDelete(selection)"
+                >删除选中</el-button
+            >
         </template>
 
         <el-table-column label="账号">
@@ -150,7 +159,12 @@ load(1)
                 <el-input v-model="formModel.password" placeholder="留空表示不修改密码" show-password type="password" />
             </el-form-item>
             <el-form-item label="确认密码" prop="repassword">
-                <el-input v-model="formModel.repassword" placeholder="留空表示不修改密码" show-password type="password" />
+                <el-input
+                    v-model="formModel.repassword"
+                    placeholder="留空表示不修改密码"
+                    show-password
+                    type="password"
+                />
             </el-form-item>
             <el-form-item>
                 <el-button :loading="submitting" type="primary" @click="editAdmin">修改</el-button>

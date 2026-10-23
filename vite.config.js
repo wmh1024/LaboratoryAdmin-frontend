@@ -14,7 +14,9 @@ export default defineConfig(({ mode, command }) => {
     // 需要发布「纯前端 demo」（GitHub Pages / 纯静态演示）时请使用 `npm run build:demo`。
     const useMock = mode === 'demo' || (command === 'serve' && String(env.VITE_USE_MOCK) === 'true')
     if (command === 'build' && mode !== 'demo' && String(env.VITE_USE_MOCK) === 'true') {
-        console.warn('[mock] VITE_USE_MOCK=true 仅对开发服务器生效，生产构建已忽略；如需 demo 构建请用 npm run build:demo')
+        console.warn(
+            '[mock] VITE_USE_MOCK=true 仅对开发服务器生效，生产构建已忽略；如需 demo 构建请用 npm run build:demo'
+        )
     }
 
     return {

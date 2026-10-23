@@ -1,14 +1,21 @@
 <script setup>
 import { Delete, Edit } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import { addLabService, deleteLabByIdsService, editLabService, getLabByIdService, getLabListService } from '@/api/lab/LabManage'
+import {
+    addLabService,
+    deleteLabByIdsService,
+    editLabService,
+    getLabByIdService,
+    getLabListService
+} from '@/api/lab/LabManage'
 import { getLabCategoryListService } from '@/api/lab/labCategory'
 import { getAdminListService } from '@/api/data'
 import { toPageResult } from '@/api/common'
 import { usePagedList } from '@/composables/usePagedList'
 import { useCrudDrawer } from '@/composables/useCrudDrawer'
 
-const { rows, total, page, pageSize, loading, selection, load, refresh, onSelectionChange } = usePagedList(getLabListService)
+const { rows, total, page, pageSize, loading, selection, load, refresh, onSelectionChange } =
+    usePagedList(getLabListService)
 
 const categoryList = ref([])
 const adminList = ref([])
@@ -28,14 +35,27 @@ const loadDictionaries = async () => {
 }
 
 /* 使用次数等统计数据不由客户端提交 */
-const EDITABLE_FIELDS = ['id', 'laboratoryName', 'laboratoryLocation', 'laboratoryType', 'laboratoryCategory', 'laboratoryDirectorId', 'laboratoryHeadId']
+const EDITABLE_FIELDS = [
+    'id',
+    'laboratoryName',
+    'laboratoryLocation',
+    'laboratoryType',
+    'laboratoryCategory',
+    'laboratoryDirectorId',
+    'laboratoryHeadId'
+]
 
 const transform = (payload) =>
     Object.fromEntries(EDITABLE_FIELDS.filter((key) => payload[key] !== undefined).map((key) => [key, payload[key]]))
 
 const { formModel, addDrawer, editDrawer, submitting, addFormRef, editFormRef, openAdd, openEdit, submit, remove } =
     useCrudDrawer({
-        services: { add: addLabService, update: editLabService, remove: deleteLabByIdsService, find: getLabByIdService },
+        services: {
+            add: addLabService,
+            update: editLabService,
+            remove: deleteLabByIdsService,
+            find: getLabByIdService
+        },
         refresh
     })
 
@@ -70,7 +90,9 @@ loadDictionaries()
     >
         <template #toolbar>
             <el-button plain type="primary" @click="openAdd">实验室添加</el-button>
-            <el-button :disabled="selection.length === 0" plain type="danger" @click="onDelete(selection)">删除选中</el-button>
+            <el-button :disabled="selection.length === 0" plain type="danger" @click="onDelete(selection)"
+                >删除选中</el-button
+            >
         </template>
 
         <el-table-column label="实验室名称">
@@ -129,16 +151,31 @@ loadDictionaries()
             </el-form-item>
             <el-form-item label="分类" prop="laboratoryCategory">
                 <el-select v-model="formModel.laboratoryCategory" placeholder="请选择实验室分类" style="width: 100%">
-                    <el-option v-for="item in categoryList" :key="item.id" :label="item.categoryName" :value="item.id" />
+                    <el-option
+                        v-for="item in categoryList"
+                        :key="item.id"
+                        :label="item.categoryName"
+                        :value="item.id"
+                    />
                 </el-select>
             </el-form-item>
             <el-form-item label="审核人">
-                <el-select v-model="formModel.laboratoryDirectorId" clearable placeholder="请选择审核人" style="width: 100%">
+                <el-select
+                    v-model="formModel.laboratoryDirectorId"
+                    clearable
+                    placeholder="请选择审核人"
+                    style="width: 100%"
+                >
                     <el-option v-for="item in adminList" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
             </el-form-item>
             <el-form-item label="负责人">
-                <el-select v-model="formModel.laboratoryHeadId" clearable placeholder="请选择负责人" style="width: 100%">
+                <el-select
+                    v-model="formModel.laboratoryHeadId"
+                    clearable
+                    placeholder="请选择负责人"
+                    style="width: 100%"
+                >
                     <el-option v-for="item in adminList" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
             </el-form-item>
@@ -161,16 +198,31 @@ loadDictionaries()
             </el-form-item>
             <el-form-item label="分类" prop="laboratoryCategory">
                 <el-select v-model="formModel.laboratoryCategory" placeholder="请选择实验室分类" style="width: 100%">
-                    <el-option v-for="item in categoryList" :key="item.id" :label="item.categoryName" :value="item.id" />
+                    <el-option
+                        v-for="item in categoryList"
+                        :key="item.id"
+                        :label="item.categoryName"
+                        :value="item.id"
+                    />
                 </el-select>
             </el-form-item>
             <el-form-item label="审核人">
-                <el-select v-model="formModel.laboratoryDirectorId" clearable placeholder="请选择审核人" style="width: 100%">
+                <el-select
+                    v-model="formModel.laboratoryDirectorId"
+                    clearable
+                    placeholder="请选择审核人"
+                    style="width: 100%"
+                >
                     <el-option v-for="item in adminList" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
             </el-form-item>
             <el-form-item label="负责人">
-                <el-select v-model="formModel.laboratoryHeadId" clearable placeholder="请选择负责人" style="width: 100%">
+                <el-select
+                    v-model="formModel.laboratoryHeadId"
+                    clearable
+                    placeholder="请选择负责人"
+                    style="width: 100%"
+                >
                     <el-option v-for="item in adminList" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
             </el-form-item>
