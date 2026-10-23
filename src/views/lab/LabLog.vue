@@ -79,9 +79,15 @@ load(1)
             <el-descriptions-item label="审核主任ID">{{ detailsData.directorId ?? '-' }}</el-descriptions-item>
             <el-descriptions-item label="用途">{{ detailsData.useTo || '-' }}</el-descriptions-item>
             <el-descriptions-item label="状态">{{ recordStatus(detailsData.status).text }}</el-descriptions-item>
-            <el-descriptions-item label="指导教师拒绝原因">{{ detailsData.teacherFailReason || '-' }}</el-descriptions-item>
-            <el-descriptions-item label="主任拒绝原因">{{ detailsData.directorFailReason || '-' }}</el-descriptions-item>
-            <el-descriptions-item label="院长拒绝原因">{{ detailsData.presidentFailReason || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="指导教师拒绝原因">{{
+                detailsData.teacherFailReason || '-'
+            }}</el-descriptions-item>
+            <el-descriptions-item label="主任拒绝原因">{{
+                detailsData.directorFailReason || '-'
+            }}</el-descriptions-item>
+            <el-descriptions-item label="院长拒绝原因">{{
+                detailsData.presidentFailReason || '-'
+            }}</el-descriptions-item>
         </el-descriptions>
     </el-drawer>
 </template>

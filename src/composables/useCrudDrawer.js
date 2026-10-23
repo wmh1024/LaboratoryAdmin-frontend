@@ -95,5 +95,17 @@ export const useCrudDrawer = ({ services, refresh, defaults = () => ({}), onOpen
         }
     }
 
-    return { formModel, addDrawer, editDrawer, submitting, addFormRef, editFormRef, resetForm, openAdd, openEdit, submit, remove }
+    return {
+        formModel,
+        addDrawer,
+        editDrawer,
+        submitting,
+        addFormRef,
+        editFormRef,
+        resetForm,
+        openAdd,
+        openEdit,
+        submit,
+        remove
+    }
 }

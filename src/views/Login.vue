@@ -79,7 +79,8 @@ const login = async () => {
                 <el-form-item v-if="demoAccount" class="tip">
                     <el-alert :closable="false" show-icon type="info">
                         <template #title>
-                            当前为演示模式（Mock 数据），演示账号：{{ demoAccount.username }} / {{ demoAccount.password }}
+                            当前为演示模式（Mock 数据），演示账号：{{ demoAccount.username }} /
+                            {{ demoAccount.password }}
                         </template>
                     </el-alert>
                 </el-form-item>

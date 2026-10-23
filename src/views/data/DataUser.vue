@@ -11,22 +11,28 @@ import { usePagedList } from '@/composables/usePagedList'
 import { useCrudDrawer } from '@/composables/useCrudDrawer'
 import { POSITIONS, positionName } from '@/constants/role'
 
-const { rows, total, page, pageSize, loading, selection, load, refresh, onSelectionChange } = usePagedList(
-    getUserListService
-)
+const { rows, total, page, pageSize, loading, selection, load, refresh, onSelectionChange } =
+    usePagedList(getUserListService)
 
 /* 密码字段只在新增/修改密码时提交，避免整包回填 */
 const EDITABLE_FIELDS = ['id', 'username', 'name', 'positionStatus', 'className']
 
 const transform = (payload) => {
-    const data = Object.fromEntries(EDITABLE_FIELDS.filter((key) => payload[key] !== undefined).map((key) => [key, payload[key]]))
+    const data = Object.fromEntries(
+        EDITABLE_FIELDS.filter((key) => payload[key] !== undefined).map((key) => [key, payload[key]])
+    )
     if (payload.password) data.password = payload.password
     return data
 }
 
 const { formModel, addDrawer, editDrawer, submitting, addFormRef, editFormRef, openAdd, openEdit, submit, remove } =
     useCrudDrawer({
-        services: { add: addUserService, update: editUserService, remove: deleteUserByIdsService, find: getUserByIdService },
+        services: {
+            add: addUserService,
+            update: editUserService,
+            remove: deleteUserByIdsService,
+            find: getUserByIdService
+        },
         refresh,
         defaults: () => ({ positionStatus: 0 }),
         // 密码不回填，留空表示不修改
@@ -61,10 +67,8 @@ const editRules = {
     repassword: [{ validator: validateEditConfirmPassword, trigger: 'blur' }]
 }
 
-const addUser = () =>
-    submit(addFormRef, 'add', { successMessage: '添加成功', drawer: addDrawer, transform })
-const editUser = () =>
-    submit(editFormRef, 'update', { successMessage: '修改成功', drawer: editDrawer, transform })
+const addUser = () => submit(addFormRef, 'add', { successMessage: '添加成功', drawer: addDrawer, transform })
+const editUser = () => submit(editFormRef, 'update', { successMessage: '修改成功', drawer: editDrawer, transform })
 
 const onDelete = async (ids) => {
     if (await remove(ids)) selection.value = []
@@ -86,7 +90,9 @@ load(1)
     >
         <template #toolbar>
             <el-button plain type="primary" @click="openAdd">用户添加</el-button>
-            <el-button :disabled="selection.length === 0" plain type="danger" @click="onDelete(selection)">删除选中</el-button>
+            <el-button :disabled="selection.length === 0" plain type="danger" @click="onDelete(selection)"
+                >删除选中</el-button
+            >
         </template>
 
         <el-table-column label="学号(工号)" width="200">
@@ -173,7 +179,12 @@ load(1)
                 <el-input v-model="formModel.password" placeholder="留空表示不修改密码" show-password type="password" />
             </el-form-item>
             <el-form-item label="确认密码" prop="repassword">
-                <el-input v-model="formModel.repassword" placeholder="留空表示不修改密码" show-password type="password" />
+                <el-input
+                    v-model="formModel.repassword"
+                    placeholder="留空表示不修改密码"
+                    show-password
+                    type="password"
+                />
             </el-form-item>
             <el-form-item>
                 <el-button :loading="submitting" type="primary" @click="editUser">修改</el-button>

@@ -13,10 +13,9 @@
 
 import { createSeed } from './seed.js'
 import { DEMO_ACCOUNT } from './account.js'
+import { DEFAULT_PAGE_SIZE } from '../api/common.js'
 
 export { DEMO_ACCOUNT }
-
-const PAGE_SIZE = 10
 
 // 开发期浏览器端 mock 适配器与 vite 中间件可能各自加载此模块，挂到 globalThis 上共享同一份数据
 const state = globalThis.__LABADMIN_MOCK_STATE__ || (globalThis.__LABADMIN_MOCK_STATE__ = { db: null, tokens: null })
@@ -71,7 +70,7 @@ const parseIds = (raw) =>
         .filter((item) => !Number.isNaN(item))
 
 /** 通用分页，返回后端约定的 { items, counts } */
-const paginate = (list, query, pageSize = PAGE_SIZE) => {
+const paginate = (list, query, pageSize = DEFAULT_PAGE_SIZE) => {
     const page = Math.max(toInt(query.get('page'), 1), 1)
     const size = Math.max(toInt(query.get('pageSize'), pageSize), 1)
     const start = (page - 1) * size

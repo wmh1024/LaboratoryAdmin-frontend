@@ -10,18 +10,18 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /** 把 baseURL + url 拼成 URL 可解析的地址（浏览器内二者均为相对/绝对地址） */
 const toAbsolute = (baseURL, url) => {
-  const prefix = String(baseURL || '').replace(/\/+$/, '')
-  const suffix = String(url || '')
-  return prefix + (suffix.startsWith('/') ? suffix : `/${suffix}`)
+    const prefix = String(baseURL || '').replace(/\/+$/, '')
+    const suffix = String(url || '')
+    return prefix + (suffix.startsWith('/') ? suffix : `/${suffix}`)
 }
 
 const parseBody = (data) => {
-  if (typeof data !== 'string') return data
-  try {
-    return JSON.parse(data)
-  } catch {
-    return data
-  }
+    if (typeof data !== 'string') return data
+    try {
+        return JSON.parse(data)
+    } catch {
+        return data
+    }
 }
 
 /**
@@ -29,14 +29,14 @@ const parseBody = (data) => {
  * 注意：真实 HTTP 适配器会处理 params，而自定义 adapter 必须自己拼接，否则分页参数会丢失。
  */
 const toQuery = (params) => {
-  if (!params) return ''
-  const search = new URLSearchParams()
-  Object.entries(params).forEach(([key, value]) => {
-    if (value === undefined || value === null) return
-    search.append(key, Array.isArray(value) ? value.join(',') : String(value))
-  })
-  const query = search.toString()
-  return query ? `?${query}` : ''
+    if (!params) return ''
+    const search = new URLSearchParams()
+    Object.entries(params).forEach(([key, value]) => {
+        if (value === undefined || value === null) return
+        search.append(key, Array.isArray(value) ? value.join(',') : String(value))
+    })
+    const query = search.toString()
+    return query ? `?${query}` : ''
 }
 
 export const createMockAdapter = () => async (config) => {

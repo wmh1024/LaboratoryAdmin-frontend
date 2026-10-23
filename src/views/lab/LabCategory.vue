@@ -11,9 +11,8 @@ import { usePagedList } from '@/composables/usePagedList'
 import { useCrudDrawer } from '@/composables/useCrudDrawer'
 import { ADMIN_ROLES, roleName } from '@/constants/role'
 
-const { rows, total, page, pageSize, loading, selection, load, refresh, onSelectionChange } = usePagedList(
-    getLabCategoryListService
-)
+const { rows, total, page, pageSize, loading, selection, load, refresh, onSelectionChange } =
+    usePagedList(getLabCategoryListService)
 
 const EDITABLE_FIELDS = ['id', 'categoryName', 'categoryStatus']
 const transform = (payload) =>
@@ -36,7 +35,8 @@ const rules = {
 }
 
 const addLabCategory = () => submit(addFormRef, 'add', { successMessage: '添加成功', drawer: addDrawer, transform })
-const editLabCategory = () => submit(editFormRef, 'update', { successMessage: '修改成功', drawer: editDrawer, transform })
+const editLabCategory = () =>
+    submit(editFormRef, 'update', { successMessage: '修改成功', drawer: editDrawer, transform })
 
 const onDelete = async (ids) => {
     if (await remove(ids)) selection.value = []
@@ -58,7 +58,9 @@ load(1)
     >
         <template #toolbar>
             <el-button plain type="primary" @click="openAdd">类别添加</el-button>
-            <el-button :disabled="selection.length === 0" plain type="danger" @click="onDelete(selection)">删除选中</el-button>
+            <el-button :disabled="selection.length === 0" plain type="danger" @click="onDelete(selection)"
+                >删除选中</el-button
+            >
         </template>
 
         <el-table-column label="分类名称">

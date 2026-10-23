@@ -15,73 +15,85 @@ const router = createRouter({
                     meta: {
                         title: '用户信息管理'
                     }
-                }, {
+                },
+                {
                     path: '/data/admin',
                     component: () => import('@/views/data/DataAdmin.vue'),
                     meta: {
                         title: '管理员信息管理'
                     }
-                }, {
+                },
+                {
                     path: '/lab/category',
                     component: () => import('@/views/lab/LabCategory.vue'),
                     meta: {
                         title: '实验室类别'
                     }
-                }, {
+                },
+                {
                     path: '/lab/log',
                     component: () => import('@/views/lab/LabLog.vue'),
                     meta: {
                         title: '实验室预约记录'
                     }
-                }, {
+                },
+                {
                     path: '/lab/manage',
                     component: () => import('@/views/lab/LabManage.vue'),
                     meta: {
                         title: '实验室管理'
                     }
-                }, {
+                },
+                {
                     path: '/lab/note',
                     component: () => import('@/views/lab/LabNote.vue'),
                     meta: {
                         title: '实验室注意事项'
                     }
-                }, {
+                },
+                {
                     path: '/dev/category',
                     component: () => import('@/views/dev/DevCategory.vue'),
                     meta: {
                         title: '设备分类'
                     }
-                }, {
+                },
+                {
                     path: '/dev/log',
                     component: () => import('@/views/dev/DevLog.vue'),
                     meta: {
                         title: '设备预约记录'
                     }
-                }, {
+                },
+                {
                     path: '/dev/head',
                     component: () => import('@/views/dev/DevHead.vue'),
                     meta: {
                         title: '设备负责人数据'
                     }
-                }, {
+                },
+                {
                     path: '/dev/note',
                     component: () => import('@/views/dev/DevNote.vue'),
                     meta: {
                         title: '设备注意事项'
                     }
-                }, {
+                },
+                {
                     path: '/timetable',
                     component: () => import('@/views/TimeTable.vue'),
                     meta: {
                         title: '课表管理'
                     }
-                }, {
+                },
+                {
                     path: '/datalog',
                     component: () => import('@/views/DataLog.vue'),
                     meta: {
                         title: '数据留存'
                     }
-                }, {
+                },
+                {
                     path: '/datashow',
                     component: () => import('@/views/DataShow.vue'),
                     meta: {
@@ -108,14 +120,17 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-    if (to.meta.title) {
-        document.title = to.meta.title + ' | 实验室预约系统'
-    }
     const useStore = useUserStore()
     // 已登录时访问登录页，直接回到首页
     if (useStore.token && to.path === '/login') return '/'
     // 如果没有token, 且访问的是非登录页，拦截到登录
     if (!useStore.token && to.path !== '/login') return '/login'
+})
+
+// afterEach 保证所有路由（含无 meta.title 的子路由）都能正确设置标题，
+// 避免标题残留上一个页面
+router.afterEach((to) => {
+    document.title = `${to.meta.title || '管理端'} | 实验室预约系统`
 })
 
 export default router

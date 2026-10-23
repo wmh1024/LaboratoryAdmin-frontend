@@ -47,7 +47,11 @@ describe('handleMockRequest 鉴权', () => {
 
     it('有效令牌可读列表', () => {
         const token = freshToken()
-        const res = handleMockRequest({ method: 'GET', url: '/api/user/list?page=1&pageSize=10', headers: authed(token) })
+        const res = handleMockRequest({
+            method: 'GET',
+            url: '/api/user/list?page=1&pageSize=10',
+            headers: authed(token)
+        })
         expect(res.status).toBe(200)
         expect(res.payload.data.items).toHaveLength(5)
     })
@@ -59,7 +63,12 @@ describe('handleMockRequest 写权限与字段白名单', () => {
     it('非院长角色写入被拒绝 403', () => {
         const token = freshToken()
         // 先把当前登录院长（id=1）降级为主任
-        handleMockRequest({ method: 'PUT', url: '/api/admin/update', headers: authed(token), body: { id: 1, status: 1 } })
+        handleMockRequest({
+            method: 'PUT',
+            url: '/api/admin/update',
+            headers: authed(token),
+            body: { id: 1, status: 1 }
+        })
         const res = handleMockRequest({
             method: 'POST',
             url: '/api/user/add',
@@ -86,7 +95,12 @@ describe('handleMockRequest 写权限与字段白名单', () => {
 
     it('/admin/update 不会误改到用户表', () => {
         const token = freshToken()
-        handleMockRequest({ method: 'PUT', url: '/api/admin/update', headers: authed(token), body: { id: 1, name: '管理员一' } })
+        handleMockRequest({
+            method: 'PUT',
+            url: '/api/admin/update',
+            headers: authed(token),
+            body: { id: 1, name: '管理员一' }
+        })
         const users = handleMockRequest({ method: 'GET', url: '/api/user/find/1', headers: authed(token) })
         expect(users.payload.data.name).toBe('张同学')
     })
