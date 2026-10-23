@@ -9,9 +9,8 @@ import { createSeed } from './seed.js'
 
 const PAGE_SIZE = 10
 
-const state = {
-  db: null
-}
+// 开发期浏览器端 mock 适配器与 vite 中间件可能各自加载此模块，挂到 globalThis 上共享同一份数据
+const state = globalThis.__LABADMIN_MOCK_STATE__ || (globalThis.__LABADMIN_MOCK_STATE__ = { db: null })
 
 const db = () => {
   if (!state.db) state.db = createSeed()

@@ -37,6 +37,12 @@ const validateConfirmPassword = (_rule, value, callback) => {
   callback()
 }
 
+// 编辑时密码留空表示不修改，此时无需校验确认密码
+const validateEditConfirmPassword = (_rule, value, callback) => {
+  if (!formModel.password && !value) return callback()
+  return validateConfirmPassword(_rule, value, callback)
+}
+
 const rules = {
   username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
   name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
@@ -50,7 +56,7 @@ const editRules = {
   name: rules.name,
   status: rules.status,
   password: [{ min: 6, message: '密码长度不能少于 6 位', trigger: 'blur' }],
-  repassword: [{ validator: validateConfirmPassword, trigger: 'blur' }]
+  repassword: [{ validator: validateEditConfirmPassword, trigger: 'blur' }]
 }
 
 const handleSelectionChange = (val) => {
@@ -205,11 +211,11 @@ getAdminList(pageNum.value)
     </el-table>
     <div style="display: flex; justify-content: center">
       <el-pagination
-        :current-page="pageNum"
+        v-if="totalNum > PAGE_SIZE"
+        v-model:current-page="pageNum"
         :page-size="PAGE_SIZE"
         :total="totalNum"
         background
-        hide-on-single-page
         layout="total, prev, pager, next"
         style="margin: 20px auto"
         @current-change="(currentPage) => pageChange(currentPage)"

@@ -210,11 +210,11 @@ getLabCategoryList()
     </el-table>
     <div style="display: flex; justify-content: center">
       <el-pagination
-        :current-page="pageNum"
+        v-if="totalNum > PAGE_SIZE"
+        v-model:current-page="pageNum"
         :page-size="PAGE_SIZE"
         :total="totalNum"
         background
-        hide-on-single-page
         layout="total, prev, pager, next"
         style="margin: 20px auto"
         @current-change="(currentPage) => pageChange(currentPage)"
