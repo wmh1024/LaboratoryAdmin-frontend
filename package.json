@@ -27,10 +27,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:prod": "vite build --mode production",
     "preview": "vite preview",
+    "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"src/**/*.{js,vue,css,scss}\" \"build/**/*.js\"",
+    "format": "prettier --write \"src/**/*.{js,vue,css,scss}\" \"build/**/*.js\" \"*.js\"",
+    "format:check": "prettier --check \"src/**/*.{js,vue,css,scss}\" \"build/**/*.js\" \"*.js\"",
     "audit": "npm audit --omit=dev"
   },
   "dependencies": {
@@ -53,6 +56,7 @@
     "sass": "^1.106.1",
     "unplugin-auto-import": "^21.1.0",
     "unplugin-vue-components": "^32.1.0",
-    "vite": "^5.4.21"
+    "vite": "^5.4.21",
+    "vitest": "^2.1.9"
   }
 }
