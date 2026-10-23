@@ -3,8 +3,8 @@ import { pageParams } from '@/api/common'
 
 // GET /laboratory/record/list
 // 获取实验室记录列表
-export const getLabRecordListService = (page) => {
-    return request.get('/laboratory/record/list', { params: pageParams(page) })
+export const getLabRecordListService = (page, pageSize) => {
+    return request.get('/laboratory/record/list', { params: pageParams(page, pageSize) })
 }
 
 // 根据id查询详细记录
