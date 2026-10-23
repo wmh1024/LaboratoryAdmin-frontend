@@ -8,7 +8,10 @@ import { handleMockRequest } from './server'
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
-/** 把 baseURL + url 拼成 URL 可解析的地址（浏览器内二者均为相对/绝对地址） */
+/** 解析基准 origin：浏览器取 location，SSR/单测下退化为占位 origin，避免依赖 window */
+const ORIGIN = globalThis.location?.origin || 'http://localhost'
+
+/** 把 baseURL + url 拼成 URL 可解析的地址（二者均为相对/绝对地址） */
 const toAbsolute = (baseURL, url) => {
     const prefix = String(baseURL || '').replace(/\/+$/, '')
     const suffix = String(url || '')
@@ -42,7 +45,7 @@ const toQuery = (params) => {
 export const createMockAdapter = () => async (config) => {
     const method = String(config.method || 'get').toUpperCase()
     const body = parseBody(config.data)
-    const { pathname, search } = new URL(toAbsolute(config.baseURL, config.url), window.location.origin)
+    const { pathname, search } = new URL(toAbsolute(config.baseURL, config.url), ORIGIN)
     const query = search + toQuery(config.params)
 
     // 真实 HTTP 适配器会自动带上请求头，自定义 adapter 必须手动透传，否则 Mock 侧鉴权必然 401

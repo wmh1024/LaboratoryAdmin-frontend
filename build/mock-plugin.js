@@ -50,7 +50,8 @@ export default function mockPlugin(options = {}) {
     const enabled = String(options.useMock) === 'true'
     return {
         name: 'labadmin-mock',
-        apply: () => enabled,
+        // apply 用于按 command 过滤插件；这里用显式常量避免误读为「每次都应用」
+        apply: enabled ? () => true : () => false,
         configResolved(config) {
             if (enabled) config.logger.info('[mock] 已启用内存 Mock 服务（/api）')
         },
