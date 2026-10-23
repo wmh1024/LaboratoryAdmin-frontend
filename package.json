@@ -28,6 +28,7 @@
     "dev": "vite",
     "build": "vite build",
     "build:prod": "vite build --mode production",
+    "build:demo": "vite build --mode demo",
     "preview": "vite preview",
     "test": "vitest run",
     "lint": "eslint .",
