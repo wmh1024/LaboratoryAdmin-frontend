@@ -1,0 +1,50 @@
+name: CI
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    check:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: yarn
+
+            - name: Install dependencies
+              run: yarn install --frozen-lockfile
+
+            - name: Lint
+              run: yarn lint
+
+            - name: Format check
+              run: yarn format:check
+
+            - name: Unit tests
+              run: yarn test
+
+            - name: Build (production, Mock excluded)
+              run: yarn build
+
+            - name: Assert no Mock data in production bundle
+              run: |
+                  if grep -rlE "demo_admin|demo1234|20990101|mock-token-" dist; then
+                      echo "::error::生产构建产物中包含 Mock 数据，请检查 vite.config.js 的 @/mock 别名"
+                      exit 1
+                  fi
+                  echo "OK: production bundle contains no mock data"
+
+            - name: Build (demo, Mock included)
+              run: yarn build:demo
+
+            - name: Security audit (production dependencies)
+              run: yarn audit --groups dependencies || true

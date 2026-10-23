@@ -9,3 +9,5 @@ export const createMockAdapter = () => {
 }
 
 export const handleMockRequest = () => null
+
+export const DEMO_ACCOUNT = null
