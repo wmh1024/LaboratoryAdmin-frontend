@@ -7,14 +7,15 @@
 
 ### Added
 
-- 单元测试体系（Vitest）：API 工具、分页 composable、Mock 鉴权/白名单/适配器，共 31 个用例
+- 单元测试体系（Vitest）：API 工具、分页 composable、Mock 鉴权/契约/适配器，共 37 个用例
 - GitHub Actions CI（lint + format:check + test + build + 产物无 Mock 断言）
+- `docs/API.md`：后端接口唯一契约（响应包、错误码、鉴权、分页、字段模型与示例）
 - `npm run build:demo`：纯静态演示构建（含 Mock，相对路径）
 - `POST /admin/logout` 接口与前端登出调用
 - `composables/usePagedList`、`composables/useCrudDrawer`、`components/CrudTable`、`constants/role.js`
 - 内置内存 Mock 服务（`src/mock`）：无后端亦可完整运行，支持用户、管理员、实验室、实验室分类、预约记录的增删改查
 - 可配置接口地址与 Mock 开关（`VITE_API_BASE_URL` / `VITE_USE_MOCK`），新增 `.env.example`
-- 侧边栏退出登录入口、占位页组件、`CONTRIBUTING.md` / `SECURITY.md` / `.prettierrc.json`
+- 侧边栏退出登录入口、`CONTRIBUTING.md` / `SECURITY.md` / `.prettierrc.json`
 - ESLint 9（flat config）+ Prettier，新增 `lint` / `lint:fix` / `format` / `audit` 脚本
 
 ### Fixed
@@ -22,6 +23,9 @@
 - **Mock 服务无鉴权**：除登录外全部接口校验 Bearer 令牌（无效 401），写操作仅院长角色（403）
 - **`/admin/update` 与 `/user/update` 路由混用**：已拆分，管理员更新不再复用用户语义
 - **Mock 更新接口可被任意字段覆盖**：改为字段白名单，`id` 与只读统计字段不可改写
+- **Mock 响应泄露密码**：`password` 改为只写字段，用户/管理员列表、详情、增删改响应均不返回密码
+- **Mock 未按契约校验**：补齐新增必填字段、账号唯一、密码最短 6 位、批量删除空 `ids`、`pageSize` 上限 100
+- **实验室详情路径拼写不一致**：统一为 `/laboratory/find/{id}`，移除 `findl` 兼容
 - **生产构建仍打包 Mock 与种子数据**：`@/mock` 别名指向空实现 + `define` 静态化开关，产物已无 Mock
 - **Mock 适配器延迟挂载导致首屏请求走真实网络**：改为 `app.mount` 前 `await` 安装
 - 种子数据 `demo_admin` 角色由「指导老师」修正为「院长」，与权限模型一致
@@ -47,6 +51,7 @@
 ### Changed
 
 - 依赖升级至 Vite 8 / @vitejs/plugin-vue 6 / Vitest 4 / eslint-plugin-vue 10，`npm audit` 归零
+- Node 版本要求与 Vite 8 对齐为 `^20.19.0 || >=22.12.0`，CI 使用 Node 22
 - dev server 仅监听 `127.0.0.1`；`loadEnv` 仅加载 `VITE_` 前缀变量
 - 全量应用 Prettier（此前 26 个文件不符合配置）
 - `PAGE_SIZE` 统一由 `api/common.js` 派生，Mock 复用同一常量
@@ -54,7 +59,8 @@
 - 侧边栏支持折叠与窄屏响应式布局
 - 包管理器统一为 npm，移除 `yarn.lock` 并提交 `package-lock.json`
 - `LICENSE.txt` 版权人更正为项目作者
-- 7 个未实现页面统一为“建设中”占位版式
+- 移除 8 个未实现页面（设备、课表、数据留存/展示、注意事项）及菜单入口，删除 `PlaceholderPage` 与 `favicon.ico`
+- README 功能范围收缩为已实现模块，接口说明改由 `docs/API.md` 承载
 
 ## [0.0.0] - 2023-11
 
