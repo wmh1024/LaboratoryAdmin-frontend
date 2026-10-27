@@ -18,22 +18,22 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: 22
-                  cache: yarn
+                  cache: npm
 
             - name: Install dependencies
-              run: yarn install --frozen-lockfile
+              run: npm ci
 
             - name: Lint
-              run: yarn lint
+              run: npm run lint
 
             - name: Format check
-              run: yarn format:check
+              run: npm run format:check
 
             - name: Unit tests
-              run: yarn test
+              run: npm test
 
             - name: Build (production, Mock excluded)
-              run: yarn build
+              run: npm run build
 
             - name: Assert no Mock data in production bundle
               run: |
@@ -44,7 +44,7 @@ jobs:
                   echo "OK: production bundle contains no mock data"
 
             - name: Build (demo, Mock included)
-              run: yarn build:demo
+              run: npm run build:demo
 
             - name: Security audit (production dependencies)
-              run: yarn audit --groups dependencies || true
+              run: npm audit --omit=dev
