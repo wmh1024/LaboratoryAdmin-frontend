@@ -29,7 +29,7 @@
 
 ## 快速开始
 
-环境要求：Node.js >= 18，包管理器 npm（仓库提供 `package-lock.json`）。
+环境要求：Node.js `^20.19.0` 或 `>=22.12.0`（Vite 8 要求），包管理器 npm（仓库提供 `package-lock.json`）。
 
 ```sh
 git clone https://github.com/wmh1024/LaboratoryAdmin-frontend.git
