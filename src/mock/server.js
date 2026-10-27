@@ -42,7 +42,7 @@ const pick = (source, fields) => {
 }
 
 const FIELDS = {
-    user: ['username', 'name', 'positionStatus', 'className', 'violationCount', 'violationStatus', 'password'],
+    user: ['username', 'name', 'positionStatus', 'className', 'password'],
     admin: ['username', 'name', 'status', 'phone', 'password'],
     labCategory: ['categoryName', 'categoryStatus'],
     laboratory: [
@@ -54,6 +54,30 @@ const FIELDS = {
         'laboratoryHeadId'
     ]
 }
+
+/** 移除只写字段，保证 password 不会出现在任何响应中 */
+const publicRecord = (record) => {
+    if (!record) return record
+    const result = { ...record }
+    delete result.password
+    return result
+}
+
+/** 校验新增必填字段，返回错误响应或 null */
+const requireFields = (body, fields) => {
+    const missing = fields.filter((key) => body?.[key] === undefined || body?.[key] === null || body?.[key] === '')
+    return missing.length ? fail(`缺少必填字段: ${missing.join(', ')}`, 400) : null
+}
+
+/** 密码为只写字段，传入时至少 6 位 */
+const validatePassword = (body) => {
+    if (body?.password === undefined || body.password === '') return null
+    return String(body.password).length >= 6 ? null : fail('密码长度不能少于 6 位', 400)
+}
+
+/** username 在各自表内唯一 */
+const duplicateUsername = (list, username, excludeId) =>
+    list.some((item) => item.username === username && item.id !== excludeId)
 
 const toInt = (value, fallback = 0) => {
     const num = Number.parseInt(value, 10)
@@ -72,7 +96,7 @@ const parseIds = (raw) =>
 /** 通用分页，返回后端约定的 { items, counts } */
 const paginate = (list, query, pageSize = DEFAULT_PAGE_SIZE) => {
     const page = Math.max(toInt(query.get('page'), 1), 1)
-    const size = Math.max(toInt(query.get('pageSize'), pageSize), 1)
+    const size = Math.min(Math.max(toInt(query.get('pageSize'), pageSize), 1), 100)
     const start = (page - 1) * size
     return {
         items: list.slice(start, start + size),
@@ -81,6 +105,14 @@ const paginate = (list, query, pageSize = DEFAULT_PAGE_SIZE) => {
 }
 
 const nextId = (list) => (list.length ? Math.max(...list.map((item) => item.id)) + 1 : 1)
+
+/** 批量删除：ids 必填，空值时返回 400 */
+const removeByIds = (key, query) => {
+    const ids = parseIds(query.get('ids'))
+    if (!ids.length) return fail('请选择要删除的数据', 400)
+    db()[key] = db()[key].filter((item) => !ids.includes(item.id))
+    return ok(null, '删除成功')
+}
 
 const makeToken = (id) => `mock-token-${id}-${Date.now()}`
 
@@ -129,14 +161,17 @@ const routes = () => [
     {
         method: 'GET',
         test: /^\/user\/list$/,
-        handle: ({ query }) => ok(paginate(db().users, query))
+        handle: ({ query }) => {
+            const { items, counts } = paginate(db().users, query)
+            return ok({ items: items.map(publicRecord), counts })
+        }
     },
     {
         method: 'GET',
         test: /^\/user\/find\/(\d+)$/,
         handle: ({ params }) => {
             const user = db().users.find((item) => item.id === toInt(params[0]))
-            return user ? ok(user) : fail('用户不存在', 404)
+            return user ? ok(publicRecord(user)) : fail('用户不存在', 404)
         }
     },
     {
@@ -144,9 +179,18 @@ const routes = () => [
         write: true,
         test: /^\/user\/add$/,
         handle: ({ body }) => {
-            const user = { ...pick(body, FIELDS.user), id: nextId(db().users) }
+            const invalid =
+                requireFields(body, ['username', 'name', 'positionStatus', 'password']) || validatePassword(body)
+            if (invalid) return invalid
+            if (duplicateUsername(db().users, body.username)) return fail('该学号(工号)已存在', 400)
+            const user = {
+                ...pick(body, FIELDS.user),
+                id: nextId(db().users),
+                violationCount: 0,
+                violationStatus: 0
+            }
             db().users.push(user)
-            return ok(user, '添加成功')
+            return ok(publicRecord(user), '添加成功')
         }
     },
     {
@@ -156,33 +200,37 @@ const routes = () => [
         handle: ({ body }) => {
             const index = db().users.findIndex((item) => item.id === toInt(body?.id))
             if (index < 0) return fail('用户不存在', 404)
+            const invalid = validatePassword(body)
+            if (invalid) return invalid
+            if (body?.username && duplicateUsername(db().users, body.username, db().users[index].id)) {
+                return fail('该学号(工号)已存在', 400)
+            }
             db().users[index] = { ...db().users[index], ...pick(body, FIELDS.user) }
-            return ok(db().users[index], '修改成功')
+            return ok(publicRecord(db().users[index]), '修改成功')
         }
     },
     {
         method: 'DELETE',
         write: true,
         test: /^\/user\/delete$/,
-        handle: ({ query }) => {
-            const ids = parseIds(query.get('ids'))
-            db().users = db().users.filter((item) => !ids.includes(item.id))
-            return ok(null, '删除成功')
-        }
+        handle: ({ query }) => removeByIds('users', query)
     },
 
     /* ---------------- 管理员 ---------------- */
     {
         method: 'GET',
         test: /^\/admin\/list$/,
-        handle: ({ query }) => ok(paginate(db().admins, query))
+        handle: ({ query }) => {
+            const { items, counts } = paginate(db().admins, query)
+            return ok({ items: items.map(publicRecord), counts })
+        }
     },
     {
         method: 'GET',
         test: /^\/admin\/find\/(\d+)$/,
         handle: ({ params }) => {
             const admin = db().admins.find((item) => item.id === toInt(params[0]))
-            return admin ? ok(admin) : fail('管理员不存在', 404)
+            return admin ? ok(publicRecord(admin)) : fail('管理员不存在', 404)
         }
     },
     {
@@ -190,9 +238,12 @@ const routes = () => [
         write: true,
         test: /^\/admin\/add$/,
         handle: ({ body }) => {
+            const invalid = requireFields(body, ['username', 'name', 'status', 'password']) || validatePassword(body)
+            if (invalid) return invalid
+            if (duplicateUsername(db().admins, body.username)) return fail('该账号已存在', 400)
             const admin = { ...pick(body, FIELDS.admin), id: nextId(db().admins) }
             db().admins.push(admin)
-            return ok(admin, '添加成功')
+            return ok(publicRecord(admin), '添加成功')
         }
     },
     {
@@ -202,19 +253,20 @@ const routes = () => [
         handle: ({ body }) => {
             const index = db().admins.findIndex((item) => item.id === toInt(body?.id))
             if (index < 0) return fail('管理员不存在', 404)
+            const invalid = validatePassword(body)
+            if (invalid) return invalid
+            if (body?.username && duplicateUsername(db().admins, body.username, db().admins[index].id)) {
+                return fail('该账号已存在', 400)
+            }
             db().admins[index] = { ...db().admins[index], ...pick(body, FIELDS.admin) }
-            return ok(db().admins[index], '修改成功')
+            return ok(publicRecord(db().admins[index]), '修改成功')
         }
     },
     {
         method: 'DELETE',
         write: true,
         test: /^\/admin\/delete$/,
-        handle: ({ query }) => {
-            const ids = parseIds(query.get('ids'))
-            db().admins = db().admins.filter((item) => !ids.includes(item.id))
-            return ok(null, '删除成功')
-        }
+        handle: ({ query }) => removeByIds('admins', query)
     },
 
     /* ---------------- 实验室分类 ---------------- */
@@ -236,6 +288,8 @@ const routes = () => [
         write: true,
         test: /^\/lab\/category\/add$/,
         handle: ({ body }) => {
+            const invalid = requireFields(body, ['categoryName', 'categoryStatus'])
+            if (invalid) return invalid
             const category = { ...pick(body, FIELDS.labCategory), id: nextId(db().labCategories) }
             db().labCategories.push(category)
             return ok(category, '添加成功')
@@ -256,11 +310,7 @@ const routes = () => [
         method: 'DELETE',
         write: true,
         test: /^\/lab\/category\/delete$/,
-        handle: ({ query }) => {
-            const ids = parseIds(query.get('ids'))
-            db().labCategories = db().labCategories.filter((item) => !ids.includes(item.id))
-            return ok(null, '删除成功')
-        }
+        handle: ({ query }) => removeByIds('labCategories', query)
     },
 
     /* ---------------- 实验室 ---------------- */
@@ -271,7 +321,7 @@ const routes = () => [
     },
     {
         method: 'GET',
-        test: /^\/laboratory\/findl?\/(\d+)$/,
+        test: /^\/laboratory\/find\/(\d+)$/,
         handle: ({ params }) => {
             const lab = db().labs.find((item) => item.id === toInt(params[0]))
             return lab ? ok(lab) : fail('实验室不存在', 404)
@@ -282,6 +332,13 @@ const routes = () => [
         write: true,
         test: /^\/laboratory\/add$/,
         handle: ({ body }) => {
+            const invalid = requireFields(body, [
+                'laboratoryName',
+                'laboratoryLocation',
+                'laboratoryType',
+                'laboratoryCategory'
+            ])
+            if (invalid) return invalid
             const lab = { ...pick(body, FIELDS.laboratory), id: nextId(db().labs), laboratoryCount: 0 }
             db().labs.push(lab)
             return ok(lab, '添加成功')
@@ -302,11 +359,7 @@ const routes = () => [
         method: 'DELETE',
         write: true,
         test: /^\/laboratory\/delete$/,
-        handle: ({ query }) => {
-            const ids = parseIds(query.get('ids'))
-            db().labs = db().labs.filter((item) => !ids.includes(item.id))
-            return ok(null, '删除成功')
-        }
+        handle: ({ query }) => removeByIds('labs', query)
     },
 
     /* ---------------- 实验室预约记录 ---------------- */
