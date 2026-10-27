@@ -55,7 +55,10 @@ const rules = {
     username: [{ required: true, message: '请输入学号(工号)', trigger: 'blur' }],
     name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
     positionStatus: [{ required: true, message: '请选择职位', trigger: 'change' }],
-    password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+    password: [
+        { required: true, message: '请输入密码', trigger: 'blur' },
+        { min: 6, message: '密码长度不能少于 6 位', trigger: 'blur' }
+    ],
     repassword: [{ validator: validateConfirmPassword, trigger: 'blur' }]
 }
 

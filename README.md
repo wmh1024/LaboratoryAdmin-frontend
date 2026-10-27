@@ -90,24 +90,24 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 
 ## 接口约定
 
-- 响应结构：`{ code: number, msg: string, data: any }`，`code === 200` 视为成功
+完整契约（字段、枚举、错误码、请求/响应示例）见 **[docs/API.md](./docs/API.md)**，本文件与 `src/api/*`、`src/mock/*` 均以此为准。
+
+- 响应结构：`{ code: number, msg: string, data: any }`，`code === 200` 视为成功，失败时 HTTP 状态与业务码一致
 - 分页数据：`data = { items: T[], counts: number }`，请求参数为 `page` / `pageSize`
 - 认证：登录返回 `data.token`，前端以 `Authorization: Bearer <token>` 携带；令牌无效返回 `401`
 - 权限：写接口（add/update/delete）仅「院长」（`status === 0`）可调用，否则返回 `403`
-- 批量删除：`DELETE .../delete?ids=1,2,3`
+- 批量删除：`DELETE .../delete?ids=1,2,3`，`ids` 为必填的逗号分隔正整数
+- 密码为只写字段：可随新增/修改提交，任何响应都不会返回 `password`
 
 | 方法 | 路径 | 说明 |
 | --- | --- | --- |
 | POST | `/admin/login` | 管理员登录 |
 | POST | `/admin/logout` | 退出登录（作废当前令牌） |
-| GET | `/user/list` | 用户分页列表 |
-| GET/POST/PUT/DELETE | `/user/find/{id}` `/user/add` `/user/update` `/user/delete` | 用户增删改查 |
+| GET/POST/PUT/DELETE | `/user/list` `/user/find/{id}` `/user/add` `/user/update` `/user/delete` | 用户增删改查 |
 | GET/POST/PUT/DELETE | `/admin/list` `/admin/find/{id}` `/admin/add` `/admin/update` `/admin/delete` | 管理员增删改查 |
 | GET/POST/PUT/DELETE | `/lab/category/list` `/lab/category/find/{id}` `/lab/category/add` `/lab/category/update` `/lab/category/delete` | 实验室类别 |
-| GET/POST/PUT/DELETE | `/laboratory/list` `/laboratory/findl/{id}` `/laboratory/add` `/laboratory/update` `/laboratory/delete` | 实验室 |
+| GET/POST/PUT/DELETE | `/laboratory/list` `/laboratory/find/{id}` `/laboratory/add` `/laboratory/update` `/laboratory/delete` | 实验室 |
 | GET | `/laboratory/record/list` `/laboratory/record/find/{id}` | 实验室预约记录 |
-
-> `/laboratory/findl/{id}` 的拼写按现有后端行为保留，详见 `todo.md` 中的待确认项。
 
 ## 技术栈
 
