@@ -2,6 +2,7 @@
   "name": "labadmin-frontend",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@11.6.2",
   "description": "实验室预约系统 · 管理端（Vue3 + Element Plus），内置可离线运行的 Mock 数据",
   "license": "MIT",
   "repository": {
@@ -21,7 +22,8 @@
     "mock"
   ],
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   },
   "type": "module",
   "scripts": {

@@ -29,21 +29,21 @@
 
 ## 快速开始
 
-环境要求：Node.js >= 18，包管理器 yarn（仓库提供 `yarn.lock`）。
+环境要求：Node.js >= 18，包管理器 npm（仓库提供 `package-lock.json`）。
 
 ```sh
 git clone https://github.com/wmh1024/LaboratoryAdmin-frontend.git
 cd LaboratoryAdmin-frontend
-yarn
+npm install
 
 # 复制环境变量示例（默认已开启 Mock，无需后端）
 cp .env.example .env
 
-yarn dev         # 开发模式（默认 Mock）
-yarn build:demo  # 纯静态演示构建（含 Mock，可直接静态托管）
-yarn build       # 生产构建（排除 Mock，产物在 dist/）
-yarn preview     # 预览构建产物
-yarn test        # 单元测试（vitest）
+npm run dev         # 开发模式（默认 Mock）
+npm run build:demo  # 纯静态演示构建（含 Mock，可直接静态托管）
+npm run build       # 生产构建（排除 Mock，产物在 dist/）
+npm run preview     # 预览构建产物
+npm test            # 单元测试（vitest）
 ```
 
 Mock 模式下使用固定演示账号登录（登录页会提示）：
@@ -66,9 +66,9 @@ Mock 服务会校验令牌：除登录外的接口都必须携带有效 `Authori
 
 | 命令 | 用途 | Mock |
 | --- | --- | --- |
-| `yarn dev` | 本地开发 | 由 `VITE_USE_MOCK` 控制 |
-| `yarn build` / `yarn build:prod` | 对接真实后端的生产构建 | ❌ 强制排除（Mock 代码与种子数据不会进入产物） |
-| `yarn build:demo` | 纯静态演示（GitHub Pages 等） | ✅ 内置，产物使用相对路径 |
+| `npm run dev` | 本地开发 | 由 `VITE_USE_MOCK` 控制 |
+| `npm run build` / `npm run build:prod` | 对接真实后端的生产构建 | ❌ 强制排除（Mock 代码与种子数据不会进入产物） |
+| `npm run build:demo` | 纯静态演示（GitHub Pages 等） | ✅ 内置，产物使用相对路径 |
 
 `.env` 已被 `.gitignore` 忽略，仓库只提交 `.env.example`。
 
@@ -116,19 +116,20 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 
 ## 开发规范
 
-- 静态检查：`yarn lint`（ESLint 9 + eslint-plugin-vue），格式化：`yarn format`（Prettier）
-- 单元测试：`yarn test`（Vitest），覆盖 API 工具、分页 composable 与 Mock 服务
-- 提交前请确保 `yarn lint`、`yarn format:check`、`yarn test`、`yarn build` 全部通过（CI 会自动检查）
+- 静态检查：`npm run lint`（ESLint 9 + eslint-plugin-vue），格式化：`npm run format`（Prettier）
+- 单元测试：`npm test`（Vitest），覆盖 API 工具、分页 composable 与 Mock 服务
+- 提交前请确保 `npm run lint`、`npm run format:check`、`npm test`、`npm run build` 全部通过（CI 会自动检查）
+- 依赖安装建议使用 `npm ci`，以保证与 `package-lock.json` 完全一致
 - 详见 [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ## 部署
 
 | 场景 | 命令 | 产物 | 注意事项 |
 | --- | --- | --- | --- |
-| 对接真实后端 | `yarn build`（或 `build:prod`） | `dist/` | Mock 已被构建期剔除，可用 CI 断言校验 |
-| 纯静态演示（无后端） | `yarn build:demo` | `dist/`（`base` 为相对路径） | 含 Mock 与演示账号，**请勿当作生产环境部署** |
+| 对接真实后端 | `npm run build`（或 `npm run build:prod`） | `dist/` | Mock 已被构建期剔除，可用 CI 断言校验 |
+| 纯静态演示（无后端） | `npm run build:demo` | `dist/`（`base` 为相对路径） | 含 Mock 与演示账号，**请勿当作生产环境部署** |
 
-> `yarn preview` 预览 demo 时同样可用；若直接 `scp dist/` 部署，请先确认所用的是哪种构建。
+> `npm run preview` 预览 demo 时同样可用；若直接 `scp dist/` 部署，请先确认所用的是哪种构建。
 
 ## 参与贡献
 

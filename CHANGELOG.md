@@ -9,7 +9,7 @@
 
 - 单元测试体系（Vitest）：API 工具、分页 composable、Mock 鉴权/白名单/适配器，共 31 个用例
 - GitHub Actions CI（lint + format:check + test + build + 产物无 Mock 断言）
-- `yarn build:demo`：纯静态演示构建（含 Mock，相对路径）
+- `npm run build:demo`：纯静态演示构建（含 Mock，相对路径）
 - `POST /admin/logout` 接口与前端登出调用
 - `composables/usePagedList`、`composables/useCrudDrawer`、`components/CrudTable`、`constants/role.js`
 - 内置内存 Mock 服务（`src/mock`）：无后端亦可完整运行，支持用户、管理员、实验室、实验室分类、预约记录的增删改查
@@ -52,6 +52,7 @@
 - `PAGE_SIZE` 统一由 `api/common.js` 派生，Mock 复用同一常量
 - 图标改为按需引入；移除重复的 `el-message.css` 引入
 - 侧边栏支持折叠与窄屏响应式布局
+- 包管理器统一为 npm，移除 `yarn.lock` 并提交 `package-lock.json`
 - `LICENSE.txt` 版权人更正为项目作者
 - 7 个未实现页面统一为“建设中”占位版式
 
