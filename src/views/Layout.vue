@@ -2,17 +2,7 @@
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessageBox } from 'element-plus'
-import {
-    Box,
-    Calendar,
-    DataAnalysis,
-    Document,
-    Expand,
-    Fold,
-    School,
-    SwitchButton,
-    User
-} from '@element-plus/icons-vue'
+import { Expand, Fold, School, SwitchButton, User } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/modules/user'
 import { userLogoutService } from '@/api/user'
 
@@ -65,30 +55,7 @@ const handleLogout = async () => {
                     <el-menu-item index="/lab/manage">实验室管理</el-menu-item>
                     <el-menu-item index="/lab/category">实验室类别</el-menu-item>
                     <el-menu-item index="/lab/log">实验室预约记录</el-menu-item>
-                    <el-menu-item index="/lab/note">注意事项</el-menu-item>
                 </el-sub-menu>
-                <el-sub-menu index="3">
-                    <template #title>
-                        <el-icon><Box /></el-icon>
-                        <span>设备数据</span>
-                    </template>
-                    <el-menu-item index="/dev/log">设备预约记录</el-menu-item>
-                    <el-menu-item index="/dev/head">负责人数据</el-menu-item>
-                    <el-menu-item index="/dev/category">设备类别</el-menu-item>
-                    <el-menu-item index="/dev/note">注意事项</el-menu-item>
-                </el-sub-menu>
-                <el-menu-item index="/timetable">
-                    <el-icon><Calendar /></el-icon>
-                    <span>课表数据</span>
-                </el-menu-item>
-                <el-menu-item index="/datalog">
-                    <el-icon><Document /></el-icon>
-                    <span>数据留存</span>
-                </el-menu-item>
-                <el-menu-item index="/datashow">
-                    <el-icon><DataAnalysis /></el-icon>
-                    <span>数据展示</span>
-                </el-menu-item>
             </el-menu>
         </el-col>
         <el-col :xs="24" :md="collapsed ? 23 : 20" class="main">

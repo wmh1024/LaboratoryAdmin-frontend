@@ -43,62 +43,6 @@ const router = createRouter({
                     meta: {
                         title: '实验室管理'
                     }
-                },
-                {
-                    path: '/lab/note',
-                    component: () => import('@/views/lab/LabNote.vue'),
-                    meta: {
-                        title: '实验室注意事项'
-                    }
-                },
-                {
-                    path: '/dev/category',
-                    component: () => import('@/views/dev/DevCategory.vue'),
-                    meta: {
-                        title: '设备分类'
-                    }
-                },
-                {
-                    path: '/dev/log',
-                    component: () => import('@/views/dev/DevLog.vue'),
-                    meta: {
-                        title: '设备预约记录'
-                    }
-                },
-                {
-                    path: '/dev/head',
-                    component: () => import('@/views/dev/DevHead.vue'),
-                    meta: {
-                        title: '设备负责人数据'
-                    }
-                },
-                {
-                    path: '/dev/note',
-                    component: () => import('@/views/dev/DevNote.vue'),
-                    meta: {
-                        title: '设备注意事项'
-                    }
-                },
-                {
-                    path: '/timetable',
-                    component: () => import('@/views/TimeTable.vue'),
-                    meta: {
-                        title: '课表管理'
-                    }
-                },
-                {
-                    path: '/datalog',
-                    component: () => import('@/views/DataLog.vue'),
-                    meta: {
-                        title: '数据留存'
-                    }
-                },
-                {
-                    path: '/datashow',
-                    component: () => import('@/views/DataShow.vue'),
-                    meta: {
-                        title: '数据展示'
-                    }
                 }
             ]
         },
