@@ -9,8 +9,15 @@ node_modules
 .DS_Store
 dist
 dist-ssr
+dist-*
 coverage
 *.local
+
+# 构建产物与打包文件：不得入库（历史中曾误提交 dist.zip）
+*.zip
+*.tar.gz
+*.tgz
+*.bundle
 
 # 环境变量（仅提交 .env.example）
 .env
