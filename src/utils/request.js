@@ -22,8 +22,16 @@ const request = axios.create({
  */
 export const setupMockAdapter = async () => {
     if (!useMock) return
-    const { createMockAdapter } = await import('@/mock/browser')
+    const { createMockAdapter } = await import('@/mock')
     request.defaults.adapter = createMockAdapter()
+}
+
+/** 统一处理登录失效：清理本地令牌并回到登录页 */
+const handleUnauthorized = (message) => {
+    const useStore = useUserStore()
+    useStore.removeToken()
+    ElMessage.error(message || '登录已过期，请重新登录')
+    router.push('/login')
 }
 
 // 请求拦截器
@@ -47,6 +55,11 @@ request.interceptors.response.use(
         if (!body || typeof body !== 'object' || !('code' in body)) {
             return res
         }
+        // 兼容“HTTP 200 + 业务码 401”的后端实现，与网络层 401 做相同清理
+        if (body.code === 401) {
+            handleUnauthorized(body.msg)
+            return Promise.reject(body)
+        }
         // 仅 code === 200 视为业务成功，其余业务码均提示并中断
         if (body.code === 200) {
             return res
@@ -61,10 +74,7 @@ request.interceptors.response.use(
         const message = body?.msg || err.message || '服务异常'
         // 处理401错误 权限不足 或 token 过期 => 清理登录态并跳转登录
         if (status === 401) {
-            const useStore = useUserStore()
-            useStore.removeToken()
-            ElMessage.error(message === '服务异常' ? '登录已过期，请重新登录' : message)
-            router.push('/login')
+            handleUnauthorized(message === '服务异常' ? '登录已过期，请重新登录' : message)
             return Promise.reject(err)
         }
         if (status === 403) {

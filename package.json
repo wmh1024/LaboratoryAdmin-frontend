@@ -37,6 +37,7 @@
         "test:coverage": "vitest run --coverage",
         "smoke": "npm run build:demo && node scripts/smoke.mjs",
         "smoke:shots": "npm run build:demo && node scripts/smoke.mjs --screenshots",
+        "check:bundle": "node scripts/check-bundle.mjs",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "format": "prettier --write \"src/**/*.{js,vue,css,scss}\" \"build/**/*.js\" \"tests/**/*.js\" \"scripts/**/*.mjs\" \"*.{js,mjs}\" \"package.json\"",

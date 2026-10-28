@@ -36,11 +36,18 @@ export default defineConfig(({ mode, command }) => {
             mockPlugin({ useMock })
         ],
         resolve: {
-            alias: {
-                '@': fileURLToPath(new URL('./src', import.meta.url)),
-                // 生产构建把 Mock 目录指向空实现，保证 mock 代码与种子数据不进产物
-                ...(useMock ? {} : { '@/mock': fileURLToPath(new URL('./src/__mock_disabled__.js', import.meta.url)) })
-            }
+            // alias 数组按顺序匹配；`@/mock` 必须精确匹配，不能影响 `@/mock/xxx` 子路径
+            alias: [
+                ...(useMock
+                    ? []
+                    : [
+                          {
+                              find: /^@\/mock$/,
+                              replacement: fileURLToPath(new URL('./src/__mock_disabled__.js', import.meta.url))
+                          }
+                      ]),
+                { find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) }
+            ]
         },
         // 让 import.meta.env.VITE_USE_MOCK 在构建期被静态替换，动态 import 才能真正被摇树剔除
         define: {

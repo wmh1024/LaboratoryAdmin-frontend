@@ -24,8 +24,7 @@ describe('createMockAdapter', () => {
     })
 
     it('把 Authorization 头透传给 Mock 鉴权', async () => {
-        const noToken = await call({ url: '/user/list' })
-        expect(noToken.status).toBe(401)
+        await expect(call({ url: '/user/list' })).rejects.toMatchObject({ response: { status: 401 } })
 
         const login = await call({ url: '/admin/login', method: 'post', data: { ...DEMO_ACCOUNT } })
         const res = await call({
@@ -35,9 +34,21 @@ describe('createMockAdapter', () => {
         expect(res.status).toBe(200)
     })
 
-    it('返回体结构与 axios response 兼容', async () => {
-        const res = await call({ url: '/lab/category/list', headers: { Authorization: 'Bearer bad' } })
-        expect(res).toMatchObject({ status: 401, statusText: 'Error' })
+    it('HTTP >= 400 时按 axios 语义 reject，并保留 response.status', async () => {
+        await expect(
+            call({ url: '/lab/category/list', headers: { Authorization: 'Bearer bad' } })
+        ).rejects.toMatchObject({
+            response: {
+                status: 401,
+                statusText: 'Error',
+                data: { code: 401 }
+            }
+        })
+    })
+
+    it('成功响应仍返回与 axios response 兼容的结构', async () => {
+        const res = await call({ url: '/admin/login', method: 'post', data: { ...DEMO_ACCOUNT } })
+        expect(res).toMatchObject({ status: 200, statusText: 'OK' })
         expect(res).toHaveProperty('data')
         expect(res).toHaveProperty('config')
     })
