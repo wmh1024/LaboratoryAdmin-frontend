@@ -42,7 +42,8 @@
         "lint:fix": "eslint . --fix",
         "format": "prettier --write \"src/**/*.{js,vue,css,scss}\" \"build/**/*.js\" \"tests/**/*.js\" \"scripts/**/*.mjs\" \"*.{js,mjs}\" \"package.json\"",
         "format:check": "prettier --check \"src/**/*.{js,vue,css,scss}\" \"build/**/*.js\" \"tests/**/*.js\" \"scripts/**/*.mjs\" \"*.{js,mjs}\" \"package.json\"",
-        "audit": "npm audit --omit=dev"
+        "audit": "npm audit --omit=dev",
+        "check:sensitive": "node scripts/check-sensitive.mjs"
     },
     "dependencies": {
         "@element-plus/icons-vue": "^2.1.0",

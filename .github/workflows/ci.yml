@@ -28,6 +28,9 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
+            - name: Sensitive information scan
+              run: npm run check:sensitive
+
             - name: Lint
               run: npm run lint
 
