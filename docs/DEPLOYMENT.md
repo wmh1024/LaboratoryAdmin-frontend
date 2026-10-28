@@ -52,6 +52,12 @@ server {
 `npm run build:demo` 使用相对路径与 hash 路由，可部署到任意子目录（如 GitHub Pages），
 无需宿主提供 404 回退。demo 产物内置 Mock 与演示账号，**不得作为生产环境**使用。
 
+仓库提供 `.github/workflows/deploy-demo.yml`：`main` 推送后自动构建 demo 并部署到
+GitHub Pages。首次使用需在仓库 **Settings → Pages → Build and deployment** 中选择
+**GitHub Actions**，并确保 Actions 有 Pages 写权限。
+
+演示地址：<https://wmh1024.github.io/LaboratoryAdmin-frontend/>
+
 ## 本地容器 / 远程开发
 
 开发服务器默认只监听 `127.0.0.1`。在 Dev Container、WSL2 或远程 SSH 场景下，可设置：

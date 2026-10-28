@@ -12,7 +12,16 @@
 [![Vite][vite-shield]][vite-url]
 [![Node][node-shield]][node-url]
 
+**在线演示**：<https://wmh1024.github.io/LaboratoryAdmin-frontend/>
+（仓库需在 Settings → Pages 中选择 GitHub Actions，`main` 推送后自动部署）
+
 </div>
+
+## 界面预览
+
+| 登录页                           | 用户管理                               | 编辑抽屉                                 |
+| -------------------------------- | -------------------------------------- | ---------------------------------------- |
+| ![登录页](docs/images/login.jpg) | ![用户管理](docs/images/user-list.jpg) | ![编辑抽屉](docs/images/edit-drawer.jpg) |
 
 ## 功能概览
 
@@ -34,16 +43,21 @@
 ```sh
 git clone https://github.com/wmh1024/LaboratoryAdmin-frontend.git
 cd LaboratoryAdmin-frontend
-npm install
+npm ci
 
-# 复制环境变量示例（默认已开启 Mock，无需后端）
+# 必须先复制环境变量示例；否则 VITE_USE_MOCK 为空，Mock 不会启用
 cp .env.example .env
+# Windows PowerShell / cmd：Copy-Item .env.example .env
 
-npm run dev         # 开发模式（默认 Mock）
-npm run build:demo  # 纯静态演示构建（含 Mock，可直接静态托管）
-npm run build       # 生产构建（排除 Mock，产物在 dist/）
-npm run preview     # 预览构建产物
-npm test            # 单元测试（vitest）
+npm run dev            # 开发模式（.env 中 VITE_USE_MOCK=true 时使用 Mock）
+npm run build:demo     # 纯静态演示构建（含 Mock，可直接静态托管）
+npm run build          # 生产构建（排除 Mock，产物在 dist/）
+npm run preview        # 预览构建产物
+npm run preview:demo   # 以 demo 模式预览 dist/
+npm test               # 单元测试（Vitest + jsdom）
+npm run test:coverage  # 打印覆盖率基线
+npm run smoke          # 构建 demo 并用真实 Chrome 跑关键链路
+npm run check:bundle   # 检查生产产物是否混入 Mock
 ```
 
 Mock 模式下使用固定演示账号登录（登录页会提示）：
@@ -57,10 +71,11 @@ Mock 服务会校验令牌：除登录外的接口都必须携带有效 `Authori
 
 ## 环境变量
 
-| 变量                | 默认值 | 说明                                                                         |
-| ------------------- | ------ | ---------------------------------------------------------------------------- |
-| `VITE_API_BASE_URL` | `/api` | 后端接口基础地址。前后端分离部署时填写完整地址，如 `https://api.example.com` |
-| `VITE_USE_MOCK`     | `true` | 是否启用内置 Mock 服务。**仅对开发服务器生效**，接入真实后端时设为 `false`   |
+| 变量                | 默认值      | 说明                                                                         |
+| ------------------- | ----------- | ---------------------------------------------------------------------------- |
+| `VITE_API_BASE_URL` | `/api`      | 后端接口基础地址。前后端分离部署时填写完整地址，如 `https://api.example.com` |
+| `VITE_USE_MOCK`     | `true`      | 是否启用内置 Mock 服务。**仅对开发服务器生效**，接入真实后端时设为 `false`   |
+| `VITE_DEV_HOST`     | `127.0.0.1` | 开发服务器监听地址；容器/远程开发可设为 `0.0.0.0`                            |
 
 ### 构建方式
 
@@ -68,9 +83,13 @@ Mock 服务会校验令牌：除登录外的接口都必须携带有效 `Authori
 | -------------------------------------- | ----------------------------- | ---------------------------------------------- |
 | `npm run dev`                          | 本地开发                      | 由 `VITE_USE_MOCK` 控制                        |
 | `npm run build` / `npm run build:prod` | 对接真实后端的生产构建        | ❌ 强制排除（Mock 代码与种子数据不会进入产物） |
-| `npm run build:demo`                   | 纯静态演示（GitHub Pages 等） | ✅ 内置，产物使用相对路径                      |
+| `npm run build:demo`                   | 纯静态演示（GitHub Pages 等） | ✅ 内置，产物使用相对路径 + hash 路由          |
 
-`.env` 已被 `.gitignore` 忽略，仓库只提交 `.env.example`。
+`.env` 已被 `.gitignore` 忽略，仓库只提交 `.env.example`。生产构建使用 history 路由；
+demo 构建使用 hash 路由，部署到任意静态子路径都不需要 404 回退。
+
+> 本项目以**应用**形式分发，`package.json` 的 `private: true` 仅用于防止误发布到 npm，
+> 不影响克隆、构建或 fork。
 
 ## Mock 说明
 
@@ -111,7 +130,7 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 
 ## 技术栈
 
-- Vue 3（组合式 API）+ Vue Router
+- Vue 3.5（组合式 API，使用 `defineModel`）+ Vue Router
 - Element Plus（按需自动引入）
 - Pinia（登录态持久化）
 - Axios（统一请求/响应拦截）
@@ -120,10 +139,13 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 ## 开发规范
 
 - 静态检查：`npm run lint`（ESLint 9 + eslint-plugin-vue），格式化：`npm run format`（Prettier）
-- 单元测试：`npm test`（Vitest），覆盖 API 工具、分页 composable 与 Mock 服务
-- 提交前请确保 `npm run lint`、`npm run format:check`、`npm test`、`npm run build` 全部通过（CI 会自动检查）
+- 单元/组件测试：`npm test`（Vitest + jsdom + @vue/test-utils），覆盖 API 工具、composable、Mock 服务与关键页面
+- 浏览器冒烟：`npm run smoke`（playwright-core 驱动系统 Chrome，验证登录、列表与编辑闭环）
+- 覆盖率基线：`npm run test:coverage`；生产产物隔离：`npm run check:bundle`
+- 提交前请确保 `npm run lint`、`npm run format:check`、`npm test`、`npm run build`、`npm run check:bundle` 全部通过
+  （涉及 UI 时再跑 `npm run smoke`；CI 会自动检查）
 - 依赖安装建议使用 `npm ci`，以保证与 `package-lock.json` 完全一致
-- 详见 [CONTRIBUTING.md](./CONTRIBUTING.md)
+- 详见 [CONTRIBUTING.md](./CONTRIBUTING.md) 与 [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 
 ## 部署
 
@@ -134,6 +156,7 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 
 > `npm run preview` 预览 demo 时同样可用；若直接 `scp dist/` 部署，请先确认所用的是哪种构建。
 > 部署细节、SPA 回退与 Nginx 安全响应头示例见 [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)。
+> GitHub Pages 演示由 `.github/workflows/deploy-demo.yml` 自动构建并部署 `build:demo` 产物。
 
 ## 参与贡献
 
@@ -150,13 +173,15 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 
 本项目基于 [MIT License](./LICENSE) 开源。媒体资源授权见 [docs/ASSETS.md](./docs/ASSETS.md)。
 
+当前版本：`0.1.0`（版本记录见 [CHANGELOG.md](./CHANGELOG.md)）。
+
 <!-- links -->
 
 [license-shield]: https://img.shields.io/github/license/wmh1024/LaboratoryAdmin-frontend.svg?style=flat-square
 [license-url]: ./LICENSE
 [vue-shield]: https://img.shields.io/badge/Vue-3.x-42b883?style=flat-square&logo=vue.js
 [vue-url]: https://vuejs.org/
-[vite-shield]: https://img.shields.io/badge/Vite-5.x-646cff?style=flat-square&logo=vite
-[vite-url]: https://vitejs.dev/
-[node-shield]: https://img.shields.io/badge/Node-%3E%3D18-339933?style=flat-square&logo=node.js
+[vite-shield]: https://img.shields.io/badge/Vite-8.x-646cff?style=flat-square&logo=vite
+[vite-url]: https://vite.dev/
+[node-shield]: https://img.shields.io/badge/Node-%3E%3D20.19-339933?style=flat-square&logo=node.js
 [node-url]: https://nodejs.org/
