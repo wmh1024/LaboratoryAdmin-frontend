@@ -19,6 +19,7 @@ npm test                # 单元/组件测试（Vitest + jsdom）
 npm run test:coverage   # 覆盖率基线
 npm run build           # 生产构建检查
 npm run check:bundle    # 确认生产产物不含 Mock
+npm run check:sensitive # 扫描敏感信息
 npm run smoke           # 构建 demo 并用真实 Chrome 验证关键链路
 ```
 
@@ -28,7 +29,7 @@ npm run smoke           # 构建 demo 并用真实 Chrome 验证关键链路
 2. 提交信息遵循 [Conventional Commits](https://www.conventionalcommits.org/)：
    `fix(lab-manage): 修正分类下拉字段`
 3. 提交前确保 `npm run lint`、`npm run format:check`、`npm test`、`npm run build` 与
-   `npm run check:bundle` 均通过；涉及 UI 时再跑 `npm run smoke`
+   `npm run check:bundle`、`npm run check:sensitive` 均通过；涉及 UI 时再跑 `npm run smoke`
 4. 发起 Pull Request 并填写模板中的改动动机、影响范围与自测清单
 
 ## 代码约定

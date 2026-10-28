@@ -58,6 +58,7 @@ npm test               # 单元测试（Vitest + jsdom）
 npm run test:coverage  # 打印覆盖率基线
 npm run smoke          # 构建 demo 并用真实 Chrome 跑关键链路
 npm run check:bundle   # 检查生产产物是否混入 Mock
+npm run check:sensitive # 扫描内网地址/个人邮箱/密钥标识
 ```
 
 Mock 模式下使用固定演示账号登录（登录页会提示）：
@@ -141,7 +142,7 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 - 静态检查：`npm run lint`（ESLint 9 + eslint-plugin-vue），格式化：`npm run format`（Prettier）
 - 单元/组件测试：`npm test`（Vitest + jsdom + @vue/test-utils），覆盖 API 工具、composable、Mock 服务与关键页面
 - 浏览器冒烟：`npm run smoke`（playwright-core 驱动系统 Chrome，验证登录、列表与编辑闭环）
-- 覆盖率基线：`npm run test:coverage`；生产产物隔离：`npm run check:bundle`
+- 覆盖率基线：`npm run test:coverage`；生产产物隔离：`npm run check:bundle`；敏感信息扫描：`npm run check:sensitive`
 - 提交前请确保 `npm run lint`、`npm run format:check`、`npm test`、`npm run build`、`npm run check:bundle` 全部通过
   （涉及 UI 时再跑 `npm run smoke`；CI 会自动检查）
 - 依赖安装建议使用 `npm ci`，以保证与 `package-lock.json` 完全一致
