@@ -6,4 +6,3 @@ export const ACTION_COLUMN_WIDTH = 130
 export const USERNAME_COLUMN_WIDTH = 200
 export const NAME_COLUMN_WIDTH = 150
 export const COUNT_COLUMN_WIDTH = 140
-export const ID_COLUMN_WIDTH = 100

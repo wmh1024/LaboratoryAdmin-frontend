@@ -100,8 +100,7 @@ const main = async () => {
 
         const browserErrors = []
         page.on('console', (msg) => {
-            // favicon 在 P4 补齐前会 404，不应影响功能冒烟
-            if (msg.type() === 'error' && !msg.location().url.endsWith('/favicon.ico')) {
+            if (msg.type() === 'error') {
                 browserErrors.push(`${msg.text()} @ ${msg.location().url}`)
             }
         })

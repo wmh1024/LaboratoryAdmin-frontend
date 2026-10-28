@@ -165,7 +165,17 @@ if (failures.length) {
     } catch {
         baseline = []
     }
-    const isAccepted = (failure) => baseline.some((entry) => failure.includes(entry.match))
+    // 比对前把问题行末尾的括号内容（例如具体的邮箱地址）去掉，
+    // 这样基线条目本身就不必写入敏感串，避免"豁免清单自己变成泄漏源"。
+    const normalize = (text) =>
+        text
+            .replace(/（[^）]*）\s*$/, '')
+            .replace(/\s*\([^)]*\)\s*$/, '')
+            .trim()
+    const isAccepted = (failure) => {
+        const normalized = normalize(failure)
+        return baseline.some((entry) => normalized === normalize(entry.match) || failure === entry.match)
+    }
     const blocking = unique.filter((failure) => !isAccepted(failure))
     const accepted = unique.filter(isAccepted)
     acceptedCount = accepted.length

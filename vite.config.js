@@ -75,7 +75,15 @@ export default defineConfig(({ mode, command, isPreview }) => {
                 provider: 'v8',
                 reporter: ['text', 'html'],
                 include: ['src/**/*.{js,vue}'],
-                exclude: ['src/main.js', 'src/mock/seed.js', 'src/**/*.test.js']
+                exclude: ['src/main.js', 'src/mock/seed.js', 'src/**/*.test.js'],
+                // 门禁取「不低于当前基线」的保守值：只防退化，不阻碍贡献者。
+                // 覆盖提升后请同步上调，别让基线变成历史峰值。
+                thresholds: {
+                    statements: 37,
+                    branches: 33,
+                    functions: 20,
+                    lines: 40
+                }
             }
         }
     }
