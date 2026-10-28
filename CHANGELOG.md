@@ -82,8 +82,13 @@
 
 ### Security
 
-- 发布前重写 Git 历史：移除内网 IP、第三方校徽/实拍照片与内部审查文档，提交邮箱统一为 GitHub noreply
-- 新增 `npm run check:sensitive`，CI 阻止内网地址、个人邮箱与私钥/云密钥标识再次入库
+- 发布前重写 Git 历史：移除内网 IP、第三方校徽/实拍照片与内部审查文档
+- 二次重写 Git 历史：清除历史中携带第三方素材的构建产物 `dist.zip`，
+  作者/提交者/标签署名统一为 GitHub noreply
+- 新增 `npm run check:sensitive`，覆盖工作区文件、Git 历史对象、提交与标签署名，
+  并禁止构建产物入库
+- `vite preview` 预览生产产物时不再挂载 Mock，避免"以为 Mock 已剔除"的误判；
+  新增 `npm run check:modes` 断言 Mock 只在 dev 与 demo 模式生效
 
 ### Removed
 
