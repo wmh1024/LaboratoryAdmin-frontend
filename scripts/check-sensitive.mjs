@@ -32,8 +32,12 @@ const RULES = [
             /\b(?:192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b/
     },
     {
-        name: '维护者个人邮箱',
-        pattern: /wmh031024@163\.com/i
+        // 不写死具体邮箱：任何落到个人邮箱域的地址都应被拦下，
+        // 同时避免把"被保护的那个邮箱"再抄一遍进公开仓库。
+        // example.com / *.invalid 等保留域不在列表内，文档示例可正常使用。
+        name: '个人邮箱域',
+        pattern:
+            /\b[\w.+-]+@(?:163|126|yeah|qq|foxmail|sina|sohu|gmail|outlook|hotmail|live|icloud|proton(?:mail)?)\.(?:com|cn|net)\b/i
     },
     {
         name: '私钥文件头',
