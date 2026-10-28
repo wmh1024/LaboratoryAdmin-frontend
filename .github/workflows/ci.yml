@@ -46,6 +46,9 @@ jobs:
             - name: Assert no Mock data / facade bypass in production bundle
               run: npm run check:bundle
 
+            - name: Assert Mock only active in dev / demo (not preview)
+              run: npm run check:modes
+
             - name: Build (demo, Mock included)
               run: npm run build:demo
 
