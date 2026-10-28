@@ -102,8 +102,8 @@ const login = async () => {
 
     .bg {
         background:
-            url('@/assets/sjzc.png') no-repeat 50% center / 240px auto,
-            url('@/assets/lab.jpeg') no-repeat center / cover;
+            url('@/assets/brand.svg') no-repeat 50% center / 200px auto,
+            url('@/assets/login-bg.svg') no-repeat center / cover;
         border-radius: 0 20px 20px 0;
     }
 

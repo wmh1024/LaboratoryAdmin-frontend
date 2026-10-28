@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import sjzc from '@/assets/sjzc.png'
+import brand from '@/assets/brand.svg'
 
 const router = useRouter()
 
@@ -21,7 +21,7 @@ const goHome = () => {
 <template>
     <el-result icon="warning" sub-title="您访问的路径有误！" title="404">
         <template #icon>
-            <el-image :src="sjzc" class="img" />
+            <el-image :src="brand" class="img" />
         </template>
         <template #extra>
             <el-button type="primary" @click="goHome">返回首页</el-button>
