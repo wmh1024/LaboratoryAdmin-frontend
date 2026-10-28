@@ -17,11 +17,13 @@ const VITE_BIN = fileURLToPath(new URL('../node_modules/vite/bin/vite.js', impor
 
 const LOGIN_BODY = JSON.stringify({ username: 'demo_admin', password: 'demo1234' })
 
+// 显式注入 VITE_USE_MOCK=true：CI 里没有 .env（被 .gitignore 排除），
+// 若依赖工作区文件，dev 场景会因拿到 undefined 而误判"Mock 未启用"。
 const start = (args, port) =>
     spawn(process.execPath, [VITE_BIN, ...args, '--port', String(port), '--strictPort'], {
         cwd: ROOT,
         stdio: ['ignore', 'pipe', 'pipe'],
-        env: { ...process.env, VITE_DEV_HOST: '127.0.0.1' }
+        env: { ...process.env, VITE_DEV_HOST: '127.0.0.1', VITE_USE_MOCK: 'true' }
     })
 
 const waitForServer = async (port, timeoutMs = 30000) => {
