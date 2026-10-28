@@ -1,5 +1,6 @@
 import { nextTick, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { unwrapData } from '@/api/common'
 
 /**
  * 抽屉式增改表单的通用逻辑（配合 CrudTable 使用）。
@@ -11,10 +12,11 @@ import { ElMessage, ElMessageBox } from 'element-plus'
  *   services: { add: Function, update: Function, remove: Function, find?: Function },
  *   refresh: () => Promise<unknown>,
  *   defaults?: () => Record<string, any>,
+ *   editDefaults?: (record: any) => Record<string, any>,
  *   onOpenEdit?: (record: any) => void
  * }} options
  */
-export const useCrudDrawer = ({ services, refresh, defaults = () => ({}), onOpenEdit }) => {
+export const useCrudDrawer = ({ services, refresh, defaults = () => ({}), editDefaults = () => ({}), onOpenEdit }) => {
     const formModel = reactive({})
     const addDrawer = ref(false)
     const editDrawer = ref(false)
@@ -38,9 +40,11 @@ export const useCrudDrawer = ({ services, refresh, defaults = () => ({}), onOpen
 
     const openEdit = async (id) => {
         try {
-            const record = services.find ? await services.find(id) : null
+            // services.find 走 axios，返回的是响应壳；这里统一解包成业务记录
+            const record = services.find ? unwrapData(await services.find(id)) : null
             if (!record) return
-            resetForm(record)
+            // 先回填记录，再叠加编辑态默认值（例如清空只写的密码字段）
+            resetForm({ ...record, ...editDefaults(record) })
             onOpenEdit?.(record)
             editDrawer.value = true
             await nextTick()

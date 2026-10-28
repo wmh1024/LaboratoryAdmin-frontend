@@ -35,7 +35,8 @@ const { formModel, addDrawer, editDrawer, submitting, addFormRef, editFormRef, o
         },
         refresh,
         defaults: () => ({ status: 0 }),
-        onOpenEdit: (record) => Object.assign(record, { password: '', repassword: '' })
+        // 密码不回填，留空表示不修改
+        editDefaults: () => ({ password: '', repassword: '' })
     })
 
 const validateConfirmPassword = (_rule, value, callback) => {
