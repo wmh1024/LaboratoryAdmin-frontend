@@ -2,9 +2,10 @@
 import { Lock, User } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/modules/user'
 import { useRouter } from 'vue-router'
-import { reactive, ref } from 'vue'
+import { inject, reactive, ref } from 'vue'
 import { userLoginService } from '@/api/user'
 import { ElMessage } from 'element-plus'
+import { DEMO_ACCOUNT_KEY } from '@/constants/injection'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -16,8 +17,8 @@ const formModel = reactive({
     password: ''
 })
 
-// 演示模式提示：生产构建时 @/mock 被别名到空实现，这里得到 null，不包含任何凭据
-const demoAccount = import.meta.env.VITE_USE_MOCK === 'true' ? (await import('@/mock/demo')).DEMO_ACCOUNT : null
+// 演示模式提示：由 main.js 在挂载前注入；生产构建为 null，不包含任何凭据
+const demoAccount = inject(DEMO_ACCOUNT_KEY, null)
 
 const rules = {
     username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
