@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+    - name: 安全漏洞（请勿公开）
+      url: https://github.com/wmh1024/LaboratoryAdmin-frontend/security/advisories/new
+      about: 请通过 GitHub 私密漏洞报告披露安全问题，不要提交公开 Issue。
+    - name: 使用问题与讨论
+      url: https://github.com/wmh1024/LaboratoryAdmin-frontend/discussions
+      about: 安装、配置与使用问题请优先在 Discussions 中讨论。

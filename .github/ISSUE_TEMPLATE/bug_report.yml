@@ -1,0 +1,55 @@
+name: Bug 报告
+description: 报告可复现的功能缺陷
+title: '[bug] '
+labels: [bug]
+body:
+    - type: markdown
+      attributes:
+          value: |
+              感谢反馈。请先确认不是安全问题；安全问题请走 Security Advisory。
+    - type: textarea
+      id: description
+      attributes:
+          label: 问题描述
+          description: 清楚描述发生了什么，以及你期望的结果。
+      validations:
+          required: true
+    - type: textarea
+      id: steps
+      attributes:
+          label: 复现步骤
+          placeholder: |
+              1. 执行 ...
+              2. 打开 ...
+              3. 看到 ...
+      validations:
+          required: true
+    - type: input
+      id: version
+      attributes:
+          label: 版本 / 提交
+          description: 例如 v0.1.0 或 commit hash
+      validations:
+          required: true
+    - type: input
+      id: environment
+      attributes:
+          label: 环境
+          description: 操作系统、Node 版本、浏览器版本、是否使用 Mock
+          placeholder: Windows 11 / Node 22.14 / Chrome 130 / VITE_USE_MOCK=true
+      validations:
+          required: true
+    - type: textarea
+      id: logs
+      attributes:
+          label: 控制台或构建日志
+          render: shell
+    - type: checkboxes
+      id: checks
+      attributes:
+          label: 自查
+          options:
+              - label: 我已搜索过现有 Issue
+                required: true
+              - label: 这不是安全问题
+                required: true
