@@ -19,8 +19,9 @@
 
 - 登录令牌由后端签发，前端仅做持久化与请求携带，切勿在前端存放真实密钥
 - 生产部署请通过环境变量配置后端地址（`VITE_API_BASE_URL`），避免硬编码内网地址
-- 仓库内置的 Mock 服务仅用于本地演示；`npm run build` / `npm run build:prod` 已在构建期强制排除 Mock 代码与种子数据，
-  只有显式的 `npm run build:demo` 会打包 Mock（用于纯静态演示），请勿把 demo 产物当作生产环境部署
+- 仓库内置的 Mock 服务仅用于本地演示；`npm run build` / `npm run build:prod` 会将唯一门面 `@/mock`
+  在构建期替换为空实现，排除 Mock 代码与种子数据，只有显式的 `npm run build:demo` 会打包 Mock
+  （用于纯静态演示），请勿把 demo 产物当作生产环境部署
 - Mock 服务同样校验令牌（除登录外一律 401）与角色（写操作仅院长），演示账号固定为 `demo_admin` / `demo1234`
 - 仓库中的示例数据均为虚构数据，请勿替换为真实用户信息
 - 登录令牌以明文存放于浏览器 localStorage，请勿在管理端存放超出演示需要的高敏感数据；

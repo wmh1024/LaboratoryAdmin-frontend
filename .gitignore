@@ -29,3 +29,10 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+# 内部工作文档（不随开源仓库发布）
+OPEN_SOURCE_REVIEW.md
+todo.md
+review.md
+*-review.md
+*-todo.md

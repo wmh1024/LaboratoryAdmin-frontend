@@ -16,14 +16,14 @@
 
 ## 功能概览
 
-| 模块 | 状态 |
-| --- | --- |
-| 管理员登录 / 退出 | ✅ |
-| 用户信息管理（增删改查、分页） | ✅ |
-| 管理员信息管理（增删改查、分页） | ✅ |
-| 实验室管理（增删改查、分页、分类关联） | ✅ |
-| 实验室类别（增删改查） | ✅ |
-| 实验室预约记录（列表、分页、详情） | ✅ |
+| 模块                                   | 状态 |
+| -------------------------------------- | ---- |
+| 管理员登录 / 退出                      | ✅   |
+| 用户信息管理（增删改查、分页）         | ✅   |
+| 管理员信息管理（增删改查、分页）       | ✅   |
+| 实验室管理（增删改查、分页、分类关联） | ✅   |
+| 实验室类别（增删改查）                 | ✅   |
+| 实验室预约记录（列表、分页、详情）     | ✅   |
 
 > 设备、课表、数据留存/展示、注意事项等未实现模块的页面与菜单入口已移除，仓库只保留可完整运行的模块。
 
@@ -48,8 +48,8 @@ npm test            # 单元测试（vitest）
 
 Mock 模式下使用固定演示账号登录（登录页会提示）：
 
-| 账号 | 密码 | 角色 |
-| --- | --- | --- |
+| 账号         | 密码       | 角色             |
+| ------------ | ---------- | ---------------- |
 | `demo_admin` | `demo1234` | 院长（可增删改） |
 
 Mock 服务会校验令牌：除登录外的接口都必须携带有效 `Authorization`，且只有「院长」角色可以写入数据，
@@ -57,28 +57,31 @@ Mock 服务会校验令牌：除登录外的接口都必须携带有效 `Authori
 
 ## 环境变量
 
-| 变量 | 默认值 | 说明 |
-| --- | --- | --- |
+| 变量                | 默认值 | 说明                                                                         |
+| ------------------- | ------ | ---------------------------------------------------------------------------- |
 | `VITE_API_BASE_URL` | `/api` | 后端接口基础地址。前后端分离部署时填写完整地址，如 `https://api.example.com` |
-| `VITE_USE_MOCK` | `true` | 是否启用内置 Mock 服务。**仅对开发服务器生效**，接入真实后端时设为 `false` |
+| `VITE_USE_MOCK`     | `true` | 是否启用内置 Mock 服务。**仅对开发服务器生效**，接入真实后端时设为 `false`   |
 
 ### 构建方式
 
-| 命令 | 用途 | Mock |
-| --- | --- | --- |
-| `npm run dev` | 本地开发 | 由 `VITE_USE_MOCK` 控制 |
-| `npm run build` / `npm run build:prod` | 对接真实后端的生产构建 | ❌ 强制排除（Mock 代码与种子数据不会进入产物） |
-| `npm run build:demo` | 纯静态演示（GitHub Pages 等） | ✅ 内置，产物使用相对路径 |
+| 命令                                   | 用途                          | Mock                                           |
+| -------------------------------------- | ----------------------------- | ---------------------------------------------- |
+| `npm run dev`                          | 本地开发                      | 由 `VITE_USE_MOCK` 控制                        |
+| `npm run build` / `npm run build:prod` | 对接真实后端的生产构建        | ❌ 强制排除（Mock 代码与种子数据不会进入产物） |
+| `npm run build:demo`                   | 纯静态演示（GitHub Pages 等） | ✅ 内置，产物使用相对路径                      |
 
 `.env` 已被 `.gitignore` 忽略，仓库只提交 `.env.example`。
 
 ## Mock 说明
 
 - 实现位置：`src/mock/`
-  - `seed.js`：种子数据（全部为虚构数据）
-  - `account.js`：演示账号（生产构建不会进入产物）
-  - `server.js`：类 REST 路由分发（内存存储，重启后重置）
-  - `browser.js`：axios 适配器，浏览器内直接使用同一套路由
+    - `index.js`：唯一门面，应用代码只从 `@/mock` 引入
+    - `seed.js`：种子数据（全部为虚构数据）
+    - `account.js`：演示账号（生产构建不会进入产物）
+    - `server.js`：类 REST 路由分发（内存存储，重启后重置）
+    - `browser.js`：axios 适配器，浏览器内直接使用同一套路由
+- 生产构建通过 Vite alias 把精确路径 `@/mock` 替换为 `src/__mock_disabled__.js`，
+  并用 `npm run check:bundle` 做结构性断言（禁止种子数据、演示凭据与子路径绕过）
 - 同时提供 Vite 中间件（`build/mock-plugin.js`），`/api/*` 请求在开发服务器阶段即可响应
 - 新增接口时，请同步补充 Mock 路由，保证“无后端也能运行”
 
@@ -96,15 +99,15 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 - 批量删除：`DELETE .../delete?ids=1,2,3`，`ids` 为必填的逗号分隔正整数
 - 密码为只写字段：可随新增/修改提交，任何响应都不会返回 `password`
 
-| 方法 | 路径 | 说明 |
-| --- | --- | --- |
-| POST | `/admin/login` | 管理员登录 |
-| POST | `/admin/logout` | 退出登录（作废当前令牌） |
-| GET/POST/PUT/DELETE | `/user/list` `/user/find/{id}` `/user/add` `/user/update` `/user/delete` | 用户增删改查 |
-| GET/POST/PUT/DELETE | `/admin/list` `/admin/find/{id}` `/admin/add` `/admin/update` `/admin/delete` | 管理员增删改查 |
-| GET/POST/PUT/DELETE | `/lab/category/list` `/lab/category/find/{id}` `/lab/category/add` `/lab/category/update` `/lab/category/delete` | 实验室类别 |
-| GET/POST/PUT/DELETE | `/laboratory/list` `/laboratory/find/{id}` `/laboratory/add` `/laboratory/update` `/laboratory/delete` | 实验室 |
-| GET | `/laboratory/record/list` `/laboratory/record/find/{id}` | 实验室预约记录 |
+| 方法                | 路径                                                                                                             | 说明                     |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| POST                | `/admin/login`                                                                                                   | 管理员登录               |
+| POST                | `/admin/logout`                                                                                                  | 退出登录（作废当前令牌） |
+| GET/POST/PUT/DELETE | `/user/list` `/user/find/{id}` `/user/add` `/user/update` `/user/delete`                                         | 用户增删改查             |
+| GET/POST/PUT/DELETE | `/admin/list` `/admin/find/{id}` `/admin/add` `/admin/update` `/admin/delete`                                    | 管理员增删改查           |
+| GET/POST/PUT/DELETE | `/lab/category/list` `/lab/category/find/{id}` `/lab/category/add` `/lab/category/update` `/lab/category/delete` | 实验室类别               |
+| GET/POST/PUT/DELETE | `/laboratory/list` `/laboratory/find/{id}` `/laboratory/add` `/laboratory/update` `/laboratory/delete`           | 实验室                   |
+| GET                 | `/laboratory/record/list` `/laboratory/record/find/{id}`                                                         | 实验室预约记录           |
 
 ## 技术栈
 
@@ -124,10 +127,10 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 
 ## 部署
 
-| 场景 | 命令 | 产物 | 注意事项 |
-| --- | --- | --- | --- |
-| 对接真实后端 | `npm run build`（或 `npm run build:prod`） | `dist/` | Mock 已被构建期剔除，可用 CI 断言校验 |
-| 纯静态演示（无后端） | `npm run build:demo` | `dist/`（`base` 为相对路径） | 含 Mock 与演示账号，**请勿当作生产环境部署** |
+| 场景                 | 命令                                       | 产物                         | 注意事项                                     |
+| -------------------- | ------------------------------------------ | ---------------------------- | -------------------------------------------- |
+| 对接真实后端         | `npm run build`（或 `npm run build:prod`） | `dist/`                      | Mock 已被构建期剔除，可用 CI 断言校验        |
+| 纯静态演示（无后端） | `npm run build:demo`                       | `dist/`（`base` 为相对路径） | 含 Mock 与演示账号，**请勿当作生产环境部署** |
 
 > `npm run preview` 预览 demo 时同样可用；若直接 `scp dist/` 部署，请先确认所用的是哪种构建。
 
@@ -147,6 +150,7 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 本项目基于 [MIT License](./LICENSE.txt) 开源。
 
 <!-- links -->
+
 [license-shield]: https://img.shields.io/github/license/wmh1024/LaboratoryAdmin-frontend.svg?style=flat-square
 [license-url]: ./LICENSE.txt
 [vue-shield]: https://img.shields.io/badge/Vue-3.x-42b883?style=flat-square&logo=vue.js

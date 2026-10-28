@@ -35,13 +35,8 @@ jobs:
             - name: Build (production, Mock excluded)
               run: npm run build
 
-            - name: Assert no Mock data in production bundle
-              run: |
-                  if grep -rlE "demo_admin|demo1234|20990101|mock-token-" dist; then
-                      echo "::error::生产构建产物中包含 Mock 数据，请检查 vite.config.js 的 @/mock 别名"
-                      exit 1
-                  fi
-                  echo "OK: production bundle contains no mock data"
+            - name: Assert no Mock data / facade bypass in production bundle
+              run: npm run check:bundle
 
             - name: Build (demo, Mock included)
               run: npm run build:demo

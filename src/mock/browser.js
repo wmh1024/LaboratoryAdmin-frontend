@@ -4,6 +4,7 @@
  * 在浏览器端直接使用内存 Mock 服务，请求经 axios 适配器转发，
  * 因此无需依赖 Vite 插件（例如纯静态部署 demo 时）也能使用。
  */
+import { AxiosError } from 'axios'
 import { handleMockRequest } from './server'
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -56,7 +57,7 @@ export const createMockAdapter = () => async (config) => {
 
     const result = handleMockRequest({ method, url: pathname + query, body, headers })
 
-    return {
+    const response = {
         data: result.payload,
         status: result.status,
         statusText: result.status === 200 ? 'OK' : 'Error',
@@ -64,4 +65,18 @@ export const createMockAdapter = () => async (config) => {
         config,
         request: {}
     }
+
+    // 与真实 axios 适配器保持一致：HTTP >= 400 必须 reject，
+    // 否则 request.js 依赖 err.response.status 的 401 清理逻辑永远不会执行
+    if (result.status >= 400) {
+        throw new AxiosError(
+            result.payload?.msg || `Mock 请求失败（${result.status}）`,
+            AxiosError.ERR_BAD_RESPONSE,
+            config,
+            {},
+            response
+        )
+    }
+
+    return response
 }
