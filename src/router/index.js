@@ -1,8 +1,14 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/modules/user'
 
+// 生产/开发使用 history；纯静态 demo（base 为相对路径）使用 hash，避免子路径深层链接 404
+const history =
+    import.meta.env.VITE_ROUTER_MODE === 'hash'
+        ? createWebHashHistory(import.meta.env.BASE_URL)
+        : createWebHistory(import.meta.env.BASE_URL)
+
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
+    history,
     routes: [
         {
             path: '/',
