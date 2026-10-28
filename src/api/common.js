@@ -1,14 +1,11 @@
 /**
- * 接口层公共常量与工具。
+ * 接口层公共工具。
  *
- * 分页参数、ids 序列化、CRUD 路径在这里集中维护，避免各 api 文件重复拼接。
+ * 分页常量、ids 序列化、CRUD 路径在这里集中维护，避免各 api 文件重复拼接。
  */
+import { DEFAULT_PAGE_SIZE, DICT_PAGE_SIZE, MAX_PAGE_SIZE } from '@/constants/api'
 
-/** 列表默认分页大小，与后端约定的 pageSize 保持一致 */
-export const DEFAULT_PAGE_SIZE = 10
-
-/** 不分页的小型字典列表（如实验室分类）使用较大的 pageSize */
-export const DICT_PAGE_SIZE = 50
+export { DEFAULT_PAGE_SIZE, DICT_PAGE_SIZE, MAX_PAGE_SIZE }
 
 /** 数组转逗号分隔字符串（兼容带空格的旧格式） */
 export const List2String = (arr) => (Array.isArray(arr) ? arr.join(',') : '')

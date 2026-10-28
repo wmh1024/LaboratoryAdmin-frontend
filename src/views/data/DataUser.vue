@@ -6,10 +6,18 @@ import {
     editUserService,
     getUserByIdService,
     getUserListService
-} from '@/api/data'
+} from '@/api/user'
 import { usePagedList } from '@/composables/usePagedList'
 import { useCrudDrawer } from '@/composables/useCrudDrawer'
+import { usePasswordConfirm } from '@/composables/usePasswordConfirm'
 import { POSITIONS, positionName } from '@/constants/role'
+import {
+    ACTION_COLUMN_WIDTH,
+    COUNT_COLUMN_WIDTH,
+    DRAWER_SIZE,
+    NAME_COLUMN_WIDTH,
+    USERNAME_COLUMN_WIDTH
+} from '@/constants/ui'
 
 const { rows, total, page, pageSize, loading, selection, load, refresh, onSelectionChange } =
     usePagedList(getUserListService)
@@ -39,35 +47,22 @@ const { formModel, addDrawer, editDrawer, submitting, addFormRef, editFormRef, o
         editDefaults: () => ({ password: '', repassword: '' })
     })
 
-const validateConfirmPassword = (_rule, value, callback) => {
-    if (!value) return callback(new Error('请再次输入密码'))
-    if (value !== formModel.password) return callback(new Error('两次输入密码不一致'))
-    callback()
-}
-
-// 编辑时密码留空表示不修改，此时无需校验确认密码
-const validateEditConfirmPassword = (_rule, value, callback) => {
-    if (!formModel.password && !value) return callback()
-    return validateConfirmPassword(_rule, value, callback)
-}
+const { addPasswordRules, addConfirmRules, editPasswordRules, editConfirmRules } = usePasswordConfirm(formModel)
 
 const rules = {
     username: [{ required: true, message: '请输入学号(工号)', trigger: 'blur' }],
     name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
     positionStatus: [{ required: true, message: '请选择职位', trigger: 'change' }],
-    password: [
-        { required: true, message: '请输入密码', trigger: 'blur' },
-        { min: 6, message: '密码长度不能少于 6 位', trigger: 'blur' }
-    ],
-    repassword: [{ validator: validateConfirmPassword, trigger: 'blur' }]
+    password: addPasswordRules,
+    repassword: addConfirmRules
 }
 
 const editRules = {
     username: rules.username,
     name: rules.name,
     positionStatus: rules.positionStatus,
-    password: [{ min: 6, message: '密码长度不能少于 6 位', trigger: 'blur' }],
-    repassword: [{ validator: validateEditConfirmPassword, trigger: 'blur' }]
+    password: editPasswordRules,
+    repassword: editConfirmRules
 }
 
 const addUser = () => submit(addFormRef, 'add', { successMessage: '添加成功', drawer: addDrawer, transform })
@@ -98,17 +93,17 @@ load(1)
             >
         </template>
 
-        <el-table-column label="学号(工号)" width="200">
+        <el-table-column label="学号(工号)" :width="USERNAME_COLUMN_WIDTH">
             <template #default="scope">
                 <span>{{ scope.row.username }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="姓名" width="150">
+        <el-table-column label="姓名" :width="NAME_COLUMN_WIDTH">
             <template #default="scope">
                 <span>{{ scope.row.name }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="职位" width="150">
+        <el-table-column label="职位" :width="NAME_COLUMN_WIDTH">
             <template #default="scope">
                 <span>{{ positionName(scope.row.positionStatus) }}</span>
             </template>
@@ -118,7 +113,7 @@ load(1)
                 <span>{{ scope.row.className }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="违规次数" width="140">
+        <el-table-column label="违规次数" :width="COUNT_COLUMN_WIDTH">
             <template #default="scope">
                 <div class="violation">
                     <span>{{ scope.row.violationCount ?? 0 }}</span>
@@ -126,7 +121,7 @@ load(1)
                 </div>
             </template>
         </el-table-column>
-        <el-table-column label="操作" width="130">
+        <el-table-column label="操作" :width="ACTION_COLUMN_WIDTH">
             <template #default="scope">
                 <el-button :icon="Edit" circle type="primary" @click="openEdit(scope.row.id)" />
                 <el-button :icon="Delete" circle type="danger" @click="onDelete([scope.row.id])" />
@@ -134,7 +129,7 @@ load(1)
         </el-table-column>
     </CrudTable>
 
-    <el-drawer v-model="addDrawer" direction="rtl" size="35%" title="添加用户">
+    <el-drawer v-model="addDrawer" direction="rtl" :size="DRAWER_SIZE" title="添加用户">
         <el-form ref="addFormRef" :model="formModel" :rules="rules" label-width="100px">
             <el-form-item label="学号(工号)" prop="username">
                 <el-input v-model.trim="formModel.username" placeholder="请输入学号(工号)" />
@@ -150,19 +145,14 @@ load(1)
             <el-form-item label="专业班级" prop="className">
                 <el-input v-model.trim="formModel.className" placeholder="请输入专业班级" />
             </el-form-item>
-            <el-form-item label="密码" prop="password">
-                <el-input v-model="formModel.password" placeholder="请输入密码" show-password type="password" />
-            </el-form-item>
-            <el-form-item label="确认密码" prop="repassword">
-                <el-input v-model="formModel.repassword" placeholder="请再次输入密码" show-password type="password" />
-            </el-form-item>
+            <PasswordFormItems v-model:password="formModel.password" v-model:repassword="formModel.repassword" />
             <el-form-item>
                 <el-button :loading="submitting" type="primary" @click="addUser">添加</el-button>
             </el-form-item>
         </el-form>
     </el-drawer>
 
-    <el-drawer v-model="editDrawer" direction="rtl" size="35%" title="编辑用户">
+    <el-drawer v-model="editDrawer" direction="rtl" :size="DRAWER_SIZE" title="编辑用户">
         <el-form ref="editFormRef" :model="formModel" :rules="editRules" label-width="100px">
             <el-form-item label="学号(工号)" prop="username">
                 <el-input v-model.trim="formModel.username" placeholder="请输入学号(工号)" />
@@ -178,17 +168,7 @@ load(1)
             <el-form-item label="专业班级" prop="className">
                 <el-input v-model.trim="formModel.className" placeholder="请输入专业班级" />
             </el-form-item>
-            <el-form-item label="密码" prop="password">
-                <el-input v-model="formModel.password" placeholder="留空表示不修改密码" show-password type="password" />
-            </el-form-item>
-            <el-form-item label="确认密码" prop="repassword">
-                <el-input
-                    v-model="formModel.repassword"
-                    placeholder="留空表示不修改密码"
-                    show-password
-                    type="password"
-                />
-            </el-form-item>
+            <PasswordFormItems v-model:password="formModel.password" v-model:repassword="formModel.repassword" edit />
             <el-form-item>
                 <el-button :loading="submitting" type="primary" @click="editUser">修改</el-button>
             </el-form-item>

@@ -5,7 +5,6 @@ import pinia from '@/stores/index'
 import 'element-plus/dist/index.css'
 import { setupMockAdapter } from '@/utils/request'
 import { DEMO_ACCOUNT_KEY } from '@/constants/injection'
-import { getDemoAccount } from '@/mock'
 
 const app = createApp(App)
 
@@ -18,7 +17,9 @@ app.use(pinia)
  * - Mock 适配器必须先安装，否则首屏请求会抢跑走真实网络
  */
 const bootstrap = async () => {
-    app.provide(DEMO_ACCOUNT_KEY, getDemoAccount())
+    // 入口处 await 一次并注入，页面 setup 保持同步；生产构建该分支会被 DCE 移除
+    const demoAccount = import.meta.env.VITE_USE_MOCK === 'true' ? (await import('@/mock')).getDemoAccount() : null
+    app.provide(DEMO_ACCOUNT_KEY, demoAccount)
 
     try {
         await setupMockAdapter()

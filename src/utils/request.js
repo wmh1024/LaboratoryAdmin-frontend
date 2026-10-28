@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useUserStore } from '@/stores'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
+import { REQUEST_TIMEOUT_MS } from '@/constants/api'
 
 // 后端基础地址通过环境变量配置，见 .env.example
 const baseURL = import.meta.env.VITE_API_BASE_URL || '/api'
@@ -11,7 +12,7 @@ const useMock = import.meta.env.VITE_USE_MOCK === 'true'
 const request = axios.create({
     // 基础地址，超时时间
     baseURL,
-    timeout: 10000
+    timeout: REQUEST_TIMEOUT_MS
 })
 
 /**
@@ -91,4 +92,4 @@ request.interceptors.response.use(
 )
 
 export default request
-export { baseURL, useMock }
+export { baseURL }

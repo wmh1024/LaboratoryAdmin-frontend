@@ -125,7 +125,17 @@ const main = async () => {
         assert((await page.locator('.el-table__row').count()) > 0, '用户列表没有数据')
         await screenshot(page, 'user-list')
 
-        // 3. 实验室编辑回填 + 保存闭环（在 SPA 内跳转，避免 demo 内存 Mock 因整页刷新丢令牌）
+        // 3. 用户编辑抽屉：验证共享密码表单项与字段回填
+        await page.locator('.el-table__row').first().locator('button').first().click()
+        await page.waitForSelector('.el-drawer.open')
+        const userDrawer = page.locator('.el-drawer.open')
+        assert((await userDrawer.locator('input').count()) >= 6, '用户编辑抽屉字段不完整')
+        const usernameValue = (await userDrawer.locator('input').first().inputValue()).trim()
+        assert(usernameValue.length > 0, '用户编辑抽屉未回填学号(工号)')
+        await page.keyboard.press('Escape')
+        await page.waitForSelector('.el-drawer.open', { state: 'detached' })
+
+        // 4. 实验室编辑回填 + 保存闭环（在 SPA 内跳转，避免 demo 内存 Mock 因整页刷新丢令牌）
         await page.locator('.el-sub-menu__title', { hasText: '实验室数据' }).click()
         await page.locator('.el-menu-item', { hasText: '实验室管理' }).click()
         await page.waitForURL(/lab\/manage/)

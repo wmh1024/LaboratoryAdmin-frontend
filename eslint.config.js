@@ -16,7 +16,13 @@ export default [
             sourceType: 'module',
             globals: {
                 ...globals.browser,
-                ...globals.node
+                ...globals.node,
+                // Vue <script setup> 编译宏
+                defineProps: 'readonly',
+                defineEmits: 'readonly',
+                defineExpose: 'readonly',
+                defineModel: 'readonly',
+                withDefaults: 'readonly'
             }
         },
         rules: {
@@ -27,8 +33,7 @@ export default [
             'vue/html-self-closing': 'off',
             'vue/html-indent': 'off',
             'vue/attributes-order': 'off',
-            // 全局自动导入的 ElMessage / ElMessageBox / ElPagination 等
-            'no-undef': 'off',
+            // 自动导入由 unplugin-auto-import 处理，但未导入的变量仍应被 no-undef 捕获
             'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
             'no-console': ['warn', { allow: ['warn', 'error'] }]
         }

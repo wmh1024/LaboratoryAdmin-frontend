@@ -5,6 +5,7 @@
  * 因此无需依赖 Vite 插件（例如纯静态部署 demo 时）也能使用。
  */
 import { AxiosError } from 'axios'
+import { MOCK_DELAY_MS } from '../constants/api.js'
 import { handleMockRequest } from './server'
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -53,7 +54,7 @@ export const createMockAdapter = () => async (config) => {
     const headers = { authorization: config.headers?.Authorization || config.headers?.authorization || '' }
 
     // 模拟网络延迟，便于观察 loading 状态
-    await delay(120)
+    await delay(MOCK_DELAY_MS)
 
     const result = handleMockRequest({ method, url: pathname + query, body, headers })
 
