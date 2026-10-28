@@ -3,7 +3,7 @@ import { Lock, User } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/modules/user'
 import { useRouter } from 'vue-router'
 import { inject, reactive, ref } from 'vue'
-import { userLoginService } from '@/api/user'
+import { userLoginService } from '@/api/auth'
 import { ElMessage } from 'element-plus'
 import { DEMO_ACCOUNT_KEY } from '@/constants/injection'
 

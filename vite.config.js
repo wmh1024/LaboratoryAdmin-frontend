@@ -57,7 +57,7 @@ export default defineConfig(({ mode, command }) => {
         },
         server: {
             // 仅监听本机，避免 dev server 暴露到局域网
-            host: '127.0.0.1',
+            host: env.VITE_DEV_HOST || '127.0.0.1',
             port: 5173,
             strictPort: true
         },

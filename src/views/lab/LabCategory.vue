@@ -9,6 +9,7 @@ import {
 } from '@/api/lab/labCategory'
 import { usePagedList } from '@/composables/usePagedList'
 import { useCrudDrawer } from '@/composables/useCrudDrawer'
+import { ACTION_COLUMN_WIDTH, DRAWER_SIZE } from '@/constants/ui'
 import { ADMIN_ROLES, roleName } from '@/constants/role'
 
 const { rows, total, page, pageSize, loading, selection, load, refresh, onSelectionChange } =
@@ -73,7 +74,7 @@ load(1)
                 <span>{{ roleName(scope.row.categoryStatus) }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="操作" width="130">
+        <el-table-column label="操作" :width="ACTION_COLUMN_WIDTH">
             <template #default="scope">
                 <el-button :icon="Edit" circle type="primary" @click="openEdit(scope.row.id)" />
                 <el-button :icon="Delete" circle type="danger" @click="onDelete([scope.row.id])" />
@@ -81,7 +82,7 @@ load(1)
         </el-table-column>
     </CrudTable>
 
-    <el-drawer v-model="addDrawer" direction="rtl" size="35%" title="添加分类">
+    <el-drawer v-model="addDrawer" direction="rtl" :size="DRAWER_SIZE" title="添加分类">
         <el-form ref="addFormRef" :model="formModel" :rules="rules" label-width="100px">
             <el-form-item label="分类名称" prop="categoryName">
                 <el-input v-model.trim="formModel.categoryName" placeholder="请输入分类名称" />
@@ -97,7 +98,7 @@ load(1)
         </el-form>
     </el-drawer>
 
-    <el-drawer v-model="editDrawer" direction="rtl" size="35%" title="编辑分类">
+    <el-drawer v-model="editDrawer" direction="rtl" :size="DRAWER_SIZE" title="编辑分类">
         <el-form ref="editFormRef" :model="formModel" :rules="rules" label-width="100px">
             <el-form-item label="分类名称" prop="categoryName">
                 <el-input v-model.trim="formModel.categoryName" placeholder="请输入分类名称" />

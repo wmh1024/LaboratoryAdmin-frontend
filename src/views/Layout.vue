@@ -4,7 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElMessageBox } from 'element-plus'
 import { Expand, Fold, School, SwitchButton, User } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/modules/user'
-import { userLogoutService } from '@/api/user'
+import { userLogoutService } from '@/api/auth'
 
 const router = useRouter()
 const route = useRoute()

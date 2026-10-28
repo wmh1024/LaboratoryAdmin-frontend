@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { toPageResult } from '@/api/common'
 import { PAGE_SIZE } from '@/constants/page'
 
@@ -54,7 +54,5 @@ export const usePagedList = (fetcher, options = {}) => {
     /** 刷新当前页（删除/新增/修改后调用） */
     const refresh = () => load(lastPage)
 
-    const selectedIds = computed(() => selection.value)
-
-    return { rows, total, page, pageSize, loading, selection, selectedIds, load, refresh, onSelectionChange }
+    return { rows, total, page, pageSize, loading, selection, load, refresh, onSelectionChange }
 }

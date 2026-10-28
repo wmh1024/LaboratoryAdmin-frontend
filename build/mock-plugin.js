@@ -3,6 +3,7 @@
  *
  * 仅当 VITE_USE_MOCK=true 时启用，生产构建不受影响。
  */
+import { MOCK_DELAY_MS } from '../src/constants/api.js'
 import { handleMockRequest } from '../src/mock/server.js'
 
 const readBody = (req) =>
@@ -33,7 +34,7 @@ export const createMockMiddleware = () => {
         if (!req.url || !req.url.startsWith('/api/')) return next()
         const body = ['POST', 'PUT', 'PATCH'].includes(req.method) ? await readBody(req) : undefined
         // 模拟网络延迟，便于观察 loading 状态
-        await new Promise((resolve) => setTimeout(resolve, 120))
+        await new Promise((resolve) => setTimeout(resolve, MOCK_DELAY_MS))
         const result = handleMockRequest({
             method: req.method,
             url: req.url,

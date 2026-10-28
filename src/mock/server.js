@@ -13,7 +13,7 @@
 
 import { createSeed } from './seed.js'
 import { DEMO_ACCOUNT } from './account.js'
-import { DEFAULT_PAGE_SIZE } from '../api/common.js'
+import { DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE } from '../constants/api.js'
 
 export { DEMO_ACCOUNT }
 
@@ -96,7 +96,7 @@ const parseIds = (raw) =>
 /** 通用分页，返回后端约定的 { items, counts } */
 const paginate = (list, query, pageSize = DEFAULT_PAGE_SIZE) => {
     const page = Math.max(toInt(query.get('page'), 1), 1)
-    const size = Math.min(Math.max(toInt(query.get('pageSize'), pageSize), 1), 100)
+    const size = Math.min(Math.max(toInt(query.get('pageSize'), pageSize), 1), MAX_PAGE_SIZE)
     const start = (page - 1) * size
     return {
         items: list.slice(start, start + size),
@@ -141,7 +141,8 @@ const routes = () => [
             if (username !== DEMO_ACCOUNT.username || password !== DEMO_ACCOUNT.password) {
                 return fail('用户名或密码错误', 401)
             }
-            const admin = db().admins.find((item) => item.username === username) || db().admins[0]
+            const admin = db().admins.find((item) => item.username === username)
+            if (!admin) return fail('演示账号未初始化', 500)
             const token = makeToken(admin.id)
             tokens().set(token, admin.id)
             return ok({ token })
@@ -273,7 +274,7 @@ const routes = () => [
     {
         method: 'GET',
         test: /^\/lab\/category\/list$/,
-        handle: ({ query }) => ok(paginate(db().labCategories, query, 50))
+        handle: ({ query }) => ok(paginate(db().labCategories, query))
     },
     {
         method: 'GET',

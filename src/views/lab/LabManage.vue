@@ -7,12 +7,13 @@ import {
     editLabService,
     getLabByIdService,
     getLabListService
-} from '@/api/lab/LabManage'
-import { getLabCategoryListService } from '@/api/lab/labCategory'
-import { getAdminListService } from '@/api/data'
+} from '@/api/lab/labManage'
+import { getLabCategoryDictService } from '@/api/lab/labCategory'
+import { getAdminListService } from '@/api/admin'
 import { toPageResult } from '@/api/common'
 import { usePagedList } from '@/composables/usePagedList'
 import { useCrudDrawer } from '@/composables/useCrudDrawer'
+import { ACTION_COLUMN_WIDTH, COUNT_COLUMN_WIDTH, DRAWER_SIZE } from '@/constants/ui'
 
 const { rows, total, page, pageSize, loading, selection, load, refresh, onSelectionChange } =
     usePagedList(getLabListService)
@@ -26,7 +27,7 @@ const adminName = (id) => adminList.value.find((item) => item.id === id)?.name |
 const loadDictionaries = async () => {
     try {
         // 并行拉取两个字典，任一失败不影响列表展示
-        const [categoryRes, adminRes] = await Promise.allSettled([getLabCategoryListService(), getAdminListService(1)])
+        const [categoryRes, adminRes] = await Promise.allSettled([getLabCategoryDictService(), getAdminListService(1)])
         if (categoryRes.status === 'fulfilled') categoryList.value = toPageResult(categoryRes.value).items
         if (adminRes.status === 'fulfilled') adminList.value = toPageResult(adminRes.value).items
     } catch {
@@ -125,12 +126,12 @@ loadDictionaries()
                 <span>{{ adminName(scope.row.laboratoryHeadId) }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="使用次数" width="100">
+        <el-table-column label="使用次数" :width="COUNT_COLUMN_WIDTH">
             <template #default="scope">
                 <span>{{ scope.row.laboratoryCount ?? 0 }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="操作" width="130">
+        <el-table-column label="操作" :width="ACTION_COLUMN_WIDTH">
             <template #default="scope">
                 <el-button :icon="Edit" circle type="primary" @click="openEdit(scope.row.id)" />
                 <el-button :icon="Delete" circle type="danger" @click="onDelete([scope.row.id])" />
@@ -138,7 +139,7 @@ loadDictionaries()
         </el-table-column>
     </CrudTable>
 
-    <el-drawer v-model="addDrawer" direction="rtl" size="35%" title="添加实验室">
+    <el-drawer v-model="addDrawer" direction="rtl" :size="DRAWER_SIZE" title="添加实验室">
         <el-form ref="addFormRef" :model="formModel" :rules="rules" label-width="100px">
             <el-form-item label="名称" prop="laboratoryName">
                 <el-input v-model.trim="formModel.laboratoryName" placeholder="请输入实验室名称" />
@@ -185,7 +186,7 @@ loadDictionaries()
         </el-form>
     </el-drawer>
 
-    <el-drawer v-model="editDrawer" direction="rtl" size="35%" title="编辑实验室">
+    <el-drawer v-model="editDrawer" direction="rtl" :size="DRAWER_SIZE" title="编辑实验室">
         <el-form ref="editFormRef" :model="formModel" :rules="rules" label-width="100px">
             <el-form-item label="名称" prop="laboratoryName">
                 <el-input v-model.trim="formModel.laboratoryName" placeholder="请输入实验室名称" />

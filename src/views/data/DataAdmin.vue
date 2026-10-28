@@ -6,10 +6,12 @@ import {
     editAdminService,
     getAdminByIdService,
     getAdminListService
-} from '@/api/data'
+} from '@/api/admin'
 import { usePagedList } from '@/composables/usePagedList'
 import { useCrudDrawer } from '@/composables/useCrudDrawer'
+import { usePasswordConfirm } from '@/composables/usePasswordConfirm'
 import { ADMIN_ROLES, roleName } from '@/constants/role'
+import { ACTION_COLUMN_WIDTH, DRAWER_SIZE } from '@/constants/ui'
 
 const { rows, total, page, pageSize, loading, selection, load, refresh, onSelectionChange } =
     usePagedList(getAdminListService)
@@ -39,35 +41,22 @@ const { formModel, addDrawer, editDrawer, submitting, addFormRef, editFormRef, o
         editDefaults: () => ({ password: '', repassword: '' })
     })
 
-const validateConfirmPassword = (_rule, value, callback) => {
-    if (!value) return callback(new Error('请再次输入密码'))
-    if (value !== formModel.password) return callback(new Error('两次输入密码不一致'))
-    callback()
-}
-
-// 编辑时密码留空表示不修改，此时无需校验确认密码
-const validateEditConfirmPassword = (_rule, value, callback) => {
-    if (!formModel.password && !value) return callback()
-    return validateConfirmPassword(_rule, value, callback)
-}
+const { addPasswordRules, addConfirmRules, editPasswordRules, editConfirmRules } = usePasswordConfirm(formModel)
 
 const rules = {
     username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
     name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
     status: [{ required: true, message: '请选择权限', trigger: 'change' }],
-    password: [
-        { required: true, message: '请输入密码', trigger: 'blur' },
-        { min: 6, message: '密码长度不能少于 6 位', trigger: 'blur' }
-    ],
-    repassword: [{ validator: validateConfirmPassword, trigger: 'blur' }]
+    password: addPasswordRules,
+    repassword: addConfirmRules
 }
 
 const editRules = {
     username: rules.username,
     name: rules.name,
     status: rules.status,
-    password: [{ min: 6, message: '密码长度不能少于 6 位', trigger: 'blur' }],
-    repassword: [{ validator: validateEditConfirmPassword, trigger: 'blur' }]
+    password: editPasswordRules,
+    repassword: editConfirmRules
 }
 
 const addAdmin = () => submit(addFormRef, 'add', { successMessage: '添加成功', drawer: addDrawer, transform })
@@ -113,7 +102,7 @@ load(1)
                 <span>{{ roleName(scope.row.status) }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="操作" width="130">
+        <el-table-column label="操作" :width="ACTION_COLUMN_WIDTH">
             <template #default="scope">
                 <el-button :icon="Edit" circle type="primary" @click="openEdit(scope.row.id)" />
                 <el-button :icon="Delete" circle type="danger" @click="onDelete([scope.row.id])" />
@@ -121,7 +110,7 @@ load(1)
         </el-table-column>
     </CrudTable>
 
-    <el-drawer v-model="addDrawer" direction="rtl" size="35%" title="添加管理员">
+    <el-drawer v-model="addDrawer" direction="rtl" :size="DRAWER_SIZE" title="添加管理员">
         <el-form ref="addFormRef" :model="formModel" :rules="rules" label-width="100px">
             <el-form-item label="账号" prop="username">
                 <el-input v-model.trim="formModel.username" placeholder="请输入账号" />
@@ -134,19 +123,14 @@ load(1)
                     <el-option v-for="role in ADMIN_ROLES" :key="role.id" :label="role.name" :value="role.id" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="密码" prop="password">
-                <el-input v-model="formModel.password" placeholder="请输入密码" show-password type="password" />
-            </el-form-item>
-            <el-form-item label="确认密码" prop="repassword">
-                <el-input v-model="formModel.repassword" placeholder="请再次输入密码" show-password type="password" />
-            </el-form-item>
+            <PasswordFormItems v-model:password="formModel.password" v-model:repassword="formModel.repassword" />
             <el-form-item>
                 <el-button :loading="submitting" type="primary" @click="addAdmin">添加</el-button>
             </el-form-item>
         </el-form>
     </el-drawer>
 
-    <el-drawer v-model="editDrawer" direction="rtl" size="35%" title="编辑管理员">
+    <el-drawer v-model="editDrawer" direction="rtl" :size="DRAWER_SIZE" title="编辑管理员">
         <el-form ref="editFormRef" :model="formModel" :rules="editRules" label-width="100px">
             <el-form-item label="账号" prop="username">
                 <el-input v-model.trim="formModel.username" placeholder="请输入账号" />
@@ -159,17 +143,7 @@ load(1)
                     <el-option v-for="role in ADMIN_ROLES" :key="role.id" :label="role.name" :value="role.id" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="密码" prop="password">
-                <el-input v-model="formModel.password" placeholder="留空表示不修改密码" show-password type="password" />
-            </el-form-item>
-            <el-form-item label="确认密码" prop="repassword">
-                <el-input
-                    v-model="formModel.repassword"
-                    placeholder="留空表示不修改密码"
-                    show-password
-                    type="password"
-                />
-            </el-form-item>
+            <PasswordFormItems v-model:password="formModel.password" v-model:repassword="formModel.repassword" edit />
             <el-form-item>
                 <el-button :loading="submitting" type="primary" @click="editAdmin">修改</el-button>
             </el-form-item>

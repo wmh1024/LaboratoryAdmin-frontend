@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from 'vue'
-import { getLabRecordByIdService, getLabRecordListService } from '@/api/lab/LabLog'
+import { getLabRecordByIdService, getLabRecordListService } from '@/api/lab/labLog'
 import { usePagedList } from '@/composables/usePagedList'
 import { recordStatus } from '@/constants/role'
+import { unwrapData } from '@/api/common'
+import { ACTION_COLUMN_WIDTH, DETAIL_DRAWER_SIZE } from '@/constants/ui'
 
 const { rows, total, page, pageSize, loading, load } = usePagedList(getLabRecordListService)
 
@@ -12,7 +14,7 @@ const detailsDrawer = ref(false)
 const onDetails = async (id) => {
     try {
         const req = await getLabRecordByIdService(id)
-        detailsData.value = req.data.data || {}
+        detailsData.value = unwrapData(req) || {}
         detailsDrawer.value = true
     } catch {
         // 错误提示由请求拦截器统一处理
@@ -60,14 +62,14 @@ load(1)
                 </el-tag>
             </template>
         </el-table-column>
-        <el-table-column label="操作" width="130">
+        <el-table-column label="操作" :width="ACTION_COLUMN_WIDTH">
             <template #default="scope">
                 <el-button type="primary" @click="onDetails(scope.row.id)">查看详情</el-button>
             </template>
         </el-table-column>
     </CrudTable>
 
-    <el-drawer v-model="detailsDrawer" direction="rtl" size="25%" title="">
+    <el-drawer v-model="detailsDrawer" direction="rtl" :size="DETAIL_DRAWER_SIZE" title="">
         <el-descriptions border :column="1" title="内容详情">
             <el-descriptions-item label="ID">{{ detailsData.id ?? '-' }}</el-descriptions-item>
             <el-descriptions-item label="实验室名称">{{ detailsData.laboratoryName || '-' }}</el-descriptions-item>

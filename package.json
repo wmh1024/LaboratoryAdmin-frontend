@@ -50,7 +50,7 @@
         "element-plus": "^2.4.1",
         "pinia": "^2.1.7",
         "pinia-plugin-persistedstate": "^3.2.0",
-        "vue": "^3.3.4",
+        "vue": "^3.5.0",
         "vue-router": "^4.2.5"
     },
     "devDependencies": {
