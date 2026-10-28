@@ -72,11 +72,11 @@ Mock 服务会校验令牌：除登录外的接口都必须携带有效 `Authori
 
 ## 环境变量
 
-| 变量                | 默认值      | 说明                                                                         |
-| ------------------- | ----------- | ---------------------------------------------------------------------------- |
-| `VITE_API_BASE_URL` | `/api`      | 后端接口基础地址。前后端分离部署时填写完整地址，如 `https://api.example.com` |
-| `VITE_USE_MOCK`     | `true`      | 是否启用内置 Mock 服务。**仅对开发服务器生效**，接入真实后端时设为 `false`   |
-| `VITE_DEV_HOST`     | `127.0.0.1` | 开发服务器监听地址；容器/远程开发可设为 `0.0.0.0`                            |
+| 变量                | 默认值      | 说明                                                                            |
+| ------------------- | ----------- | ------------------------------------------------------------------------------- |
+| `VITE_API_BASE_URL` | `/api`      | 后端接口基础地址。前后端分离部署时填写完整地址，如 `https://api.example.com`    |
+| `VITE_USE_MOCK`     | `true`      | 是否启用内置 Mock 服务。**仅对 `npm run dev` 生效**，接入真实后端时设为 `false` |
+| `VITE_DEV_HOST`     | `127.0.0.1` | 开发服务器监听地址；容器/远程开发可设为 `0.0.0.0`                               |
 
 ### 构建方式
 
@@ -88,6 +88,9 @@ Mock 服务会校验令牌：除登录外的接口都必须携带有效 `Authori
 
 `.env` 已被 `.gitignore` 忽略，仓库只提交 `.env.example`。生产构建使用 history 路由；
 demo 构建使用 hash 路由，部署到任意静态子路径都不需要 404 回退。
+
+`npm run preview` 预览**生产**产物时不会挂载 Mock（`/api` 会照常返回 404，与真实静态部署一致），
+适合用来确认"Mock 确实已被剔除"；需要预览带 Mock 的产物请用 `npm run preview:demo`。
 
 > 本项目以**应用**形式分发，`package.json` 的 `private: true` 仅用于防止误发布到 npm，
 > 不影响克隆、构建或 fork。
@@ -155,7 +158,8 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 | 对接真实后端         | `npm run build`（或 `npm run build:prod`） | `dist/`                      | Mock 已被构建期剔除，可用 CI 断言校验        |
 | 纯静态演示（无后端） | `npm run build:demo`                       | `dist/`（`base` 为相对路径） | 含 Mock 与演示账号，**请勿当作生产环境部署** |
 
-> `npm run preview` 预览 demo 时同样可用；若直接 `scp dist/` 部署，请先确认所用的是哪种构建。
+> `npm run preview` 只预览生产产物（不含 Mock）；预览 demo 产物请用 `npm run preview:demo`。
+> 若直接 `scp dist/` 部署，请先确认所用的是哪种构建。
 > 部署细节、SPA 回退与 Nginx 安全响应头示例见 [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)。
 > GitHub Pages 演示由 `.github/workflows/deploy-demo.yml` 自动构建并部署 `build:demo` 产物。
 
