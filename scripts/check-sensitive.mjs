@@ -157,50 +157,14 @@ for (const row of tagRows.split('\n').filter(Boolean)) {
     }
 }
 
-let acceptedCount = 0
 if (failures.length) {
     const unique = [...new Set(failures)]
-    // 基线白名单：只用于「已确认、已有明确处理计划」的历史遗留项，且必须逐条列出。
-    // 新增任何条目都应当在 PR 中说明原因与移除时间；清空基线是发布前的硬性要求。
-    const baselinePath = new URL('../security-baseline.json', import.meta.url)
-    let baseline = []
-    try {
-        baseline = JSON.parse(readFileSync(baselinePath, 'utf8')).accepted ?? []
-    } catch {
-        baseline = []
-    }
-    // 比对前把问题行末尾的括号内容（例如具体的邮箱地址）去掉，
-    // 这样基线条目本身就不必写入敏感串，避免"豁免清单自己变成泄漏源"。
-    const normalize = (text) =>
-        text
-            .replace(/（[^）]*）\s*$/, '')
-            .replace(/\s*\([^)]*\)\s*$/, '')
-            .trim()
-    const isAccepted = (failure) => {
-        const normalized = normalize(failure)
-        return baseline.some((entry) => normalized === normalize(entry.match) || failure === entry.match)
-    }
-    const blocking = unique.filter((failure) => !isAccepted(failure))
-    const accepted = unique.filter(isAccepted)
-    acceptedCount = accepted.length
-
-    for (const failure of accepted) {
-        process.stdout.write(`[check-sensitive] 已知遗留（基线豁免）：${failure}\n`)
-    }
-    if (blocking.length) {
-        for (const failure of blocking) process.stderr.write(`[check-sensitive] ${failure}\n`)
-        process.stderr.write(
-            '[check-sensitive] 失败：存在未登记的敏感信息问题。若确认是已知遗留项，请登记到 security-baseline.json 并说明处理计划。\n'
-        )
-        process.exit(1)
-    }
+    for (const failure of unique) process.stderr.write(`[check-sensitive] ${failure}\n`)
+    process.stderr.write('[check-sensitive] 失败：发现敏感信息。历史遗留项必须在发布前清理，不接受豁免清单。\n')
+    process.exit(1)
 }
 
 process.stdout.write(
-    `[check-sensitive] 扫描完成：${TRACKED.length} 个跟踪文件、${seenBlobs.size} 个历史文本对象、` +
-        `${emailRows.split('\n').filter(Boolean).length} 个提交、${tagRows.split('\n').filter(Boolean).length} 个标签` +
-        `${acceptedCount > 0 ? `；其中 ${acceptedCount} 项为已登记的基线遗留（见 security-baseline.json）` : '；无任何问题'}\n`
+    `[check-sensitive] 通过：${TRACKED.length} 个跟踪文件、${seenBlobs.size} 个历史文本对象、` +
+        `${emailRows.split('\n').filter(Boolean).length} 个提交、${tagRows.split('\n').filter(Boolean).length} 个标签均未发现问题\n`
 )
-if (acceptedCount > 0) {
-    process.stdout.write('[check-sensitive] 注意：基线豁免必须在发布前清空，当前仍有遗留项\n')
-}
