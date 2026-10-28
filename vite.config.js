@@ -13,6 +13,9 @@ export default defineConfig(({ mode, command }) => {
     // 生产构建默认关闭 Mock，即使 .env 里残留 VITE_USE_MOCK=true 也不会打进产物。
     // 需要发布「纯前端 demo」（GitHub Pages / 纯静态演示）时请使用 `npm run build:demo`。
     const useMock = mode === 'demo' || (command === 'serve' && String(env.VITE_USE_MOCK) === 'true')
+    // 单元测试由 jsdom 运行，不需要也不支持 Element Plus 的 CSS 副作用导入
+    const isTest = mode === 'test' || !!process.env.VITEST
+    const elementPlusResolver = ElementPlusResolver({ importStyle: isTest ? false : 'css' })
     if (command === 'build' && mode !== 'demo' && String(env.VITE_USE_MOCK) === 'true') {
         console.warn(
             '[mock] VITE_USE_MOCK=true 仅对开发服务器生效，生产构建已忽略；如需 demo 构建请用 npm run build:demo'
@@ -24,10 +27,10 @@ export default defineConfig(({ mode, command }) => {
             vue(),
             AutoImport({
                 imports: ['vue', 'vue-router'],
-                resolvers: [ElementPlusResolver()]
+                resolvers: [elementPlusResolver]
             }),
             Components({
-                resolvers: [ElementPlusResolver()]
+                resolvers: [elementPlusResolver]
             }),
             // 无后端时可通过 VITE_USE_MOCK=true 启用内置 Mock 服务
             mockPlugin({ useMock })
@@ -41,7 +44,9 @@ export default defineConfig(({ mode, command }) => {
         },
         // 让 import.meta.env.VITE_USE_MOCK 在构建期被静态替换，动态 import 才能真正被摇树剔除
         define: {
-            'import.meta.env.VITE_USE_MOCK': JSON.stringify(useMock ? 'true' : 'false')
+            'import.meta.env.VITE_USE_MOCK': JSON.stringify(useMock ? 'true' : 'false'),
+            // demo 构建部署在任意静态子路径下，使用 hash 路由避免深层链接依赖 404 回退
+            'import.meta.env.VITE_ROUTER_MODE': JSON.stringify(mode === 'demo' ? 'hash' : 'history')
         },
         server: {
             // 仅监听本机，避免 dev server 暴露到局域网
@@ -50,6 +55,16 @@ export default defineConfig(({ mode, command }) => {
             strictPort: true
         },
         // 静态 demo 构建（mode=demo）产物用于纯静态部署，使用相对路径
-        base: mode === 'demo' ? './' : '/'
+        base: mode === 'demo' ? './' : '/',
+        test: {
+            environment: 'jsdom',
+            setupFiles: ['./tests/setup.js'],
+            coverage: {
+                provider: 'v8',
+                reporter: ['text', 'html'],
+                include: ['src/**/*.{js,vue}'],
+                exclude: ['src/main.js', 'src/mock/seed.js', 'src/**/*.test.js']
+            }
+        }
     }
 })
