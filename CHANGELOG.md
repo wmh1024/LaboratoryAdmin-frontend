@@ -80,6 +80,11 @@
 - 移除 8 个未实现页面（设备、课表、数据留存/展示、注意事项）及菜单入口，删除 `PlaceholderPage` 与 `favicon.ico`
 - README 功能范围收缩为已实现模块，接口说明改由 `docs/API.md` 承载
 
+### Security
+
+- 发布前重写 Git 历史：移除内网 IP、第三方校徽/实拍照片与内部审查文档，提交邮箱统一为 GitHub noreply
+- 新增 `npm run check:sensitive`，CI 阻止内网地址、个人邮箱与私钥/云密钥标识再次入库
+
 ### Removed
 
 - 内部审查报告 `review.md`、临时 `todo.md`（不随开源仓库发布）
