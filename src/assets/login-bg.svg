@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="title">
+  <title id="title">实验室主题抽象背景</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1220"/>
+      <stop offset=".55" stop-color="#12314a"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M80 0H0V80" fill="none" stroke="#e0f2fe" stroke-opacity=".06"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="1200" fill="url(#bg)"/>
+  <rect width="1600" height="1200" fill="url(#grid)"/>
+  <circle cx="1180" cy="300" r="520" fill="url(#glow)"/>
+  <circle cx="280" cy="960" r="420" fill="url(#glow)" opacity=".55"/>
+  <g fill="none" stroke="#bae6fd" stroke-opacity=".34" stroke-width="5">
+    <path d="M1040 760V520l-90-90h180l-90 90"/>
+    <path d="M950 760h180l70 160H880z"/>
+    <path d="M330 300h150v90H330z"/>
+    <path d="M405 390v110"/>
+    <circle cx="405" cy="540" r="42"/>
+    <path d="M620 520h120M620 570h120M620 620h80"/>
+  </g>
+  <g fill="#7dd3fc" fill-opacity=".5">
+    <circle cx="1110" cy="850" r="10"/>
+    <circle cx="1180" cy="890" r="7"/>
+    <circle cx="1210" cy="830" r="5"/>
+    <circle cx="365" cy="540" r="8"/>
+  </g>
+  <g stroke="#67e8f9" stroke-opacity=".22" stroke-width="3">
+    <path d="M0 980c220-80 360 60 560 0s340-140 540-60 280 20 500-40"/>
+    <path d="M0 1040c220-80 360 60 560 0s340-140 540-60 280 20 500-40"/>
+  </g>
+</svg>

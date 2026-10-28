@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="images/logo.png" alt="logo" width="120" height="120" />
+<img src="images/logo.svg" alt="logo" width="120" height="120" />
 
 # 实验室预约系统 · 管理端
 
@@ -133,6 +133,7 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 | 纯静态演示（无后端） | `npm run build:demo`                       | `dist/`（`base` 为相对路径） | 含 Mock 与演示账号，**请勿当作生产环境部署** |
 
 > `npm run preview` 预览 demo 时同样可用；若直接 `scp dist/` 部署，请先确认所用的是哪种构建。
+> 部署细节、SPA 回退与 Nginx 安全响应头示例见 [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)。
 
 ## 参与贡献
 
@@ -147,12 +148,12 @@ Mock 数据脱敏约定：学号为虚构号段，姓名为虚构姓名，手机
 
 ## 许可证
 
-本项目基于 [MIT License](./LICENSE.txt) 开源。
+本项目基于 [MIT License](./LICENSE) 开源。媒体资源授权见 [docs/ASSETS.md](./docs/ASSETS.md)。
 
 <!-- links -->
 
 [license-shield]: https://img.shields.io/github/license/wmh1024/LaboratoryAdmin-frontend.svg?style=flat-square
-[license-url]: ./LICENSE.txt
+[license-url]: ./LICENSE
 [vue-shield]: https://img.shields.io/badge/Vue-3.x-42b883?style=flat-square&logo=vue.js
 [vue-url]: https://vuejs.org/
 [vite-shield]: https://img.shields.io/badge/Vite-5.x-646cff?style=flat-square&logo=vite
